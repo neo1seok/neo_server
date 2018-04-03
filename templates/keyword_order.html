@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+
+{% block title %}Index{% endblock %}
+
+
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+  </style>
+{% endblock %}
+
+
+{% block list_contents %}
+
+<div class="row">
+
+
+  {% for portal in list_portals %}
+  <div class="col-lg-6" style="background-color:grey;">
+    <h2>{{portal.title}}</h2>
+
+    <div class="list-group">
+        {% for order in portal.list_order %}
+
+  <!--<a href="#" class="list-group-item">First item</a>-->
+  <!--<a href="#" class="list-group-item">Second item</a>-->
+  <!--<a href="#" class="list-group-item">Third item</a>-->
+
+<a href="{{ order.url }}" class="list-group-item" target="_blank">&#9998; {{ order.order }} . {{order.keyword }}</a>
+          <!--</th>-->
+        <!--<tr>-->
+          <!--<th>-->
+            <!--<a href="{{ order.url }}" target="_blank">&#9998; {{ order.order }} . {{order.keyword }}</a>-->
+          <!--</th>-->
+
+
+        <!--</tr>-->
+        {% endfor %}
+</div>
+
+  </div>
+  {% endfor %}
+
+  <!--<div class="col-lg-6" style="background-color:pink;">-->
+  <!--Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.-->
+  <!--</div>-->
+</div>
+
+
+
+
+{% endblock %}
+
+
+{% block form_contents %}
+{% endblock %}
+
+{% block hide_button %}
+{% endblock%}

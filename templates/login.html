@@ -1,0 +1,112 @@
+{% extends "layout.html" %}
+
+
+{% block title %}Index{% endblock %}
+
+
+
+{% block head %}
+  {{ super() }}
+<script src="https://connect.facebook.net/en_US/sdk.js"></script>
+  <style type="text/css">
+    .important { color: #336699; }
+  </style>
+{% endblock %}
+
+
+{% block jsonfunction %}
+var statusChangeCallback = function (response) {
+    console.log('statusChangeCallback');
+    console.log(response);
+
+    if (response.status === 'connected') {
+		console.log("connected");
+		$('#status').text( 'connected' );
+        $.ajax({
+            url: '/query/login/log_in_facebook',
+            data: {cmd:"get_content"},
+            type: 'POST',
+			dataType: "json",
+            success: function(response) {
+                console.log("responseaaa",response);
+				window.location.href =response.redirect;
+
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+
+
+
+    } else if (response.status === 'not_authorized') {
+      // The person is logged into Facebook, but not your app.
+		$('#status').val( 'Please log ' +'into this app.');
+
+    } else {
+
+		$('#status').val( 'Please log ' +'into Facebook.');
+
+    }
+  }
+   function checkLoginState() {
+       FB.getLoginStatus(statusChangeCallback);
+     }
+
+     window.fbAsyncInit = function() {
+   	    FB.init({
+   	      //appId      : '171344269971521',
+   	      appId      : '171344269971521',
+   	      xfbml      : true,
+   	      version    : 'v2.7'
+   	    });
+   	  };
+
+
+{% endblock%}
+
+
+{% block jsonsrc %}
+$('#status').val( 'TEST');
+{% endblock %}
+
+
+{% block main_lable %}
+{% endblock %}
+
+
+{% block list_contents %}
+{% endblock %}
+
+{% block form_contents %}
+
+<div class="jumbotron">
+	<h1>Bucket List App</h1>
+	<form class="form-signin" class="w3-container" id="div_input" name="div_input">
+		<label for="inputName" class="sr-only">Name</label>
+		<input type="name" name="inputName" id="inputName" class="neo_form form-control" placeholder="Name" required autofocus>
+		<label for="inputEmail" class="sr-only">Email address</label>
+		<input type="email" name="inputEmail" id="inputEmail" class="neo_form form-control" placeholder="Email address" required
+		       autofocus>
+		<label for="inputPassword" class="sr-only">Password</label>
+		<input type="password" name="inputPassword" id="inputPassword" class="neo_form form-control" placeholder="Password"
+		       required>
+
+		<button id="btnSignUp" class="btn btn-lg btn-primary btn-block" type="button">Sign up</button>
+
+
+		<fb:login-button size="xlarge"
+		                 onlogin='checkLoginState();'>
+			Login with Facebook
+		</fb:login-button>
+
+
+	</form>
+	<div id="status"></div>
+</div>
+
+	    <br>
+
+
+{% endblock %}
+

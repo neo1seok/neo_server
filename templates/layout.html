@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  {% block head %}
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 위 3개의 메타 태그는 *반드시* head 태그의 처음에 와야합니다; 어떤 다른 콘텐츠들은 반드시 이 태그들 *다음에* 와야 합니다 -->
+  <title>{{title}}</title>
+
+  <!-- 부트스트랩 -->
+
+  <!-- 합쳐지고 최소화된 최신 CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+  <!-- 부가적인 테마 -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script> -->
+  <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="../static/style.css">
+  <script src="../static/comm.js"></script>
+  {% endblock%}
+
+</head>
+
+
+<body>
+
+
+
+
+  <script type="text/javascript">
+    {% block jsonfunction %}
+
+    function btn_new_input() {
+      $('#div_input').show();
+
+    }
+
+    function delete_content(id) {
+      console.log('delete_content', id);
+
+      temp_query('/query/{{name}}/delete', {
+        cur_uid: id
+      }, function(response) {
+        console.log("confirm ok");
+        location.reload();
+
+      })
+    }
+
+    function edit_content(id) {
+      console.log('edit_content', id);
+
+      temp_query('/query/{{name}}/get_content', {
+        cur_uid: id
+      }, function(response) {
+        console.log("confirm ok");
+
+        <!--$('#div_input').show();-->
+        <!--$('#div_input').show();-->
+        <!--$('#div_list').hide();-->
+      })
+
+
+    }
+    {% endblock %}
+
+
+    $(function() {
+
+      $('#nav_{{ id }}').addClass("active");
+      console.log("cur nav id", $('#nav_{{ id }}'));
+ {% block jsonsrc %}
+      $('#id_alert').hide();
+      $('#id_warning').hide();
+      $('#div_input').hide();
+
+      console.log('ready 1');
+      is_hide = false;
+
+      is_input_enable = false;
+      show_input_enable(false);
+
+
+      $('#toggle_input').click(function() {
+        console.log('toggle_input');
+        $('#div_input').toggle();
+
+      });
+      $('#toggle_list').click(function() {
+        console.log('toggle_list');
+
+        $('#div_list').toggle();
+
+      });
+      $('#toggle_all').click(function() {
+        console.log('toggle_all');
+        console.log(is_hide);
+        if (!is_hide) {
+          $('#div_input').hide();
+          $('#div_list').hide();
+          is_hide = true;
+        } else {
+          $('#div_input').show();
+          $('#div_list').show();
+          is_hide = false;
+
+        }
+
+      });
+      $('#btn_new_input').click(function() {
+        btn_new_input();
+
+      });
+      $('#id_check_box').click(function(event) {
+
+        console.log('#id_check_box', is_input_enable);
+        if (is_input_enable) show_input_enable(false);
+        else show_input_enable(true);
+        is_input_enable = !is_input_enable;
+        //$('.neo_form').removeAttr('disabled');
+      })
+
+{% endblock %}
+    });
+  </script>
+
+
+
+
+  <div class="col-md-6">
+    <div id="navi">
+      <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <ul class="nav navbar-nav">
+            <li><a class="navbar-brand" href="/">neo1seok main</a></li>
+            <li>
+              <p class="navbar-brand">aaaa{{user_description}}</p>
+            </li>
+          </ul>
+
+          <!--<div class="btn-group">-->
+            <!--<button type="button" class="btn btn-primary">Apple</button>-->
+            <!--<button type="button" class="btn btn-primary">Samsung</button>-->
+            <!--<button type="button" class="btn btn-primary">Sony</button>-->
+          <!--</div>-->
+          <ul class="nav navbar-nav">
+
+            {% for item in navigation %}
+            <li id="nav_{{ item.id }}"><a class="navbar-brand" href="{{ item.href }}">{{ item.title }}</a></li>
+            {% endfor %}
+
+
+          </ul>
+
+        </div>
+      </nav>
+    </div>
+    {% block main_lable %}
+    <div class="jumbotron">
+      <div class="container">
+        <br>
+        <h1>{{title}}</h1>
+        <p>{{description}}</p>
+        <p>
+          {% block hide_button %}
+          <!--<a class="btn btn-info btn-lg" id="toggle_input" href="#" >입력&gt;&gt;</a>-->
+          <a class="btn btn-info btn-lg" id="toggle_list" href="#"> 목록 &gt;&gt;</a>
+          <!--<a class="btn btn-info btn-lg" id="toggle_all" href="#">전체토글&gt;&gt;</a>-->
+          {% endblock%}
+
+
+        </p>
+      </div>
+    </div>
+
+    {% endblock%}
+
+    <div class="w3-container" id='div_list'>
+
+      {% block list_contents %}
+      <h2>전체 리스트</h2>
+      <table id="table_today_all" class="table table-striped">
+        <thead>
+          <tr>
+            {% for item in list_col_name %}
+            <th>{{ item }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+
+        {% block tobody %}
+        <tbody>
+          {% for item in list_data %}
+
+          <tr>
+            <th>
+              <a href="{{ item.link }}">&#9998; {{item.title }}</a>
+            </th>
+            <th>{{ item.updt_date }}</th>
+            </th>
+          </tr>
+          {% endfor %}
+
+
+        </tbody>
+        {% endblock %}
+
+      </table>
+      {% endblock %}
+    </div>
+
+
+
+    <!-- <button class="w3-btn w3-green w3-ripple"  ng-click="test()" >&#10004; TEST</button> -->
+
+    {% block form_contents %}
+    <div class="w3-container">
+      <!--<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>-->
+      <button class="btn btn-info btn-lg" id="btn_new_input" data-toggle="modal" data-target="#id_modal_input">&#10004;  새 글쓰기</button>
+      <br>
+    </div>
+    <!--<div class="jumbotron" id="div_input_">-->
+
+	{% block form_modal %}
+    <!-- Modal -->
+    <div class="modal fade" id="id_modal_input" role="dialog">
+      <div class="modal-dialog ">
+
+        <!-- Modal content-->
+        <div class="modal-content jumbotron">
+
+
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button> {% block form_header %}
+            <h3>{{title}}</h3> {% endblock %}
+          </div>
+          <div class="modal-body">
+            {% block form %}
+            <form class="w3-container" id="form_input" name="form_input">
+
+              <br>
+
+
+            </form>
+
+            {% endblock %}
+          </div>
+          <div class="modal-footer">
+            <button class="w3-btn w3-green w3-ripple neo_form" id="btn_confirm" data-dismiss="modal" onclick="confirm('/query/{{name}}/update')">&#10004; CONFRIM</button>
+          </div>
+
+          <!--<button class="w3-btn w3-green w3-ripple neo_form" id="btn_confir_m" onclick="confirm('/query/{{name}}/update')" >&#10004; CONFRIM</button>-->
+          <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
+          <div class="alert alert-success" id="id_alert">
+            <strong>Warning!</strong> {{msg}}
+          </div>
+
+          <div class="alert alert-danger" id="id_warning">
+            <strong>Warning!</strong> {{warning}}
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+	{% endblock %}
+
+
+
+
+
+
+
+
+
+    <br>
+
+
+    <!--<button class="w3-btn w3-green w3-ripple" >&#10004; 삭제</button>-->
+    <br>
+
+
+    <!--</div>-->
+    {% endblock %}
+  </div>
+
+</body>
+
+</html>

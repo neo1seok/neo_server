@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 위 3개의 메타 태그는 *반드시* head 태그의 처음에 와야합니다; 어떤 다른 콘텐츠들은 반드시 이 태그들 *다음에* 와야 합니다 -->
+  <title>샘플폼</title>
+
+  <!-- 부트스트랩 -->
+
+  <!-- 합쳐지고 최소화된 최신 CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+  <!-- 부가적인 테마 -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script> -->
+  <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+
+
+
+</head>
+
+
+<body >
+
+
+
+
+  <script type="text/javascript">
+
+
+    $(function() {
+      console.log('ready 1');
+
+
+    });
+  </script>
+
+  <div id="navi">
+      <nav class="navbar navbar-inverse">
+       <div class="container-fluid">
+         <div class="navbar-header">
+           <a class="navbar-brand" href="/">neo1seok main</a>
+         </div>
+         <ul class="nav navbar-nav">
+
+{% for item in navigation %}
+              <li id="{{ item.id }}"><a class="navbar-brand" href="{{ item.href }}">{{ item.name }}</a></li>
+{% endfor %}
+
+
+         </ul>
+
+       </div>
+     </nav>
+      </div>
+
+
+  <div class="col-md-6" >
+    <div id='navi'></div>
+    <div class="jumbotron">
+      <div class="container">
+        <br>
+        <h1>샘플폼2</h1>
+        <p>이 페이지는 샘플폼페이지 이다..</p>
+        <p><a class="btn btn-info btn-lg" id="toggle_input" href="#" >입력&gt;&gt;</a>
+          <a class="btn btn-info btn-lg" id="toggle_list" href="#" >전체 목록 &gt;&gt;</a>
+          <a class="btn btn-info btn-lg" id="toggle_all" href="#">전체토글&gt;&gt;</a>
+        </p>
+      </div>
+    </div>
+
+
+
+    <div class="col-md-6" id='div_list' >
+      <h2>전체 리스트</h2>
+      <table id="table_today_all" class="table table-striped">
+        <thead>
+          <tr>
+            <th>제목</th>
+            <th>날짜</th>
+            <!-- <th >삭제</th> -->
+          </tr>
+        </thead>
+        <tbody>
+{% for item in list_data %}
+
+<tr >
+  <th>
+    <a href="{{ item.href }}" >&#9998; {{item.caption }}</a>
+  </th>
+  <th>{{ item.date }}</th>
+  </th>
+</tr>
+{% endfor %}
+
+
+
+        </tbody>
+      </table>
+    </div>
+    <div class="w3-container">
+      <button class="btn btn-info btn-lg" >&#10004;  새 글쓰기</button>
+      <br>
+
+    </div>
+
+    <!-- <button class="w3-btn w3-green w3-ripple"  ng-click="test()" >&#10004; TEST</button> -->
+
+    <form class="w3-container" id="div_input" name="div_input">
+      <h3>{{title}}</h3>
+      <!-- <div class="w3-container w3-orange">
+        <h3>{{contents_title}}</h2>
+      </div> -->
+
+      <!-- <h3 ng-show="edit">Insert New CONTENTS:</h3>
+      <h3 ng-hide="edit">Update CONTENTS:</h3> -->
+
+      <label>내용수정:
+        <input type="checkbox">
+      </label><br/>
+
+      <label>제목</label>
+      <input class="w3-input w3-border" type="text" placeholder="제목">
+      <br>
+      <label>이슈</label>
+      <TEXTAREA class="w3-input w3-border" id=inputSolution  NAME='cmd' ROWS=10 COLS=100 placeholder="이슈" class="neo_form" tabindex='2'></TEXTAREA>
+      <!-- <input class="w3-input w3-border" type="text" ng-model="issue" ng-disabled="true" placeholder="이슈"> -->
+
+      <br>
+      <label>솔루션</label>
+      <TEXTAREA class="w3-input w3-border" id=inputSolution  NAME='cmd' ROWS=10 COLS=100 placeholder="솔루션" class="neo_form" tabindex='2'></TEXTAREA>
+
+      <br>
+      <div class="alert alert-success" >
+        <strong>Warning!</strong> {{msg}}
+      </div>
+
+      <div class="alert alert-danger">
+        <strong>Warning!</strong> {{warning}}
+      </div>
+
+      <br>
+      <!-- <button class="w3-btn w3-green w3-ripple" ng-click="modifyChip()" ng-disabled="error || incomplete">&#10004; Save Changes</button> -->
+      <button class="w3-btn w3-green w3-ripple" >&#10004; SAVE</button>
+      <button class="w3-btn w3-green w3-ripple" >&#10004; 삭제</button>
+      <br>
+
+
+
+    </form>
+
+  </div>
+
+
+</body>
+
+</html>

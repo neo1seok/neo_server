@@ -1,0 +1,131 @@
+{% extends "layout.html" %}
+
+
+{% block title %}Index{% endblock %}
+
+
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+  </style>
+{% endblock %}
+
+
+
+{% block jsonfunction %}
+{{super()}}
+function btn_new_input(){
+	show_input_enable(true);
+$('#div_input').show();
+	$('#input_title').val("");
+		$('#input_issue').val("");
+		$('#input_solution').val("");
+		$('#input_cur_uid').val("");
+
+
+
+
+}
+function edit_content(id){
+	console.log('edit_content',id);
+
+    temp_query('/query/{{name}}/get_content',{cur_uid:id},function(response){
+        console.log("confirm ok");
+		$('#input_title').val(response.title);
+		$('#input_issue').val(response.issue);
+		$('#input_solution').val(response.solution);
+		$('#input_cur_uid').val(response.id);
+
+		$('#div_input').show();
+        $('#div_input').show();
+        $('#div_list').hide();
+    })
+
+
+}
+
+{% endblock%}
+
+{% block jsonsrc %}
+{{ super() }}
+
+    <!--$('.cls_list').click(function(event) {-->
+		<!--console.log("cls_list",event.target.id);-->
+		<!--var id = event.target.id;-->
+
+        <!--$.ajax({-->
+            <!--url: '/query/todaycontents/get_content',-->
+            <!--data: {cmd:"get_content",id:id},-->
+            <!--type: 'POST',-->
+			<!--dataType: "json",-->
+            <!--success: function(response) {-->
+                <!--console.log("response",response);-->
+
+				<!--$('#input_title').val(response.title);-->
+				<!--$('#input_issue').val(response.issue);-->
+				<!--$('#input_solution').val(response.solution);-->
+				<!--$('#input_id').val(response.id);-->
+
+				<!--$('#div_input').show();-->
+	            <!--$('#div_input').show();-->
+	            <!--$('#div_list').hide();-->
+            <!--},-->
+            <!--error: function(error) {-->
+                <!--console.log(error);-->
+            <!--}-->
+        <!--});-->
+    <!--});-->
+
+
+{% endblock%}
+
+{% block tobody %}
+        <tbody>
+
+{% for item in list_data %}
+
+<tr >
+  <th>
+    <a href="#div_input" data-toggle="modal" data-target="#id_modal_input"  onclick="edit_content('{{item.tdc_uid}}')" >&#9998; {{item.title }}</a>
+  </th>
+	  <th>
+          <button class="w3-btn w3-ripple" onclick="delete_content('{{ item.tdc_uid }}')">&#9998; 삭제</button>
+        </th>
+  <th>{{ item.updt_date }}</th>
+  </th>
+
+</tr>
+{% endfor %}
+
+
+
+     </tbody>
+{% endblock %}
+
+
+{% block form %}
+    <form  class="w3-container" id="form_input" name="form_input">
+      <h3>{{contents_title}}</h3>
+
+
+      <label>내용수정:
+        <input type="checkbox" id="id_check_box">
+      </label><br/>
+		 <input  id="input_cur_uid" name="cur_uid" type="text"  hidden>
+        <label>제목</label>
+        <input class="w3-input w3-border neo_form" id=input_title name='title' type="text" placeholder="제목" disabled>
+      <br>
+        <label>이슈</label>
+        <TEXTAREA class="w3-input w3-border neo_form" id=input_issue  name='issue' ROWS=10 COLS=100 placeholder="이슈"  tabindex='2' disabled>
+
+        </TEXTAREA>
+        <br>
+          <label>솔루션</label>
+          <TEXTAREA class="w3-input w3-border neo_form" id=input_solution  name='solution' ROWS=10 COLS=100 placeholder="솔루션" tabindex='2' disabled>
+
+          </TEXTAREA>
+
+    </form>
+{% endblock %}
+
