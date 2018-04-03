@@ -398,12 +398,12 @@ class TodayContentsWebApp(BaseDBWebApp):
 
 		]
 
-		attr_ext = lambda \
-			item: r'data-toggle="modal" data-target="#id_modal_input"  onclick="edit_content(\'{cur_uid}\')" '.format(			cur_uid=item['cur_uid'])
 		list_attr = [dict(key="data-toggle",val="modal"),
 		             dict(key="data-target", val="#id_modal_input"),
 		             ]
-		print("attr_ext",attr_ext(self.list_data[0]))
+		list_attr_ext = [dict(key="onclick", proc=lambda item:"edit_content('{cur_uid}')".format(cur_uid=item['cur_uid']))]
+		text_ext = lambda item: item['title']
+
 
 		self.list_tables = [
 			dict(title="전체리스트",
@@ -417,7 +417,8 @@ class TodayContentsWebApp(BaseDBWebApp):
 			     list_input_row=list_input_row,
 			     list_col_info=[
 				     dict(title="제목", type="btn_ext", onclick="edit_content",href_key="link", title_key="title",
-				          attr_ext = lambda item:"data-toggle='modal' data-target='#id_modal_input ' onclick='edit_content(\'{cur_uid}\')'".format(cur_uid=item['cur_uid']),
+				          list_attr=list_attr,
+				          list_attr_ext=list_attr_ext,
 				          text_ext=lambda
 					          item: item['title'],
 
@@ -549,6 +550,15 @@ class PasswdWebApp(BaseDBWebApp):
 
 		]
 
+		list_attr = [dict(key="data-toggle", val="modal"),
+		             dict(key="data-target", val="#id_modal_input"),
+		             ]
+		list_attr_ext = [
+			dict(key="onclick", proc=lambda item: "edit_content('{cur_uid}')".format(cur_uid=item['cur_uid']))]
+		list_attr_header_ext = [
+			dict(key="onclick", proc=lambda item: "edit_content_header('{phd_uid}')".format(phd_uid=item['phd_uid']))]
+		text_ext = lambda item: item['site']
+		text_header_ext = lambda item: item['title']
 		self.list_tables = [
 			dict(title="사이트리스트",
 			     modal_id="id_modal_input",
@@ -560,9 +570,9 @@ class PasswdWebApp(BaseDBWebApp):
 
 			     list_input_row=list_input_site,
 			     list_col_info=[
-				     dict(title="사이트", type="link_modal", onclick="edit_content",href_key="link", title_key="title"),
-				     dict(title="헤더", type="btn",  title_key="updt_date"),
-				     dict(title="테일", type="title", title_key="tail"),
+				     dict(title="사이트", type="btn_ext",text_ext=text_ext,list_attr=list_attr,list_attr_ext=list_attr_ext),
+				     dict(title="헤더", type="btn_ext",  text_ext=text_header_ext,list_attr=list_attr,list_attr_ext=list_attr_header_ext),
+				     dict(title="테일", type="title", title_key="ptail"),
 			     ],
 			     list_data=self.list_data)
 		]

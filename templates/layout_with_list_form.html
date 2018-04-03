@@ -98,7 +98,11 @@
         <a href="{{ item[col.href_key] }}" target="_blank">&#9998; {{item[col.title_key] }}</a>
 {%elif col.type == "btn_ext"%}
         <!--<a href="{{ item[col.href_key] }}" target="_blank">&#9998; {{item[col.title_key] }}</a>		   -->
-		<button class="w3-btn w3-ripple "  test="2332" {%for attr in col.list_attr %}  {{attr.key}}="{{attr.val}}" {%endfor%} {{col.attr_ext(item)}}  >&#9998; {{col.text_ext(item)}}  </button>
+		<button class="w3-btn w3-ripple "  test="2332"
+		        {%for attr in col.list_attr %}  {{attr.key}}="{{attr.val}}" {%endfor%}
+		         {%for attr in col.list_attr_ext %}  {{attr.key}}={{attr.proc(item)}} {%endfor%}
+
+		         >&#9998; {{col.text_ext(item)}}  </button>
 {%elif col.type == "btn"%}
 	  <button class="w3-btn w3-ripple "  data-toggle="modal" data-target="#{{table.modal_id}}" onclick="{{col.onclick}}('{{item.cur_uid}}')">&#9998; {{col.title}}</button>
 {%elif col.type == "btn_no_modal"%}
