@@ -96,13 +96,16 @@
 	   <td>
 {%if col.type == "link"%}
         <a href="{{ item[col.href_key] }}" target="_blank">&#9998; {{item[col.title_key] }}</a>
+{%elif col.type == "btn_ext"%}
+        <!--<a href="{{ item[col.href_key] }}" target="_blank">&#9998; {{item[col.title_key] }}</a>		   -->
+		<button class="w3-btn w3-ripple "  test="2332" {%for attr in col.list_attr %}  {{attr.key}}="{{attr.val}}" {%endfor%} {{col.attr_ext(item)}}  >&#9998; {{col.text_ext(item)}}  </button>
 {%elif col.type == "btn"%}
-	  <button class="w3-btn w3-ripple "  data-toggle="modal" data-target="#{{table.modal_id}}" onclick="{{col.onclick}}('{{item.uid}}')">&#9998; {{col.title}}</button>
+	  <button class="w3-btn w3-ripple "  data-toggle="modal" data-target="#{{table.modal_id}}" onclick="{{col.onclick}}('{{item.cur_uid}}')">&#9998; {{col.title}}</button>
 {%elif col.type == "btn_no_modal"%}
-	  <button class="w3-btn w3-ripple "  onclick="{{col.onclick}}('{{item.uid}}')">&#9998; {{col.title}}</button>
+	  <button class="w3-btn w3-ripple "  onclick="{{col.onclick}}('{{item.cur_uid}}')">&#9998; {{col.title}}</button>
 
 {%elif col.type == "title"%}
-	   {{ item.title }}
+	   {{item[col.title_key] }}
 {% endif %}
 
 
@@ -184,6 +187,8 @@
 					{%endfor%}
 		           </select>
 				{%elif row.type == "text"%}
+		           <TEXTAREA class="w3-input w3-border neo_form" name="{{row.name}}"  id ="{{row.id}}"  ROWS=10 COLS=100 placeholder="{{row.title}}"  tabindex='2' disabled>
+			            </TEXTAREA>
 		        {%endif%}
 
 	          </td>
