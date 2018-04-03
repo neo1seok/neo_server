@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash
 import pymysql
 from werkzeug.utils import redirect
 
-from private_project.neoserver import class_web_app
+import class_web_app
 #WebAppBase, map_general_map, navigation, tag_login
 map_general_map = class_web_app.get_lists()
 
