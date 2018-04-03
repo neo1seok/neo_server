@@ -5,6 +5,8 @@ import collections
 from neolib import neoutil
 from werkzeug.utils import redirect
 
+import tool_xls_to_json
+
 tag_login = "login"
 tag_user = "user"
 tag_time ="log_in_time"
@@ -104,7 +106,7 @@ class WebAppBase():
 		return self.param_dict
 
 	def render(self):
-		print("self.__dict__",self.__dict__)
+		print("render",self.temp_file)
 		ret_render = render_template(self.temp_file, **self.__dict__)
 		#print("ret_render",ret_render)
 		return ret_render
@@ -141,6 +143,8 @@ class WebAppBase():
 		#print({ key:value for key,value in data.items()})
 		#self.__dict__.update(**{ key:value for key,value in data.items()})
 		self.data.from_dict(self.__dict__)
+		# uid_prefix = neoutil.get_safe_mapvalue(self.__dict__,"uid_prefix","")
+		# self.data = neoutil.Struct(uid_prefix = uid_prefix)
 		self.data.from_dict({ key:value for key,value in data.items()})
 		self.cmd = cmd
 		print("do_query", self.cmd,self.data.get_dict())
@@ -224,7 +228,7 @@ class BaseDBWebApp(WebAppBase):
 		pass
 
 	def get_content(self):
-		print("get_content id", self.id)
+		print("get_content id", self.data.cur_uid)
 		try:
 			extra_condition = self.fmt_cond_get_contents.format(**self.data.get_dict())
 			sql = self.fmt_list.format(extra_condition=extra_condition)
@@ -283,8 +287,53 @@ class WebtoonWebApp(BaseDBWebApp):
 		self.extra_condition = "and dates regexp '%s'" % date_name
 
 		pass
-
 	def post_process(self):
+		sql = """
+				SELECT prt_uid, main_url,name as title 	FROM neo_pwinfo.portal;
+				"""
+		list_portals = self.select(sql)
+
+		for map_line in self.list_data:
+
+			map_line['list_url'] =map_line['list_url'].format(map_line['id'])
+			map_line['detail_url'] = map_line['detail_url'].format(map_line['id'],map_line['lastno'])
+			print("map_url", map_line['list_url'], map_line['detail_url'])
+
+
+
+
+		list_input_row = [
+
+			dict(name="cur_uid", id="input_cur_uid", type='hidden'),
+			dict(title="웹툰이름",name="title",id="input_title",row_type="all",type="input"),
+			dict(title="웹툰아이디", name="id", id="input_id", row_type="left", type="input"),
+			dict(title="요일",name="dates",id="input_dates",row_type="right",type="input"),
+			dict(title="포탈", name="prt_uid", id="input_prt_uid",
+			row_type='all',type="select",
+			list_options=[ dict(value=map_portal['prt_uid'],name=map_portal["title"]) for map_portal in list_portals])
+		                  ]
+
+		self.list_tables =[
+			dict(title="talbe",
+			     modal_id = "id_modal_input",
+			     form_id="form_input", form_title="title",
+			     button_id="",
+			     check_box_id="id_check_box",
+			     edit_function="edit_content",
+			     new_input_function="new_input_function",
+
+			     list_input_row=list_input_row,
+			     list_col_info=[
+				dict(title="제목",type="link",href_key="list_url",title_key="title"),
+				dict(title="제목", type="link",href_key="detail_url",title_key= "today_title"),
+				dict(title="편집", type="btn",onclick="edit_content"),
+				dict(title="삭제", type="btn_no_modal",onclick="delete_content"),
+			],
+			     list_data = self.list_data)
+		]
+		neoutil.simple_view_list(self.list_data)
+		pass
+	def post_process_old(self):
 		for map_line in self.list_data:
 
 			map_line['list_url'] =map_line['list_url'].format(map_line['id'])
@@ -299,6 +348,36 @@ class WebtoonWebApp(BaseDBWebApp):
 		pass
 
 class FavLinkDBWebApp(BaseDBWebApp):
+	def post_process(self):
+
+
+		list_input_row = [
+
+			dict(name="cur_uid", id="input_cur_uid", type='hidden'),
+			dict(title="제목", name="title", id="input_title", row_type="all", type="input"),
+			dict(title="링크", name="link", id="input_link", row_type="all", type="input"),
+
+		]
+
+		self.list_tables = [
+			dict(title="전체리스트",
+			     modal_id="id_modal_input",
+			     form_id="form_input", form_title="title",
+			     button_id="",
+			     check_box_id="id_check_box",
+			     edit_function="edit_content",
+			     new_input_function="new_input_function",
+
+			     list_input_row=list_input_row,
+			     list_col_info=[
+				     dict(title="링크", type="link", href_key="link", title_key="title"),
+				     dict(title="편집", type="btn", onclick="edit_content"),
+				     dict(title="삭제", type="btn_no_modal", onclick="delete_content"),
+			     ],
+			     list_data=self.list_data)
+		]
+		neoutil.simple_view_list(self.list_data)
+		pass
 	# def is_login(self):
 	# 	if self.name == "fav_link_prv":
 	# 		print("is_login")
@@ -307,7 +386,49 @@ class FavLinkDBWebApp(BaseDBWebApp):
 	pass
 
 class TodayContentsWebApp(BaseDBWebApp):
-	pass
+	def post_process(self):
+
+
+		list_input_row = [
+
+			dict(name="cur_uid", id="input_cur_uid", type='hidden'),
+			dict(title="제목", name="title", id="input_title", row_type="all", type="input"),
+			dict(title="이슈", name="issue", id="input_issue", row_type="all", type="text"),
+			dict(title="솔루션", name="solution", id="input_solution", row_type="all", type="text"),
+
+		]
+
+		attr_ext = lambda \
+			item: r'data-toggle="modal" data-target="#id_modal_input"  onclick="edit_content(\'{cur_uid}\')" '.format(			cur_uid=item['cur_uid'])
+		list_attr = [dict(key="data-toggle",val="modal"),
+		             dict(key="data-target", val="#id_modal_input"),
+		             ]
+		print("attr_ext",attr_ext(self.list_data[0]))
+
+		self.list_tables = [
+			dict(title="전체리스트",
+			     modal_id="id_modal_input",
+			     form_id="form_input", form_title="title",
+			     button_id="",
+			     check_box_id="id_check_box",
+			     edit_function="edit_content",
+			     new_input_function="new_input_function",
+
+			     list_input_row=list_input_row,
+			     list_col_info=[
+				     dict(title="제목", type="btn_ext", onclick="edit_content",href_key="link", title_key="title",
+				          attr_ext = lambda item:"data-toggle='modal' data-target='#id_modal_input ' onclick='edit_content(\'{cur_uid}\')'".format(cur_uid=item['cur_uid']),
+				          text_ext=lambda
+					          item: item['title'],
+
+				          ),
+				     dict(title="날짜", type="title",  title_key="updt_date"),
+				     dict(title="삭제", type="btn_no_modal", onclick="delete_content"),
+			     ],
+			     list_data=self.list_data)
+		]
+		neoutil.simple_view_list(self.list_data)
+		pass
 
 
 
@@ -414,7 +535,39 @@ class PasswdWebApp(BaseDBWebApp):
 
 		pass
 	pass
+	def post_process(self):
 
+
+		list_input_site = [
+
+			dict(name="cur_uid", id="input_cur_uid", type='hidden'),
+			dict(title="site", name="site", id="input_site", row_type="left", type="input"),
+			dict(title="header", name="phd_uid", id="input_header", row_type="right", type="select"),
+			dict(title="ptail", name="ptail", id="input_ptail", row_type="left", type="input"),
+			dict(title="id", name="ptail", id="input_id", row_type="right", type="input"),
+			dict(title="etc", name="etc", id="input_etc", row_type="all", type="text"),
+
+		]
+
+		self.list_tables = [
+			dict(title="사이트리스트",
+			     modal_id="id_modal_input",
+			     form_id="form_input", form_title="title",
+			     button_id="",
+			     check_box_id="id_check_box",
+			     edit_function="edit_content",
+			     new_input_function="new_input_function",
+
+			     list_input_row=list_input_site,
+			     list_col_info=[
+				     dict(title="사이트", type="link_modal", onclick="edit_content",href_key="link", title_key="title"),
+				     dict(title="헤더", type="btn",  title_key="updt_date"),
+				     dict(title="테일", type="title", title_key="tail"),
+			     ],
+			     list_data=self.list_data)
+		]
+		neoutil.simple_view_list(self.list_data)
+		pass
 class TestWebApp(BaseDBWebApp):
 	def ready_extra_condition(self):
 		import time
@@ -508,6 +661,7 @@ class LogIn(WebAppBase):
 
 
 def get_lists():
+	tool_xls_to_json.main()
 	list_new_content = json.load(open('rsc/webinfo.json'))
 	val_global = globals()
 	list_map_from_json =[  val_global[tmp['class_name']](**tmp) for tmp in list_new_content]
