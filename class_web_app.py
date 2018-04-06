@@ -5,7 +5,7 @@ import collections
 from neolib import neoutil
 from werkzeug.utils import redirect
 
-import tool_xls_to_json
+
 
 tag_login = "login"
 tag_user = "user"
@@ -671,7 +671,6 @@ class LogIn(WebAppBase):
 
 
 def get_lists():
-	tool_xls_to_json.main()
 	list_new_content = json.load(open('rsc/webinfo.json'))
 	val_global = globals()
 	list_map_from_json =[  val_global[tmp['class_name']](**tmp) for tmp in list_new_content]

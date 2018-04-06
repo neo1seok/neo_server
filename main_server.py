@@ -5,8 +5,6 @@ import pymysql
 from werkzeug.utils import redirect
 
 import class_web_app
-import tool_xls_to_json
-#WebAppBase, map_general_map, navigation, tag_login
 map_general_map = class_web_app.get_lists()
 
 print(map_general_map)
@@ -165,7 +163,7 @@ def sample_form(title=None):
 
 @app.route('/tes2t/')
 @app.route('/test2/<name>')
-def test2(name=None):
+def aabvfd(name=None):
 	app.logger.debug('A value for debugging')
 	app.logger.warning('A warning occurred (%d apples)', 42)
 	app.logger.error('An error occurred')
@@ -180,7 +178,7 @@ def showSignUp():
 	return render_template('signup.html')
 
 @app.route('/test_red')
-def test_red():
+def atest_red():
 	return redirect("/signup")
 
 @app.route('/signUp', methods=['POST'])
@@ -211,5 +209,6 @@ def signUp():
 	# 	return json.dumps({'html': '<span>Enter the required fields</span>'})
 
 if __name__ == '__main__':
-
+	import tool_xls_to_json
+	tool_xls_to_json.main()
 	app.run(host='0.0.0.0' ,port=80,threaded=True)
