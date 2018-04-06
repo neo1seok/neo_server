@@ -8,7 +8,7 @@ from neolib import neoutil,crypto_util_bin
 from neolib.hexstr_util import *
 from werkzeug.utils import redirect
 
-import tool_xls_to_json
+
 
 tag_login = "login"
 tag_user = "user"
@@ -769,8 +769,8 @@ class LogIn(BaseDBWebApp):
 
 
 def get_lists():
-	tool_xls_to_json.main()
-	list_new_content = json.load(open('rsc/webinfo.json'))
+	dir_path = os.path.dirname(os.path.realpath(__file__))
+	list_new_content = json.load(open(dir_path+'/rsc/webinfo.json'))
 	val_global = globals()
 	list_map_from_json =[  val_global[tmp['class_name']](**tmp) for tmp in list_new_content]
 	list_general_map =  [
