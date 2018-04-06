@@ -2,6 +2,8 @@ import pymysql
 import time
 from flask import render_template, json, session, request
 import collections
+
+import os
 from neolib import neoutil
 from werkzeug.utils import redirect
 
@@ -671,7 +673,8 @@ class LogIn(WebAppBase):
 
 
 def get_lists():
-	list_new_content = json.load(open('rsc/webinfo.json'))
+	dir_path = os.path.dirname(os.path.realpath(__file__))
+	list_new_content = json.load(open(dir_path+'/rsc/webinfo.json'))
 	val_global = globals()
 	list_map_from_json =[  val_global[tmp['class_name']](**tmp) for tmp in list_new_content]
 	list_general_map =  [
