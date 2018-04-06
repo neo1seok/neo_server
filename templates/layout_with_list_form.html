@@ -7,74 +7,99 @@
       <!--$('#div_input').show();-->
 
     <!--}-->
+function init() {
+{%for table in list_tables%}
+ is_{{table.form_id}}_enable = show_input_enable('{{table.input_class}}',false);;
+{%endfor%}
+
+};
 
 {%for table in list_tables%}
- function {{table.new_input_function}}() {
-      console.log('{{table.edit_function}}');
-		show_input_enable(true);
-
-		{%for row in table.list_input_row%}
-		$('#{{row.id}}').val("");;
-		{% endfor %}
 
 
-    }
-
-{% endfor %}
+function {{table.new_input_function}}() {
+  console.log('{{table.edit_function}}');
+	 is_{{table.form_id}}_enable = show_input_enable('{{table.input_class}}',true);;
 
 
 
-    function delete_content(id) {
-      console.log('delete_content', id);
+	{%for row in table.list_input_row%}
+	$('#{{row.id}}').val("");;
+	{% endfor %}
+
+
+};
+
+function {{table.enable_function}}() {
+  console.log('{{table.enable_function}}');
+
+    is_{{table.form_id}}_enable = show_input_enable('{{table.input_class}}',! is_{{table.form_id}}_enable);;
+
+
+};
+
+ function {{table.delete_function}}(cur_uid) {
+      console.log('{{table.delete_function}}', cur_uid);
+
+	  if(!confirm('삭제 하시겠습니까?')) return ;
+
+
 
       temp_query('/query/{{name}}/delete', {
-        cur_uid: id
+        cur_uid: cur_uid,
+		option:'{{table.query_option}}'
       }, function(response) {
         console.log("confirm ok");
         location.reload();
 
       })
-    }
-{%for table in list_tables%}
- function {{table.edit_function}}(cur_uid) {
-      console.log('{{table.edit_function}}', cur_uid);
+};
+function {{table.edit_function}}(cur_uid) {
+  console.log('{{table.edit_function}}', cur_uid);
 
-      temp_query('/query/{{name}}/get_content', {
-        cur_uid: cur_uid
-      }, function(response) {
-        console.log("confirm ok");
+  temp_query('/query/{{name}}/get_content', {
+    cur_uid: cur_uid,
+	option:'{{table.query_option}}'
+  }, function(response) {
+    console.log("confirm ok");
 
-		{%for row in table.list_input_row%}
-		$('#{{row.id}}').val(response.{{row.name}});;
-		{% endfor %}
-
-
-      })
+	{%for row in table.list_input_row%}
+	$('#{{row.id}}').val(response.{{row.name}});;
+	{% endfor %}
 
 
-    }
+  })
+
+
+};
 
 {% endfor %}
-    <!--function edit_content(id) {-->
-      <!--console.log('edit_content', id);-->
 
-      <!--temp_query('/query/{{name}}/get_content', {-->
-        <!--cur_uid: id-->
-      <!--}, function(response) {-->
-        <!--console.log("confirm ok");-->
-
-        <!--&lt;!&ndash;$('#div_input').show();&ndash;&gt;-->
-        <!--&lt;!&ndash;$('#div_input').show();&ndash;&gt;-->
-        <!--&lt;!&ndash;$('#div_list').hide();&ndash;&gt;-->
-      <!--})-->
-
-
-    <!--}-->
     {% endblock %}
+
+{% block hide_button %}
+
+
+<div class="w3-container">
+	{{super()}}
+{% for table in list_tables %}
+ <button class="btn btn-primary btn-md" onclick="{{table.new_input_function}}()" data-toggle="modal" data-target="#{{table.modal_id}}">&#10004; {{table.new_input_button}} </button>
+
+{% endfor %}
+
+  <br>
+</div>
+
+
+{% endblock%}
+
+
 
 
 {% block list_contents %}
 {%for table in list_tables%}
+
+<div class="w3-container" id='{{table.id_div_list}}'>
 <h2>{{table.title}}</h2>
 <table  class="table table-striped">
 <thead>
@@ -89,42 +114,31 @@
 <tbody>
 
 {% for item in table.list_data %}
-
-  <tr>
-
+ <tr>
 {% for col in table.list_col_info %}
-	   <td>
-{%if col.type == "link"%}
+ <td>{%if col.type == "link"%}
         <a href="{{ item[col.href_key] }}" target="_blank">&#9998; {{item[col.title_key] }}</a>
 {%elif col.type == "btn_ext"%}
-        <!--<a href="{{ item[col.href_key] }}" target="_blank">&#9998; {{item[col.title_key] }}</a>		   -->
-		<button class="w3-btn w3-ripple "  test="2332"
+ 		<button class="w3-btn w3-ripple "  test="2332"
 		        {%for attr in col.list_attr %}  {{attr.key}}="{{attr.val}}" {%endfor%}
 		         {%for attr in col.list_attr_ext %}  {{attr.key}}={{attr.proc(item)}} {%endfor%}
-
 		         >&#9998; {{col.text_ext(item)}}  </button>
 {%elif col.type == "btn"%}
 	  <button class="w3-btn w3-ripple "  data-toggle="modal" data-target="#{{table.modal_id}}" onclick="{{col.onclick}}('{{item.cur_uid}}')">&#9998; {{col.title}}</button>
 {%elif col.type == "btn_no_modal"%}
 	  <button class="w3-btn w3-ripple "  onclick="{{col.onclick}}('{{item.cur_uid}}')">&#9998; {{col.title}}</button>
-
 {%elif col.type == "title"%}
-	   {{item[col.title_key] }}
-{% endif %}
-
-
-	  </td>
+	  <p>{{item[col.title_key] }}</p>
+{% endif %}</td>
 {% endfor %}
-
-
-
-  </tr>
-  {% endfor %}
+</tr>
+{% endfor %}
 
 </tbody>
 
 
 </table>
+</div>
 {%endfor%}
 {% endblock %}
 
@@ -135,40 +149,28 @@
 
 {% block form_contents %}
 
-{%for form in list_tables%}
+{%for table in list_tables%}
 
-<div class="w3-container">
-   <button class="btn btn-info btn-lg" onclick="{{form.new_input_function}}()" data-toggle="modal" data-target="#id_modal_input">&#10004;  새 글쓰기</button>
-  <br>
-</div>
 
-	<div class="modal fade" id="{{form.modal_id}}" role="dialog">
+	<div class="modal fade" id="{{table.modal_id}}" role="dialog">
   <div class="modal-dialog">
 
     <!-- Modal content-->
     <div class="modal-content">
 	      <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h3>{{form.form_title}}</h3>
+            <h3>{{table.form_title}}</h3>
           </div>
 	     <div class="modal-body">
-      <form  class="w3-container" id="{{form.form_id}}">
+      <form  class="w3-container" id="{{table.form_id}}">
 
          <label>내용수정:</label>
-        <input type="checkbox" id="{{form.check_box_id}}">
+        <input type="checkbox" onclick="{{table.enable_function}}()">
         <br/>
-
-
-
-	      <!--{%for input in form.list_input_row%}-->
-	        <!--{% if input.type=="hidden"  %}-->
-	       <!--<input type="text" id ="input_{{input.id}}"  name="{{input.id}}" hidden>-->
-	       <!--{% endif %}-->
-	      <!--{%endfor%}-->
 
         <table class="table table-striped">
 
-	        {%for row in form.list_input_row%}
+	        {%for row in table.list_input_row%}
 	        {% if row.type=="hidden"  %}
 			<input type="text" id ="{{row.id}}"  class="neo_form" name="{{row.name}}" hidden>
 			{%else%}
@@ -179,19 +181,19 @@
 
 	          <td  {% if row.row_type=="all"  %} colspan= '3' {% endif %}>
 		        {%if row.type == "input"%}
-	            <input class="w3-input w3-border neo_form"
+	            <input class="w3-input w3-border {{table.input_class}}"
 	                   type="text" id ="{{row.id}}"
 						 name="{{row.name}}" placeholder="{{row.title}}">
 
 				{%elif row.type == "select"%}
 
-		         <select class="w3-input w3-border neo_form" name="{{row.name}}"  id ="{{row.id}}" >
+		         <select class="w3-input w3-border {{table.input_class}}" name="{{row.name}}"  id ="{{row.id}}" >
 			        {% for option in row.list_options %}
 		           <option  value="{{option.value}}">"{{option.name}}"</option>
 					{%endfor%}
 		           </select>
 				{%elif row.type == "text"%}
-		           <TEXTAREA class="w3-input w3-border neo_form" name="{{row.name}}"  id ="{{row.id}}"  ROWS=10 COLS=100 placeholder="{{row.title}}"  tabindex='2' disabled>
+		           <TEXTAREA class="w3-input w3-border {{table.input_class}}" name="{{row.name}}"  id ="{{row.id}}"  ROWS=10 COLS=100 placeholder="{{row.title}}"  tabindex='2' disabled>
 			            </TEXTAREA>
 		        {%endif%}
 
@@ -219,7 +221,7 @@
 
 
 	      <div class="modal-footer">
-            <button class="w3-btn w3-green w3-ripple neo_form" id="{{form.button_id}}" data-dismiss="modal" onclick="confirm('/query/{{name}}/update')" >&#10004; CONFRIM</button>
+            <button class="w3-btn w3-green w3-ripple neo_form" id="{{table.button_id}}" data-dismiss="modal" onclick="confirm_form('/query/{{name}}/update')" >&#10004; CONFRIM</button>
           </div>
 
 	</div> <!-- Modal content-->

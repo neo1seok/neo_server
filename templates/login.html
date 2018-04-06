@@ -14,28 +14,36 @@
 {% endblock %}
 
 
+
+
+
 {% block jsonfunction %}
+
+var server_random = '{{hexstr_server_random}}';
+
 var statusChangeCallback = function (response) {
     console.log('statusChangeCallback');
-    console.log(response);
+    console.log(response,response.authResponse.userID);
+
+
+	var userID = response.authResponse.userID;
+	var hitprocess = $('#inputHintPassword').val()
+
+	var hash_hint_passwd = sha256_from_hexstr(server_random+toHex(hitprocess));
+
 
     if (response.status === 'connected') {
 		console.log("connected");
 		$('#status').text( 'connected' );
-        $.ajax({
-            url: '/query/login/log_in_facebook',
-            data: {cmd:"get_content"},
-            type: 'POST',
-			dataType: "json",
-            success: function(response) {
-                console.log("responseaaa",response);
-				window.location.href =response.redirect;
+	      temp_query('/query/login/log_in_facebook', {
+			fb_userid:userID,
+			hash_hint_passwd:hash_hint_passwd
 
-            },
-            error: function(error) {
-                console.log(error);
-            }
-        });
+		  }, function(response) {
+	            console.log("responseaaa",response);
+	            location.href =response.redirect;
+
+	      });
 
 
 
@@ -62,7 +70,11 @@ var statusChangeCallback = function (response) {
    	    });
    	  };
 
-
+function login(){
+var hexstr = sha256_from_hexstr('aa');
+console.log('login',toHex('aaaaaaa'),hexstr);
+show_message('id_warning','fuck korea');
+}
 {% endblock%}
 
 
@@ -81,28 +93,33 @@ $('#status').val( 'TEST');
 {% block form_contents %}
 
 <div class="jumbotron">
-	<h1>Bucket List App</h1>
+	<h1  align="center">로그인 </h1>
+	<p align="center">힌트: {{pre_key}}</p>
 	<form class="form-signin" class="w3-container" id="div_input" name="div_input">
-		<label for="inputName" class="sr-only">Name</label>
-		<input type="name" name="inputName" id="inputName" class="neo_form form-control" placeholder="Name" required autofocus>
-		<label for="inputEmail" class="sr-only">Email address</label>
-		<input type="email" name="inputEmail" id="inputEmail" class="neo_form form-control" placeholder="Email address" required
+
+		<label for="inputID" class="sr-only">ID</label>
+		<input type="email" name="inputID" id="inputID" class="neo_form form-control" placeholder="ID" required
 		       autofocus>
 		<label for="inputPassword" class="sr-only">Password</label>
 		<input type="password" name="inputPassword" id="inputPassword" class="neo_form form-control" placeholder="Password"
 		       required>
+		<label for="inputHintPassword" class="sr-only">hint_passwd</label>
+		<input type="password" name="inputHintPassword" id="inputHintPassword" class="neo_form form-control" placeholder="Hint Password"
+		       required>
 
-		<button id="btnSignUp" class="btn btn-lg btn-primary btn-block" type="button">Sign up</button>
-
-
-		<fb:login-button size="xlarge"
-		                 onlogin='checkLoginState();'>
-			Login with Facebook
-		</fb:login-button>
 
 
 	</form>
+	<div class="w3-container" align="center">
+	<button  class="btn btn-lg btn-primary" align="center" onclick="login()" type="button">Sign up</button>
+
+		<fb:login-button size="xlarge"
+		                 onlogin='checkLoginState();' align="center">
+			Login with Facebook
+		</fb:login-button>
+	</div>
 	<div id="status"></div>
+
 </div>
 
 	    <br>

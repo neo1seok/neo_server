@@ -24,6 +24,8 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
   <link rel="stylesheet" href="../static/style.css">
+
+	<script src="../static/sha256.js"></script>
   <script src="../static/comm.js"></script>
   {% endblock%}
 
@@ -36,6 +38,11 @@
 
 
   <script type="text/javascript">
+
+   function init() {
+
+
+    }
     {% block jsonfunction %}
 
     function btn_new_input() {
@@ -77,16 +84,18 @@
 
       $('#nav_{{ id }}').addClass("active");
       console.log("cur nav id", $('#nav_{{ id }}'));
+      init();
+       reset_message();
  {% block jsonsrc %}
-      $('#id_alert').hide();
-      $('#id_warning').hide();
+
+
       $('#div_input').hide();
 
       console.log('ready 1');
       is_hide = false;
 
-      is_input_enable = false;
-      show_input_enable(false);
+
+
 
 
       $('#toggle_input').click(function() {
@@ -142,7 +151,7 @@
           <ul class="nav navbar-nav">
             <li><a class="navbar-brand" href="/">neo1seok main</a></li>
             <li>
-              <p class="navbar-brand">aaaa{{user_description}}</p>
+              <p class="navbar-brand">{{user_description}}</p>
             </li>
           </ul>
 
@@ -172,7 +181,7 @@
         <p>
           {% block hide_button %}
           <!--<a class="btn btn-info btn-lg" id="toggle_input" href="#" >입력&gt;&gt;</a>-->
-          <a class="btn btn-info btn-lg" id="toggle_list" href="#"> 목록 &gt;&gt;</a>
+          <a class="btn btn-primary btn-md" id="toggle_list" href="#"> 목록 &gt;&gt;</a>
           <!--<a class="btn btn-info btn-lg" id="toggle_all" href="#">전체토글&gt;&gt;</a>-->
           {% endblock%}
 
@@ -183,115 +192,35 @@
 
     {% endblock%}
 
-    <div class="w3-container" id='div_list'>
+
 
       {% block list_contents %}
-      <h2>전체 리스트</h2>
-      <table id="table_today_all" class="table table-striped">
-        <thead>
-          <tr>
-            {% for item in list_col_name %}
-            <th>{{ item }}</th>
-            {% endfor %}
-          </tr>
-        </thead>
-
-        {% block tobody %}
-        <tbody>
-          {% for item in list_data %}
-
-          <tr>
-            <th>
-              <a href="{{ item.link }}">&#9998; {{item.title }}</a>
-            </th>
-            <th>{{ item.updt_date }}</th>
-            </th>
-          </tr>
-          {% endfor %}
-
-
-        </tbody>
-        {% endblock %}
-
-      </table>
       {% endblock %}
-    </div>
 
 
 
-    <!-- <button class="w3-btn w3-green w3-ripple"  ng-click="test()" >&#10004; TEST</button> -->
+
 
     {% block form_contents %}
-    <div class="w3-container">
-      <!--<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>-->
-      <button class="btn btn-info btn-lg" id="btn_new_input" data-toggle="modal" data-target="#id_modal_input">&#10004;  새 글쓰기</button>
-      <br>
-    </div>
-    <!--<div class="jumbotron" id="div_input_">-->
-
-	{% block form_modal %}
-    <!-- Modal -->
-    <div class="modal fade" id="id_modal_input" role="dialog">
-      <div class="modal-dialog ">
-
-        <!-- Modal content-->
-        <div class="modal-content jumbotron">
-
-
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button> {% block form_header %}
-            <h3>{{title}}</h3> {% endblock %}
-          </div>
-          <div class="modal-body">
-            {% block form %}
-            <form class="w3-container" id="form_input" name="form_input">
-
-              <br>
-
-
-            </form>
-
-            {% endblock %}
-          </div>
-          <div class="modal-footer">
-            <button class="w3-btn w3-green w3-ripple neo_form" id="btn_confirm" data-dismiss="modal" onclick="confirm('/query/{{name}}/update')">&#10004; CONFRIM</button>
-          </div>
-
-          <!--<button class="w3-btn w3-green w3-ripple neo_form" id="btn_confir_m" onclick="confirm('/query/{{name}}/update')" >&#10004; CONFRIM</button>-->
-          <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
-          <div class="alert alert-success" id="id_alert">
-            <strong>Warning!</strong> {{msg}}
-          </div>
-
-          <div class="alert alert-danger" id="id_warning">
-            <strong>Warning!</strong> {{warning}}
-          </div>
-
-        </div>
-
-      </div>
-    </div>
-
-	{% endblock %}
-
-
-
-
-
-
-
-
-
-    <br>
-
-
-    <!--<button class="w3-btn w3-green w3-ripple" >&#10004; 삭제</button>-->
-    <br>
-
-
-    <!--</div>-->
     {% endblock %}
+
+
+
+{% block alert_warning %}
+<div class="container">
+<div class="alert alert-success" id="id_alert">
+  <strong>Warning!</strong>
+</div>
+
+<div class="alert alert-danger" id="id_warning">
+  <strong>Warning!</strong>
+</div>
+</div>
+{% endblock %}
+
+
   </div>
+
 
 </body>
 

@@ -1,19 +1,73 @@
 {% extends "layout_with_list_form.html" %}
 
+{% block jsonfunction %}
+{{super()}}
+function init() {
+$('#div_list_header').hide();
+{%for table in list_tables%}
+ is_{{table.form_id}}_enable = show_input_enable('{{table.input_class}}',false);;
+{%endfor%}
+
+};
+
+
+function search_keyword(keyword_id){
+console.log('search',keyword_id);
+keyword = $('#'+keyword_id).val();
+if(keyword == ""){
+return;
+}
+console.log(keyword);
+location.href = '/{{name}}?type=search&keyword='+keyword
+
+}
+function search_all(){
+console.log('search_all');
+
+location.href = '/{{name}}?type=all';
+
+}
+
+function site_toggle(){
+ $('#div_list').toggle();
+}
+
+function header_toggle(){
+ $('#div_list_header').toggle();
+}
+ {% endblock%}
 
  {% block main_lable %}
     <div class="jumbotron">
-      <div class="container">
-        <br>
 
-	        <form class="w3-container" id="search" name="search">
-		         <h4>검색</h4>
-		      <input class="w3-input w3-border" type="text" id="keyword" name="keyword"  placeholder="KEYWORD">
-		      <button class="btn btn-info btn-lg" name ="type"  value="search" >&#10004; 검색</button>
-		      <button class="btn btn-info btn-lg"  name ="type" value ="all" >&#10004; 전체리스트</button>
+
+	      <div class="w3-container">
+		   <form class="w3-container" id="search" name="search">
+
 		    </form>
 
-      </div>
+		      <div class="btn-group_">
+				     <h4>검색</h4>
+			      <input class="w3-input w3-border" type="text" id="keyword" name="keyword"  placeholder="KEYWORD">
+			      <button class="btn btn-primary" name ="type"  value="search" onclick="search_keyword('keyword')">&#10004; 검색</button>
+			      <button class="btn btn-primary"  name ="type" value ="all" onclick="search_all()" >&#10004; 전체리스트</button>
+
+			      <br>
+				<button class="btn btn-primary"  onclick="site_toggle()" >&#10004; 사이트 토글>></button>
+				<button class="btn btn-primary"  onclick="header_toggle()">&#10004; 헤더 토글>></button>
+				<br>
+				{% for table in list_tables %}
+				<button class="btn btn-primary" onclick="{{table.new_input_function}}()" data-toggle="modal" data-target="#{{table.modal_id}}">&#10004; {{table.new_input_button}} </button>
+
+				{% endfor %}
+  <!--<button type="button" class="btn btn-primary">Apple</button>-->
+  <!--<button type="button" class="btn btn-primary">Samsung</button>-->
+  <!--<button type="button" class="btn btn-primary">Sony</button>-->
+			</div>
+
+	      </div>
+
+
     </div>
 
     {% endblock%}
