@@ -24,8 +24,8 @@ jinja_options.update(dict(
 #Name
 
 # MySQL configurations
-app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = '#root1234'
+app.config['MYSQL_DATABASE_USER'] = 'neo1seok'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'tofhdna1pi'
 app.config['MYSQL_DATABASE_DB'] = 'neo_pwinfo'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.secret_key = 'super secret key'
@@ -209,6 +209,6 @@ def signUp():
 	# 	return json.dumps({'html': '<span>Enter the required fields</span>'})
 
 if __name__ == '__main__':
-	import tool_xls_to_json
-	tool_xls_to_json.main()
-	app.run(host='0.0.0.0' ,port=80,threaded=True)
+	#import tool_xls_to_json
+	#tool_xls_to_json.main()
+	app.run(host='0.0.0.0' ,port=5555,threaded=True)
