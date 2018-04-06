@@ -427,7 +427,7 @@ class LogOut(WebAppBase):
 		self.end_session()
 
 		print("LogOut main_process",session)
-		return redirect("/")
+		return redirect("/main")
 class LogIn(BaseDBWebApp):
 	def init(self):
 		WebAppBase.init(self)
@@ -449,7 +449,7 @@ class LogIn(BaseDBWebApp):
 		print("log_in_facebook data", self.data.fb_userid,self.data.hash_hint_passwd)
 		list_user_info = self.select("""SELECT seq, usr_uid, id, fb_userid, name, pwd, rn, rn_srv, etc_info 
 					FROM neo_pwinfo.user where fb_userid='{fb_userid}';""".format(fb_userid=self.data.fb_userid))
-		redirect = neoutil.get_safe_mapvalue(session, tag_redirect, "/")
+		redirect = neoutil.get_safe_mapvalue(session, tag_redirect, "/main")
 		print(tag_redirect, redirect)
 		if len(list_user_info) ==0:
 			raise Exception("user is not in db")
@@ -470,7 +470,7 @@ class LogIn(BaseDBWebApp):
 		#redirect = session[tag_redirect]
 
 
-		session[tag_redirect] = "/"
+		session[tag_redirect] = "/main"
 		return dict(result="ok",redirect=redirect)
 
 	def do_run(self):
