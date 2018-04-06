@@ -3,7 +3,7 @@ import random
 import pymysql
 import time
 from flask import render_template, json, session, request
-import collections
+import collections,os
 from neolib import neoutil,crypto_util_bin
 from neolib.hexstr_util import *
 from werkzeug.utils import redirect
@@ -768,8 +768,8 @@ class LogIn(BaseDBWebApp):
 	# 	return redirect("/")
 
 
-def get_lists():
-	dir_path = os.path.dirname(os.path.realpath(__file__))
+def get_lists(dir_path):
+
 	list_new_content = json.load(open(dir_path+'/rsc/webinfo.json'))
 	val_global = globals()
 	list_map_from_json =[  val_global[tmp['class_name']](**tmp) for tmp in list_new_content]

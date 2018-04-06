@@ -1,11 +1,13 @@
-from flask import Flask, request, render_template, url_for, Markup, json, session
+import os
+from flask import Flask, request, render_template, url_for, Markup, json
 from flaskext.mysql import MySQL
 from werkzeug.security import generate_password_hash
 import pymysql
 from werkzeug.utils import redirect
 
-import class_web_app
-map_general_map = class_web_app.get_lists()
+from main_class import class_web_app
+dir_path = os.path.dirname(os.path.realpath(__file__))
+map_general_map = class_web_app.get_lists(dir_path)
 
 print(map_general_map)
 app = Flask(__name__)
