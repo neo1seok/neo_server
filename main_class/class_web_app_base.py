@@ -186,3 +186,117 @@ class WebAppBase():
 	def delete(self):
 		print("delete id", self.id)
 		pass
+
+
+
+class BaseDBWebApp(WebAppBase):
+	sql = '''SELECT id, name,updt_date FROM neo_pwinfo.user;
+'''
+	fmt_last_seq = "SELECT max(seq) as last_seq FROM neo_pwinfo.{table_name};"
+	fmt_delete = """delete from neo_pwinfo.{table_name} WHERE  {uid_prefix}_uid  = '{cur_uid}'"""
+	fmt_cond_get_contents = "and {uid_prefix}_uid = '{cur_uid}'"
+	list_col_name = ["제목", "날짜"]
+
+	uid_prefix = ""
+
+
+	def init(self):
+
+		self.list_col_name = self.column_names.split("|")
+		self.list_tables = [
+			dict(title="title",
+			     modal_id="id_modal_input",
+			     form_id="form_input",
+			     form_title="title",
+			     id_div_list ="div_list",
+				new_input_button ="새 글쓰기",
+			     button_id="",
+			     enable_function="enable_input",
+				 input_class ="neo_form",
+			     edit_function="edit_content",
+			     delete_function="delete_content",
+			     new_input_function="new_input_function",
+			     query_option="",
+
+			     list_input_row=[],
+			     list_data=[],
+			     list_col_info=[  ])
+		 ]
+		#print("list_col_name",self.list_col_name)
+
+		pass
+
+	def do_run(self):
+		self.ready_extra_condition()
+		self.update_from_db()
+		self.post_process()
+
+	def get_next_uid(self):
+		ret = self.select("SELECT max(seq) as last_seq FROM neo_pwinfo.{table_name};".format(**self.data.get_dict()))
+		last_seq = int(ret[0]['last_seq'])+1
+		return last_seq,"{}_{}".format(self.uid_prefix,last_seq)
+
+	def select(self, sql):
+		self.cur.execute(sql)
+		return self.cur.fetchall()
+
+	def ready_extra_condition(self):
+		self.extra_condition = ""
+		pass
+
+	def update_from_db(self):
+
+		sql = self.fmt_list.format(extra_condition=self.extra_condition)
+		print("extra_condition",self.extra_condition)
+		print("sql", sql)
+		self.cur.execute(sql)
+		self.list_data = self.cur.fetchall()
+		#print(self.list_data)
+
+		pass
+
+	def post_process(self):
+		pass
+
+	def get_content(self):
+		print("get_content id", self.data.cur_uid)
+		try:
+			extra_condition = self.fmt_cond_get_contents.format(**self.data.get_dict())
+			sql = self.fmt_list.format(extra_condition=extra_condition)
+			#sql = sql.format( wtn_uid = self.data.wtn_uid)
+			print(sql)
+			self.cur.execute(sql)
+			list_map =self.cur.fetchall()
+			response = list_map[0]
+			response['result'] = "OK"
+			return response
+		except Exception as ex:
+			return dict(error=str(ex))
+
+	def update(self):
+		sql = ''
+		if not neoutil.get_safe_mapvalue(session, tag_login, False):
+			return dict(result="fail",error="not login ")
+		input_uid = self.data.cur_uid
+		if input_uid == '':
+			last_seq, last_uid = self.get_next_uid()
+			self.data.last_seq = last_seq
+			self.data.last_uid = last_uid
+			fmt = self.fmt_insert
+		else :
+			fmt = self.fmt_udpate
+
+		sql = fmt.format(**self.data.get_dict())
+
+		print(sql)
+		self.cur.execute(sql)
+
+	def delete(self):
+		print("delete cur_uid", self.data.cur_uid)
+		if not neoutil.get_safe_mapvalue(session, tag_login, False):
+			return dict(result="fail",error="not login ")
+
+		sql = self.fmt_delete.format(**self.data.get_dict())
+		print(sql)
+		self.cur.execute(sql)
+		pass
