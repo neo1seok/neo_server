@@ -379,7 +379,7 @@ class PasswdWebApp(BaseDBWebApp):
 			FROM pheader where phd_uid = '{cur_uid}';""".format(cur_uid=self.data.cur_uid ))
 
 			response = list_header[0]
-			response['result'] = "OK"
+			response['result'] = "ok"
 			return response
 			pass
 		else:

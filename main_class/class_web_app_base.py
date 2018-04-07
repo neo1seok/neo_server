@@ -158,7 +158,7 @@ class WebAppBase():
 		self.cmd = cmd
 		print("do_query", self.cmd,self.post_data.get_dict())
 		ret = "NOT ASSIGN"
-		self.map_ret = dict(result="OK")
+		self.map_ret = dict(result="ok")
 		try:
 			print("self.cmd",self.cmd)
 			print(self.__dict__)
@@ -270,7 +270,7 @@ class BaseDBWebApp(WebAppBase):
 			self.cur.execute(sql)
 			list_map =self.cur.fetchall()
 			response = list_map[0]
-			response['result'] = "OK"
+			response['result'] = "ok"
 			return response
 		except Exception as ex:
 			return dict(error=str(ex))
