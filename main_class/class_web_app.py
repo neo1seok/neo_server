@@ -19,7 +19,9 @@ class SampleWebApp(BaseDBWebApp):
 
 
 class WebtoonWebApp(BaseDBWebApp):
-
+	def init(self):
+		BaseDBWebApp.init(self)
+		self.title_org = self.title
 	def init_run(self):
 		self.update_custom()
 		pass
@@ -38,6 +40,8 @@ class WebtoonWebApp(BaseDBWebApp):
 		# week = ['월', '화', '수', '목', '금', '토', '일']
 		# date_name = week[now.tm_wday]
 		# print('오늘 요일: %s요일' % date_name)
+		self.title = "{} ({}요일)".format(self.title_org,self.get_today_date())
+
 		self.extra_condition = "and dates regexp '%s'" % self.get_today_date()
 
 		pass
