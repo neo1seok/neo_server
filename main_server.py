@@ -9,7 +9,7 @@ from main_class import class_web_app
 dir_path = os.path.dirname(os.path.realpath(__file__))
 map_general_map = class_web_app.get_lists(dir_path)
 
-print(map_general_map)
+#print(map_general_map)
 app = Flask(__name__)
 mysql = MySQL()
 
@@ -32,6 +32,8 @@ app.config['MYSQL_DATABASE_DB'] = 'neo_pwinfo'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.secret_key = 'super secret key'
 app.config['SESSION_TYPE'] = 'filesystem'
+
+
 mysql.init_app(app)
 
 
@@ -82,4 +84,5 @@ def query_app(app_name=None,cmd=None):
 if __name__ == '__main__':
 	#import tool_xls_to_json
 	#tool_xls_to_json.main()
+
 	app.run(host='0.0.0.0' ,port=5555,threaded=True)

@@ -101,6 +101,7 @@ class WebAppBase():
 		session[tag_time] = time.time()
 		user = neoutil.get_safe_mapvalue(session, tag_user,"")
 		self.user_description = "{}님 반갑습니다.".format(user) if user !="" else ""
+		self.init_run()
 		self.do_run()
 
 
@@ -146,14 +147,12 @@ class WebAppBase():
 	def do_query(self,cmd,data):
 
 
-		print("do_query", dict(data))
+		print(self.__class__.__name__,"do_query", dict(data))
 		for key,value in data.items():
 			print(key,value)
-		#print({ key:value for key,value in data.items()})
-		#self.__dict__.update(**{ key:value for key,value in data.items()})
+
 		self.data.from_dict(self.__dict__)
-		# uid_prefix = neoutil.get_safe_mapvalue(self.__dict__,"uid_prefix","")
-		# self.data = neoutil.Struct(uid_prefix = uid_prefix)
+
 		self.post_data = neoutil.Struct(**data)
 		self.data.from_dict({ key:value for key,value in data.items()})
 		self.cmd = cmd
@@ -187,6 +186,9 @@ class WebAppBase():
 		print("delete id", self.id)
 		pass
 
+
+	def init_run(self):
+		pass
 
 
 class BaseDBWebApp(WebAppBase):

@@ -1,4 +1,5 @@
 import random
+import urllib
 
 import pymysql
 import time
@@ -8,6 +9,8 @@ from neolib import neoutil,crypto_util_bin
 from neolib.hexstr_util import *
 
 from main_class.class_web_app_base import *
+from parsing_class.show_naverweb import GetLateestWebtoon
+from parsing_class.show_portal_order import CheckNaverDaumOrder
 
 
 class SampleWebApp(BaseDBWebApp):
@@ -17,14 +20,25 @@ class SampleWebApp(BaseDBWebApp):
 
 class WebtoonWebApp(BaseDBWebApp):
 
-	def ready_extra_condition(self):
+	def init_run(self):
+		self.update_custom()
+		pass
+	def get_today_date(self):
 		import time
 		now = time.localtime()
 
 		week = ['월', '화', '수', '목', '금', '토', '일']
 		date_name = week[now.tm_wday]
-		print('오늘 요일: %s요일' % date_name)
-		self.extra_condition = "and dates regexp '%s'" % date_name
+		return date_name
+
+	def ready_extra_condition(self):
+		# import time
+		# now = time.localtime()
+		#
+		# week = ['월', '화', '수', '목', '금', '토', '일']
+		# date_name = week[now.tm_wday]
+		# print('오늘 요일: %s요일' % date_name)
+		self.extra_condition = "and dates regexp '%s'" % self.get_today_date()
 
 		pass
 	def post_process(self):
@@ -37,7 +51,7 @@ class WebtoonWebApp(BaseDBWebApp):
 
 			map_line['list_url'] =map_line['list_url'].format(map_line['id'])
 			map_line['detail_url'] = map_line['detail_url'].format(map_line['id'],map_line['lastno'])
-			print("map_url", map_line['list_url'], map_line['detail_url'])
+			#print("map_url", map_line['list_url'], map_line['detail_url'])
 
 
 
@@ -67,20 +81,32 @@ class WebtoonWebApp(BaseDBWebApp):
 		self.list_tables[0].update(this_table)
 		neoutil.simple_view_list(self.list_data)
 		pass
-	def post_process_old(self):
-		for map_line in self.list_data:
-
-			map_line['list_url'] =map_line['list_url'].format(map_line['id'])
-			map_line['detail_url'] = map_line['detail_url'].format(map_line['id'],map_line['lastno'])
-			print("map_url", map_line['list_url'], map_line['detail_url'])
-
-		sql = """
-		SELECT prt_uid, main_url,name as title 	FROM neo_pwinfo.portal;
-		"""
-		self. list_portals = self.select(sql)
-		print(self.list_portals)
-		pass
-
+	# def post_process_old(self):
+	# 	for map_line in self.list_data:
+	#
+	# 		map_line['list_url'] =map_line['list_url'].format(map_line['id'])
+	# 		map_line['detail_url'] = map_line['detail_url'].format(map_line['id'],map_line['lastno'])
+	# 		print("map_url", map_line['list_url'], map_line['detail_url'])
+	#
+	# 	sql = """
+	# 	SELECT prt_uid, main_url,name as title 	FROM neo_pwinfo.portal;
+	# 	"""
+	# 	self. list_portals = self.select(sql)
+	# 	print(self.list_portals)
+	# 	pass
+	def update_custom(self):
+		sql = """SELECT id FROM neo_pwinfo.webtoon where dates regexp '{}' ;""".format(self.get_today_date())
+		print(sql)
+		list_ids = self.select(sql)
+		print(sql,list_ids)
+		list_result = GetLateestWebtoon().set_list_ids([tmp['id'] for tmp in list_ids]).run().result()
+		for tmp_dic in list_result:
+			sql_update ="""UPDATE neo_pwinfo.webtoon 
+						SET  today_title = '{today_title}',  lastno = '{lastno}', updt_date = now()
+						WHERE id='{id}';""".format(**tmp_dic)
+			self.cur.execute(sql_update)
+		print(list_result)
+		return dict(result='ok')
 class FavLinkDBWebApp(BaseDBWebApp):
 	def post_process(self):
 
@@ -158,6 +184,10 @@ class TodayContentsWebApp(BaseDBWebApp):
 class KeywordOrderWebApp(BaseDBWebApp):
 	fmt_select_keyword_order ="""SELECT seq, kwo_uid, prt_uid, `order`,keyword,url, etc, updt_date, reg_date, comment 
 					FROM neo_pwinfo.keyword_order where prt_uid = '{}';"""
+
+	def init_run(self):
+		self.update_custom()
+		pass
 	def update_from_db(self):
 		sql = """
 				SELECT prt_uid, main_url,name as title 	FROM neo_pwinfo.portal;
@@ -196,7 +226,7 @@ class KeywordOrderWebApp(BaseDBWebApp):
 
 		pass
 
-	def db_update(self, prt_uid, list_order):
+	def db_update(self, obj, list_order):
 		fmt_update = """
 		UPDATE neo_pwinfo.keyword_order
 		SET
@@ -208,33 +238,25 @@ class KeywordOrderWebApp(BaseDBWebApp):
 		  AND prt_uid = '{3}' -- varchar
 		"""
 		# 0: keyword 1:url 2: order 3:prt_uid
-		for order, keyword, url in list_order:
-			sql = fmt_update.format(keyword, url, order, prt_uid)
-			print(sql)
+		for order, keyword in list_order:
+			url = obj.search_form.format(urllib.parse.quote(keyword))
+			sql = fmt_update.format(keyword, url, order, obj.prt_uid)
+		#	print(sql)
 			self.cur.execute(sql)
 			print(order, keyword, url)
 
-	def update(self):
-		print("update data",self.data)
-		self.list_result = json.loads(self.data.json_list_result)
+	def update_custom(self):
+		print("update_custom data",self.data)
+		self.list_result = CheckNaverDaumOrder().run().result()
+		list_portals = self.select("SELECT seq, prt_uid, name, search_form, main_url FROM neo_pwinfo.portal;")
 
-
-		sql = """
-		SELECT prt_uid, main_url 	FROM neo_pwinfo.portal;
-		"""
-		# self.cur.execute(sql)
-		# fmt_insert="({0},'kwo_{0}','{1}',{2},'{3}','{4}',now(),now())"
-		# # 0: seq 1:prt_uid 2:order 3:keyword 4:url
-		# list_potal =self.cur.fetchall()
-
-		list_potal = 	self.select(sql)
-		map_portal = { tmp['main_url']:neoutil.Struct(**tmp) for tmp in list_potal}
+		map_portal = { tmp['main_url']:neoutil.Struct(**tmp) for tmp in list_portals}
 
 		for main_url,list_order in self.list_result:
 			obj = map_portal[main_url]
 			print(obj.prt_uid)
 			self.db_format(obj.prt_uid,len(list_order))
-			self.db_update(obj.prt_uid,list_order)
+			self.db_update(obj,list_order)
 
 
 	pass
