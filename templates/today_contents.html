@@ -36,14 +36,9 @@ for (i = 0; i < acc.length; i++) {
 
 		 {% for item in table.list_data %}
 		<tr><td>
-		<button class="w3-btn w3-ripple " data-toggle="modal" data-target="#{{table.modal_id}}"  onclick="edit_content('{{item.cur_uid}}')" >&#9998;</button>
+		<button class="w3-btn w3-ripple " data-toggle="modal" data-target="#{{table.modal_id}}"  onclick="edit_content('{{item.cur_uid}}')" >&#9998;{{ item.title }}</button>
 		</td>
-		<td>
-			<a href="{{ item.list_url }}" target="_blank"> {{ item.title }} </a>
-		</td>
-		<td>
-			<a href="{{ item.detail_url }}" target="_blank"> {{ item.today_title }} </a>
-		</td></tr>
+		</tr>
 		{% endfor %}
 
 </table>
