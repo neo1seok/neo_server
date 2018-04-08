@@ -80,6 +80,11 @@ def query_app(app_name=None,cmd=None):
 
 
 
+@app.route('/<app_name>/',methods=['GET'])
+@app.route('/<app_name>',methods=['GET'])
+def no_neo_redirection(app_name=None):
+	print('no_neo_redirection')
+	return redirect("/"+app_name+".neo")
 
 if __name__ == '__main__':
 	#import tool_xls_to_json
