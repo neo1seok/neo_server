@@ -75,6 +75,10 @@ function {{table.edit_function}}(cur_uid) {
 
 {% endfor %}
 
+
+function page_nav(page_no){
+	location.href = '/{{name}}.neo?page='+page_no;
+}
     {% endblock %}
 
 {% block hide_button %}
@@ -101,6 +105,22 @@ function {{table.edit_function}}(cur_uid) {
 
 <div class="w3-container" id='{{table.id_div_list}}'>
 <h2>{{table.title}}</h2>
+
+
+
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item"><a class="page-link" href="#" onclick="page_nav('-1')" >prev</a></li>
+{% for page in table.list_pages %}
+    <li class="page-item"><a class="page-link" href="#" onclick="page_nav('{{page}}')">{{page}}</a></li>
+{%endfor%}
+    <li class="page-item"><a class="page-link" href="#" onclick="page_nav('100000')" >next</a></li>
+  </ul>
+</nav>
+
+
+
 <table  class="table table-striped">
 <thead>
   <tr>
@@ -112,7 +132,6 @@ function {{table.edit_function}}(cur_uid) {
 
 
 <tbody>
-
 {% for item in table.list_data %}
  <tr>
 {% for col in table.list_col_info %}
@@ -133,11 +152,12 @@ function {{table.edit_function}}(cur_uid) {
 {% endfor %}
 </tr>
 {% endfor %}
-
 </tbody>
 
-
 </table>
+
+
+
 </div>
 {%endfor%}
 {% endblock %}

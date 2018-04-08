@@ -44,7 +44,7 @@ class WebAppBase():
 		self.title =self.name
 		self.table_name = self.name
 		self.description =  self.name
-		self.href = "/" + self.name
+		self.href = "/" + self.name+".neo"
 		self.id = self.name
 		self.temp_file = self.name + ".html"
 		self.column_names =""
@@ -82,6 +82,9 @@ class WebAppBase():
 	def main_process(self):
 		print("main_process session", session)
 		print("main_process", self.__class__.__name__, self.name)
+		for value in request.values:
+			print("value",value)
+
 		log_time = neoutil.get_safe_mapvalue(session, tag_time, time.time())
 		if log_time == None:
 			log_time =0
@@ -218,6 +221,7 @@ class BaseDBWebApp(WebAppBase):
 			     edit_function="edit_content",
 			     delete_function="delete_content",
 			     new_input_function="new_input_function",
+
 			     query_option="",
 
 			     list_input_row=[],

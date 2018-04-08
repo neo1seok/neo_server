@@ -271,9 +271,10 @@ class PasswdWebApp(BaseDBWebApp):
 	# 	return neoutil.get_safe_mapvalue(session, tag_login, False)
 	def ready_extra_condition(self):
 		fmt_repl = "and site regexp '{keyword}'"
-		print("PasswdWebApp",request.args)
-		type= neoutil.get_safe_mapvalue(request.args,"type","")
-		keyword = neoutil.get_safe_mapvalue(request.args, "keyword", "")
+
+		type= neoutil.get_safe_mapvalue(request.values,"type","")
+		keyword = neoutil.get_safe_mapvalue(request.values, "keyword", "")
+		print("PasswdWebApp ready_extra_condition",type, keyword)
 		if type == "":
 			self.extra_condition =  fmt_repl.format(keyword="FFFFFFFFFFFFFFFFFFFFFFFFF")
 		elif type == "search":
@@ -386,74 +387,14 @@ class PasswdWebApp(BaseDBWebApp):
 			raise Exception("not allowd option")
 
 		pass
-class TestWebApp(BaseDBWebApp):
-	def ready_extra_condition(self):
-		import time
-		now = time.localtime()
-
-		week = ['월', '화', '수', '목', '금', '토', '일']
-		date_name = week[now.tm_wday]
-		print('오늘 요일: %s요일' % date_name)
-		self.extra_condition = "and dates regexp '%s'" % date_name
-
-		pass
-
-	'''
-	 <option  value="{{option.value}}">"{{option.name}}"</option>
-	
-	'''
-	def post_process(self):
-		sql = """
-				SELECT prt_uid, main_url,name as title 	FROM neo_pwinfo.portal;
-				"""
-		list_portals = self.select(sql)
-
-		for map_line in self.list_data:
-
-			map_line['list_url'] =map_line['list_url'].format(map_line['id'])
-			map_line['detail_url'] = map_line['detail_url'].format(map_line['id'],map_line['lastno'])
-			print("map_url", map_line['list_url'], map_line['detail_url'])
-
-
-
-
-		list_input_row = [
-
-			dict(name="cur_uid", id="input_cur_uid", type='hidden'),
-			dict(title="웹툰이름",name="title",id="input_title",row_type="all",type="input"),
-			dict(title="웹툰아이디", name="id", id="input_id", row_type="left", type="input"),
-			dict(title="요일",name="dates",id="input_dates",row_type="right",type="input"),
-			dict(title="포탈", name="prt_uid", id="input_prt_uid",
-			row_type='all',type="select",
-			list_options=[ dict(value=map_portal['prt_uid'],name=map_portal["title"]) for map_portal in list_portals])
-		                  ]
-
-		self.list_tables =[
-			dict(title="talbe",
-			     modal_id = "id_modal_input",
-			     form_id="form_input", form_title="title",
-			     button_id="",
-			     check_box_id="id_check_box",
-			     edit_function="edit_content",
-			     new_input_function="new_input_function",
-
-			     list_input_row=list_input_row,
-			     list_col_info=[
-				dict(title="제목",type="link",href_key="list_url",title_key="title"),
-				dict(title="제목", type="link",href_key="detail_url",title_key= "today_title"),
-				dict(title="편집", type="btn",onclick="edit_content"),
-				dict(title="삭제", type="btn_no_modal",onclick="delete_content"),
-			],
-			     list_data = self.list_data)
-		]
-		neoutil.simple_view_list(self.list_data)
-		pass
+class TestWebApp(WebtoonWebApp):
+	pass
 class LogOut(WebAppBase):
 	def main_process(self):
 		self.end_session()
 
 		print("LogOut main_process",session)
-		return redirect("/main")
+		return redirect("/main.neo")
 class LogIn(BaseDBWebApp):
 	def init(self):
 		WebAppBase.init(self)
@@ -475,7 +416,7 @@ class LogIn(BaseDBWebApp):
 		print("log_in_facebook data", self.data.fb_userid,self.data.hash_hint_passwd)
 		list_user_info = self.select("""SELECT seq, usr_uid, id, fb_userid, name, pwd, rn, rn_srv, etc_info 
 					FROM neo_pwinfo.user where fb_userid='{fb_userid}';""".format(fb_userid=self.data.fb_userid))
-		redirect = neoutil.get_safe_mapvalue(session, tag_redirect, "/main")
+		redirect = neoutil.get_safe_mapvalue(session, tag_redirect, "/main.neo")
 		print(tag_redirect, redirect)
 		if len(list_user_info) ==0:
 			raise Exception("user is not in db")
@@ -496,7 +437,7 @@ class LogIn(BaseDBWebApp):
 		#redirect = session[tag_redirect]
 
 
-		session[tag_redirect] = "/main"
+		session[tag_redirect] = "/main.neo"
 		return dict(result="ok",redirect=redirect)
 
 	def do_run(self):

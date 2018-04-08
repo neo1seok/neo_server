@@ -18,13 +18,13 @@ if(keyword == ""){
 return;
 }
 console.log(keyword);
-location.href = '/{{name}}?type=search&keyword='+keyword
+location.href = '/{{name}}.neo?type=search&keyword='+keyword
 
 }
 function search_all(){
 console.log('search_all');
-
-location.href = '/{{name}}?type=all';
+//location.href = '/{{name}}.neo?type=search&keyword='+keyword
+location.href = '/{{name}}.neo?type=all';
 
 }
 
@@ -72,3 +72,5 @@ function header_toggle(){
 
     {% endblock%}
 
+{% block pagination%}
+ {% endblock%}

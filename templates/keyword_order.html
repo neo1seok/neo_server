@@ -24,28 +24,17 @@
     <div class="list-group">
         {% for order in portal.list_order %}
 
-  <!--<a href="#" class="list-group-item">First item</a>-->
-  <!--<a href="#" class="list-group-item">Second item</a>-->
-  <!--<a href="#" class="list-group-item">Third item</a>-->
+<p  class="list-group-item" > <button class="w3-btn w3-ripple ">&#9998;</button>
+  <!--<button class="w3-btn w3-ripple " href="{{ order.url }}" target="_blank">{{ order.order }} . {{order.keyword }}</button>-->
+<a href="{{ order.url }}" target="_blank"> {{ order.order }} . {{order.keyword }}</a>
+</p>
 
-<a href="{{ order.url }}" class="list-group-item" target="_blank">&#9998; {{ order.order }} . {{order.keyword }}</a>
-          <!--</th>-->
-        <!--<tr>-->
-          <!--<th>-->
-            <!--<a href="{{ order.url }}" target="_blank">&#9998; {{ order.order }} . {{order.keyword }}</a>-->
-          <!--</th>-->
-
-
-        <!--</tr>-->
         {% endfor %}
 </div>
 
   </div>
   {% endfor %}
 
-  <!--<div class="col-lg-6" style="background-color:pink;">-->
-  <!--Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.-->
-  <!--</div>-->
 </div>
 
 

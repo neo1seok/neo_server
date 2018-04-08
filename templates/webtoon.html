@@ -1,0 +1,70 @@
+{% extends "layout_with_list_form.html" %}
+
+
+{% block jsonsrc %}
+{{super()}}
+
+
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function() {
+        /* Toggle between adding and removing the "active" class,
+        to highlight the button that controls the panel */
+        this.classList.toggle("active");
+
+        /* Toggle between hiding and showing the active panel */
+        var panel = this.nextElementSibling;
+        if (panel.style.display === "block") {
+            panel.style.display = "none";
+        } else {
+            panel.style.display = "block";
+        }
+    });
+}
+{% endblock %}
+{% block hide_button %}
+
+
+<div class="w3-container">
+	{{super()}}
+{% for table in list_tables %}
+ <button class="btn btn-primary btn-md" onclick="{{table.new_input_function}}()" data-toggle="modal" data-target="#{{table.modal_id}}">&#10004; {{table.new_input_button}} </button>
+
+{% endfor %}
+
+  <br>
+</div>
+
+
+{% endblock%}
+
+
+
+
+{% block list_contents %}
+{%for table in list_tables%}
+
+<div class="w3-container" id='{{table.id_div_list}}'>
+<h2>{{table.title}}</h2>
+
+ <div class="list-group">
+	 {% for item in table.list_data %}
+<p  class="list-group-item" >
+	<button class="w3-btn w3-ripple " data-toggle="modal" data-target="#{{table.modal_id}}"  onclick="edit_content('{{item.cur_uid}}')" >&#9998;</button>
+	<a href="{{ item.list_url }}" target="_blank"> 목록 </a>
+ 	<a href="{{ item.detail_url }}" target="_blank"> {{ item.title }}({{ item.today_title }}) </a>
+</p>
+
+        {% endfor %}
+</div>
+
+  </div>
+
+</div>
+{%endfor%}
+{% endblock %}
+
+
+

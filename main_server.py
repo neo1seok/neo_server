@@ -47,7 +47,7 @@ def main():
 	return get_main_inst('main') .main_process()
 
 
-@app.route('/<app_name>/')
+@app.route('/<app_name>.neo',methods=['GET','POST'])
 def show_general_app(app_name=None):
 	print("show_general_app",app_name)
 	#url_for('static', filename='style.css')
