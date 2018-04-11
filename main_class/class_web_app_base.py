@@ -199,6 +199,9 @@ class BaseDBWebApp(WebAppBase):
 '''
 	fmt_last_seq = "SELECT max(seq) as last_seq FROM neo_pwinfo.{table_name};"
 	fmt_delete = """delete from neo_pwinfo.{table_name} WHERE  {uid_prefix}_uid  = '{cur_uid}'"""
+	fmt_hide = """UPDATE neo_pwinfo.{table_name}
+				SET status = 'HIDDEN'  
+                WHERE  {uid_prefix}_uid  = '{cur_uid}'"""
 	fmt_cond_get_contents = "and {uid_prefix}_uid = '{cur_uid}'"
 	list_col_name = ["제목", "날짜"]
 
@@ -247,7 +250,16 @@ class BaseDBWebApp(WebAppBase):
 		return self.cur.fetchall()
 
 	def ready_extra_condition(self):
-		self.extra_condition = ""
+		fmt_repl = "and site regexp '{keyword}'"
+
+		type = neoutil.get_safe_mapvalue(request.values, "type", "")
+
+
+		if type == "":
+			self.extra_condition = "and status != 'HIDDEN' "
+		elif type == "all":
+			self.extra_condition = ""
+
 		pass
 
 	def update_from_db(self):
@@ -278,11 +290,18 @@ class BaseDBWebApp(WebAppBase):
 			return response
 		except Exception as ex:
 			return dict(error=str(ex))
-
-	def update(self):
+	def excute_templete(self,fmt):
 		sql = ''
 		if not neoutil.get_safe_mapvalue(session, tag_login, False):
-			return dict(result="fail",error="not login ")
+			return dict(result="fail", error="not login ")
+		sql = fmt.format(**self.data.get_dict())
+		print("excute_templete",sql)
+		self.cur.execute(sql)
+
+	def update(self):
+		# sql = ''
+		# if not neoutil.get_safe_mapvalue(session, tag_login, False):
+		# 	return dict(result="fail",error="not login ")
 		input_uid = self.data.cur_uid
 		if input_uid == '':
 			last_seq, last_uid = self.get_next_uid()
@@ -291,18 +310,29 @@ class BaseDBWebApp(WebAppBase):
 			fmt = self.fmt_insert
 		else :
 			fmt = self.fmt_udpate
-
-		sql = fmt.format(**self.data.get_dict())
-
-		print(sql)
-		self.cur.execute(sql)
+		self.excute_templete(fmt)
+		# sql = fmt.format(**self.data.get_dict())
+		#
+		# print(sql)
+		# self.cur.execute(sql)
 
 	def delete(self):
 		print("delete cur_uid", self.data.cur_uid)
-		if not neoutil.get_safe_mapvalue(session, tag_login, False):
-			return dict(result="fail",error="not login ")
-
-		sql = self.fmt_delete.format(**self.data.get_dict())
-		print(sql)
-		self.cur.execute(sql)
+		self.excute_templete(self.fmt_delete)
+		# print("delete cur_uid", self.data.cur_uid)
+		# if not neoutil.get_safe_mapvalue(session, tag_login, False):
+		# 	return dict(result="fail",error="not login ")
+		#
+		# sql = self.fmt_delete.format(**self.data.get_dict())
+		# print(sql)
+		# self.cur.execute(sql)
 		pass
+	def hide(self):
+		print("hide cur_uid", self.data.cur_uid)
+		self.excute_templete(self.fmt_hide)
+		# print("hide cur_uid", self.data.cur_uid)
+		# if not neoutil.get_safe_mapvalue(session, tag_login, False):
+		# 	return dict(result="fail", error="not login ")
+		#
+		# fmt_hide
+		# pass

@@ -77,6 +77,10 @@
 
 
     }
+
+
+
+
     {% endblock %}
 
 
@@ -181,7 +185,8 @@
         <p>
           {% block hide_button %}
           <!--<a class="btn btn-info btn-lg" id="toggle_input" href="#" >입력&gt;&gt;</a>-->
-          <button class="btn btn-primary btn-md" id="toggle_list" href="#"> 목록 &gt;&gt;</button>
+          <button class="btn btn-primary btn-md" id="toggle_list" > 목록 &gt;&gt;</button>
+          <button class="btn btn-primary btn-md" onclick="list_all()"> 전체보기 &gt;&gt;</button>
 
           <!--<a class="btn btn-info btn-lg" id="toggle_all" href="#">전체토글&gt;&gt;</a>-->
           {% endblock%}

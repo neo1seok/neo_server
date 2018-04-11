@@ -21,12 +21,6 @@ console.log(keyword);
 location.href = '/{{name}}.neo?type=search&keyword='+keyword
 
 }
-function search_all(){
-console.log('search_all');
-//location.href = '/{{name}}.neo?type=search&keyword='+keyword
-location.href = '/{{name}}.neo?type=all';
-
-}
 
 function site_toggle(){
  $('#div_list').toggle();
@@ -50,7 +44,7 @@ function header_toggle(){
 				     <h4>검색</h4>
 			      <input class="w3-input w3-border" type="text" id="keyword" name="keyword"  placeholder="KEYWORD">
 			      <button class="btn btn-primary" name ="type"  value="search" onclick="search_keyword('keyword')">&#10004; 검색</button>
-			      <button class="btn btn-primary"  name ="type" value ="all" onclick="search_all()" >&#10004; 전체리스트</button>
+			      <button class="btn btn-primary"  name ="type" value ="all" onclick="list_all()" >&#10004; 전체리스트</button>
 
 			      <br>
 				<button class="btn btn-primary"  onclick="site_toggle()" >&#10004; 사이트 토글>></button>
