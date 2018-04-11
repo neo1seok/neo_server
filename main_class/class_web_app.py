@@ -44,6 +44,9 @@ class WebtoonWebApp(BaseDBWebApp):
 		self.title = "{} ({}요일)".format(self.title_org,self.get_today_date())
 
 		self.extra_condition += "and dates regexp '%s'" % self.get_today_date()
+		
+		if type == "all":
+			self.extra_condition = ""
 
 		pass
 	def post_process(self):
