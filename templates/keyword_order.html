@@ -3,6 +3,9 @@
 
 {% block title %}Index{% endblock %}
 
+{%block jsonsrc%}
+window.setTimeout('window.location.reload()',5000);
+{% endblock %}
 
 {% block head %}
   {{ super() }}
