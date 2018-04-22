@@ -17,7 +17,7 @@
 
 
 
-{% block jsonfunction %}
+{% block json_function %}
 
 var server_random = '{{hexstr_server_random}}';
 
@@ -43,7 +43,15 @@ var statusChangeCallback = function (response) {
 	            console.log("responseaaa",response);
 	            location.href =response.redirect;
 
-	      });
+	      }
+			,
+			function(response) {
+				console.log("login error",response);
+				alert(response.error);
+				location.reload();
+
+				}
+		);
 
 
 
@@ -71,6 +79,33 @@ var statusChangeCallback = function (response) {
    	  };
 
 function login(){
+	var id = $('#inputID').val();
+	var pw = $('#inputPassword').val();
+
+	var inputhash = server_random+sha256_from_hexstr(toHex(pw))
+	console.log('login',id,pw,inputhash);
+	var hash_passwd = sha256_from_hexstr(inputhash);
+
+
+
+		$('#status').text( 'connected' );
+	      temp_query('/query/login/log_in', {
+			id:id,
+			hash_passwd:hash_passwd
+
+		  }, function(response) {
+	            console.log("responseaaa",response);
+	            location.href =response.redirect;
+
+	      },
+		function(response) {
+			console.log("login error",response);
+			alert(response.error);
+			location.reload();
+
+			}
+		);
+
 var hexstr = sha256_from_hexstr('aa');
 console.log('login',toHex('aaaaaaa'),hexstr);
 show_message('id_warning','fuck korea');
@@ -78,7 +113,7 @@ show_message('id_warning','fuck korea');
 {% endblock%}
 
 
-{% block jsonsrc %}
+{% block json_on_load %}
 $('#status').val( 'TEST');
 {% endblock %}
 

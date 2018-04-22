@@ -19,9 +19,12 @@ function temp_query(url,data,ok_process,err_process=function(error) {console.log
         success: function(response) {
             if(response.result == "ok"){
                 ok_process(response);
+                return;
 
             }
+
             console.log(response);
+            err_process(response);
 
         },
         error: err_process

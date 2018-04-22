@@ -43,7 +43,7 @@
 
 
     }
-    {% block jsonfunction %}
+    {% block json_function %}
 
     function btn_new_input() {
       $('#div_input').show();
@@ -90,7 +90,7 @@
       console.log("cur nav id", $('#nav_{{ id }}'));
       init();
        reset_message();
- {% block jsonsrc %}
+ {% block json_on_load %}
 
 
       $('#div_input').hide();

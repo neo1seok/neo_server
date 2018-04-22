@@ -117,6 +117,15 @@ class WebtoonWebApp(BaseDBWebApp):
 		print(list_result)
 		return dict(result='ok')
 class FavLinkDBWebApp(BaseDBWebApp):
+	def ready_extra_condition(self):
+		type= neoutil.get_safe_mapvalue(request.values,"type","main")
+
+		print("FavLinkDBWebApp ready_extra_condition",type)
+
+		self.extra_condition = "and type = '{type}'".format(type=type.upper())
+		print("extra_condition",self.extra_condition)
+
+		pass
 	def post_process(self):
 
 
@@ -417,6 +426,56 @@ class LogIn(BaseDBWebApp):
 
 	def update_from_db(self):
 		pass
+	def comm_confirm(self,user_info,calc_hash,hash_passwd):
+
+		print('calc_hash', tohexstr(calc_hash))
+		print('hash_passwd', hash_passwd)
+		if calc_hash != tobytes(hash_passwd):
+			raise Exception("password is not match")
+		redirect = neoutil.get_safe_mapvalue(session, tag_redirect, "/main.neo")
+		session[tag_login] = True
+		session[tag_user] = user_info.name
+		session[tag_time] = time.time()
+		# redirect = session[tag_redirect]
+
+		#session[tag_redirect] = "/main.neo"
+		return dict(result="ok", redirect=redirect)
+
+	def log_in(self):
+		print("log_in data", self.data.id,self.data.hash_passwd)
+		list_user_info = self.select("""SELECT seq, usr_uid, id, fb_userid, name, pwd, rn, rn_srv, etc_info 
+					FROM neo_pwinfo.user where id='{id}';""".format(id=self.data.id))
+
+
+
+
+		print(tag_redirect, redirect)
+		if len(list_user_info) ==0:
+			raise Exception("user is not in db")
+		user_info = neoutil.Struct(**list_user_info[0])
+		print("hash", tohexstr(crypto_util_bin.sha256('tofhdna1pwd'.encode())))
+		print("hash pwd", user_info.pwd)
+
+		pwd = user_info.pwd
+		print("input_hash",tohexstr(self.server_random+ tobytes(pwd)))
+		calc_hash = crypto_util_bin.sha256(self.server_random+ tobytes(pwd))
+		return self.comm_confirm(user_info,calc_hash,self.data.hash_passwd)
+		# print('calc_hash',tohexstr(calc_hash))
+		# print('hash_passwd', self.data.hash_passwd)
+		# if calc_hash != tobytes(self.data.hash_hint_passwd):
+		# 	raise Exception("password hit is not match")
+		#
+		#
+		#
+		#
+		# session[tag_login] = True
+		# session[tag_user] = user_info.name
+		# session[tag_time] = time.time()
+		# #redirect = session[tag_redirect]
+		#
+		#
+		# #session[tag_redirect] = "/main.neo"
+		# return dict(result="ok",redirect=redirect)
 	def log_in_facebook(self):
 		print("log_in_facebook data", self.data.fb_userid,self.data.hash_hint_passwd)
 		list_user_info = self.select("""SELECT seq, usr_uid, id, fb_userid, name, pwd, rn, rn_srv, etc_info 
@@ -426,26 +485,30 @@ class LogIn(BaseDBWebApp):
 		if len(list_user_info) ==0:
 			raise Exception("user is not in db")
 		value = self.map_hint[self.pre_key]
-
-		calc_hash = crypto_util_bin.sha256(self.server_random+ self.map_hint[self.pre_key].encode())
-		print('calc_hash',tohexstr(calc_hash))
-		print('hash_hint_passwd', self.data.hash_hint_passwd)
-		if calc_hash != tobytes(self.data.hash_hint_passwd):
-			raise Exception("password hit is not match")
-
-
 		user_info = neoutil.Struct(**list_user_info[0])
 
-		session[tag_login] = True
-		session[tag_user] = user_info.name
-		session[tag_time] = time.time()
-		#redirect = session[tag_redirect]
+		calc_hash = crypto_util_bin.sha256(self.server_random+ value.encode())
+		print('calc_hash',tohexstr(calc_hash))
+		print('hash_hint_passwd', self.data.hash_hint_passwd)
+		return self.comm_confirm(user_info, calc_hash, self.data.hash_hint_passwd)
 
-
-		session[tag_redirect] = "/main.neo"
-		return dict(result="ok",redirect=redirect)
+		# if calc_hash != tobytes(self.data.hash_hint_passwd):
+		# 	raise Exception("password hit is not match")
+		#
+		#
+		# user_info = neoutil.Struct(**list_user_info[0])
+		#
+		# session[tag_login] = True
+		# session[tag_user] = user_info.name
+		# session[tag_time] = time.time()
+		# #redirect = session[tag_redirect]
+		#
+		#
+		# session[tag_redirect] = "/main.neo"
+		# return dict(result="ok",redirect=redirect)
 
 	def do_run(self):
+		print("do_run")
 		idx_a = random.randint(0,len(self.map_hint)-1)
 		self.pre_key = list(self.map_hint.keys())[idx_a]
 		self.server_random = crypto_util_bin.getrandom(32)

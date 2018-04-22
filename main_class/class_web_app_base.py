@@ -99,8 +99,11 @@ class WebAppBase():
 
 		# neoutil.get_safe_mapvalue(session, tag_login, False)
 
-		if not self.is_login() and self.type =="private":
+		type = neoutil.get_safe_mapvalue(request.values, "type", "")
+		print("type",type)
+		if not self.is_login() and (self.type =="private" or type =="private") :
 			return self.direct_login()
+
 		session[tag_time] = time.time()
 		user = neoutil.get_safe_mapvalue(session, tag_user,"")
 		self.user_description = "{}님 반갑습니다.".format(user) if user !="" else ""
