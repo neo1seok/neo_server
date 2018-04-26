@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+
+{% block json_on_load %}
+
+
+
+ $('#example').DataTable( {
+        "ajax": "/page_test"
+    } );
+
+
+{% endblock%}
+
+
+{% block list_contents %}
+
+<table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Extn.</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Extn.</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </tfoot>
+    </table>
+{% endblock %}
+
