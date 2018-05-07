@@ -311,7 +311,7 @@ class PasswdWebApp(BaseDBWebApp):
 			     type="select",
 			     list_options = [ dict(value=map_portal['phd_uid'], name=map_portal["title"]) for map_portal in self.list_header]),
 			dict(title="ptail", name="ptail", id="input_ptail", row_type="left", type="input"),
-			dict(title="id", name="ptail", id="input_id", row_type="right", type="input"),
+			dict(title="id", name="id", id="input_id", row_type="right", type="input"),
 			dict(title="etc", name="etc", id="input_etc", row_type="all", type="text"),
 
 		]

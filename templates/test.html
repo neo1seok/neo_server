@@ -1,12 +1,46 @@
 {% extends "layout.html" %}
 
+{% block head %}
+{{super()}}
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.foundation.min.js"></script>
+
+{% endblock%}
+
 
 {% block json_on_load %}
 
 
 
- $('#example').DataTable( {
-        "ajax": "/page_test"
+var table =  $('#example').DataTable( {
+        "ajax": "/page_test_2",
+
+        "columns": [
+
+            { "data": "site" },
+            { "data": "title", "defaultContent": "<button>Edit</button>"},
+            { "data": "ptail" },
+
+	        {
+
+		      "defaultContent": "<button>Edit</button>"
+		    },
+			{ "data":"cur_uid" ,"visible": false },
+
+		]
+
+    } );
+  $('#example tbody').on( 'click', 'tr', function () {
+        if ( $(this).hasClass('selected') ) {
+            $(this).removeClass('selected');
+        }
+        else {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    } );
+
+    $('#button').click( function () {
+        table.row('.selected').remove().draw( false );
     } );
 
 
@@ -14,26 +48,29 @@
 
 
 {% block list_contents %}
+<button id="button">Delete selected row</button>
 
 <table id="example" class="display" style="width:100%">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Extn.</th>
-                <th>Start date</th>
-                <th>Salary</th>
+
+                <th>site</th>
+                <th>title</th>
+                <th>ptail</th>
+	             <th>삭제</th>
+				<th>cur_uid</th>
+
             </tr>
         </thead>
         <tfoot>
             <tr>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Extn.</th>
-                <th>Start date</th>
-                <th>Salary</th>
+
+                   <th>site</th>
+                <th>title</th>
+                <th>ptail</th>
+	              <th>삭제</th>
+				<th>cur_uid</th>
+
             </tr>
         </tfoot>
     </table>

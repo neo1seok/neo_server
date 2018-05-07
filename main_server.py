@@ -92,8 +92,22 @@ def no_neo_redirection(app_name=None):
 def test():
 	return render_template("test.html",**dict())
 
+@app.route('/page_test_2')
+def page_test_2():
+	print("page_test_2")
+	conn = mysql.connect()
+	cur = conn.cursor(pymysql.cursors.DictCursor)
+	cur.execute("""SELECT pwd_uid as cur_uid,site, B.title,ptail,B.phd_uid,id,A.etc ,A.updt_date
+  FROM passwd A,pheader B where A.phd_uid = B.phd_uid  order by updt_date desc""")
+	data = {}
+	data['data']= cur.fetchall()
+	#data = cur.fetchall()
+	print(data)
+	return jsonify(data)
+
 @app.route('/page_test')
 def page_test():
+	print("page_test")
 	data = {
   "data": [
     [
