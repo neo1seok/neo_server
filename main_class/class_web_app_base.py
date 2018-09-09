@@ -210,7 +210,6 @@ class BaseDBWebApp(WebAppBase):
 
 	uid_prefix = ""
 
-
 	def init(self):
 
 		self.list_col_name = self.column_names.split("|")
@@ -293,6 +292,7 @@ class BaseDBWebApp(WebAppBase):
 			return response
 		except Exception as ex:
 			return dict(error=str(ex))
+
 	def excute_templete(self,fmt):
 		sql = ''
 		if not neoutil.get_safe_mapvalue(session, tag_login, False):
@@ -330,6 +330,7 @@ class BaseDBWebApp(WebAppBase):
 		# print(sql)
 		# self.cur.execute(sql)
 		pass
+
 	def hide(self):
 		print("hide cur_uid", self.data.cur_uid)
 		self.excute_templete(self.fmt_hide)

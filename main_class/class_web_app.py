@@ -17,7 +17,6 @@ class SampleWebApp(BaseDBWebApp):
 	pass
 
 
-
 class WebtoonWebApp(BaseDBWebApp):
 	def init(self):
 		BaseDBWebApp.init(self)
@@ -116,6 +115,8 @@ class WebtoonWebApp(BaseDBWebApp):
 			self.cur.execute(sql_update)
 		print(list_result)
 		return dict(result='ok')
+
+
 class FavLinkDBWebApp(BaseDBWebApp):
 	def ready_extra_condition(self):
 		type= neoutil.get_safe_mapvalue(request.values,"type","main")
@@ -157,6 +158,7 @@ class FavLinkDBWebApp(BaseDBWebApp):
 	# 	return True
 	pass
 
+
 class TodayContentsWebApp(BaseDBWebApp):
 	def post_process(self):
 
@@ -196,7 +198,6 @@ class TodayContentsWebApp(BaseDBWebApp):
 		self.list_tables[0].update(this_table)
 		neoutil.simple_view_list(self.list_data)
 		pass
-
 
 
 class KeywordOrderWebApp(BaseDBWebApp):
@@ -278,6 +279,7 @@ class KeywordOrderWebApp(BaseDBWebApp):
 
 
 	pass
+
 
 class PasswdWebApp(BaseDBWebApp):
 	# def is_login(self):
@@ -401,14 +403,20 @@ class PasswdWebApp(BaseDBWebApp):
 			raise Exception("not allowd option")
 
 		pass
+
+
 class TestWebApp(WebtoonWebApp):
 	pass
+
+
 class LogOut(WebAppBase):
 	def main_process(self):
 		self.end_session()
 
 		print("LogOut main_process",session)
 		return redirect("/main.neo")
+
+
 class LogIn(BaseDBWebApp):
 	def init(self):
 		WebAppBase.init(self)

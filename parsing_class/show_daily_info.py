@@ -82,7 +82,7 @@ class GetShowDailyInfo(neo_class.NeoRunnableClass):
 			file = conv_img.split('/')[-1]
 			#download(img, "out/" + file)
 
-			print(conv_img)
+			#print(conv_img)
 
 
 
@@ -95,5 +95,7 @@ if __name__ == '__main__':
 	print([ tmp['name'] for tmp in map_list['실시간'] if tmp['day_night']=='야간'])
 
 	for key,val in map_list.items():
-		print(key,val)
+		#print(key,val)
+		for tmp in val:
+			print(tmp)
 

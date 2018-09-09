@@ -109,6 +109,9 @@ if __name__ == "__main__":
 	# url = unquote('https://search.naver.com/search.naver?where=nexearch&query={}&ie=utf8&sm=tab_lve'.format("박근헤"))
 	# print(url)
 	result = CheckNaverDaumOrder().run().result()
-	print(result)
+	for portal, list_keyword in result:
+		print(portal)
+		for keyword in list_keyword:
+			print(keyword)
 
 	pass
