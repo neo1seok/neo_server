@@ -119,7 +119,7 @@ class GetShowDailyInfo(neo_class.NeoRunnableClass):
 		sio.write(fmt_real_time.format(**phone))
 		sio.write("<br/>" )
 
-		ret =[fmt_real_time.format(**phone)]
+		ret =[fmt_real_time.format(url=self.url,name="원본"),fmt_real_time.format(**phone)]
 
 		#ret['전화'] = [fmt_real_time.format(**phone)]
 
