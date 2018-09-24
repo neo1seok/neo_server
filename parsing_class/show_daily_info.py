@@ -54,7 +54,7 @@ class GetShowDailyInfo(neo_class.NeoRunnableClass):
 				name = match.group(2)
 				if name == "팅커벨":
 					append_map("팅커벨", dict(day_night=day_night, name=name, url=img))
-					continue
+					#continue
 				append_map("실시간", dict(day_night=day_night, name=name, url=img))
 			# list_real_time = self.map_img_src.get("실시간",[])
 			# list_real_time.append(dict(day_night=day_night,name=name,url=img))
@@ -108,7 +108,7 @@ class GetShowDailyInfo(neo_class.NeoRunnableClass):
 	def get_html(self):
 		map_list = self.get_contents()
 		real_time = map_list['실시간']
-		tinca = map_list['팅커벨']
+		tinca = map_list.get('팅커벨',"")
 		phone = map_list['전화'][0]
 		status = map_list['출근현황']
 		print(phone)
