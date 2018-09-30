@@ -11,12 +11,13 @@ Press Ctrl-C on the command line or send a signal to the process to stop the
 bot.
 """
 import logging
+import threading
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
 
 # Enable logging
-from neo_chat_bot.api_token import neo_bot_token, daily_info_toke
+from neo_telegram_bot.api_token import neo_bot_token, daily_info_token
 from parsing_class.show_daily_info import GetShowDailyInfo
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -72,16 +73,12 @@ def error(bot, update, error):
 	#logger.info("error %s", update.message.text)
 	logger.warning('Update "%s" caused error "%s"', update, error)
 
-
-def main():
-
+def start_chat():
 	"""Start the bot."""
 	# Create the EventHandler and pass it your bot's token.
 
-	#https://api.telegram.org/535111053:AAHIL89_ZsQUjy43-a4JWmsvtGfuxLRKb-o/getMe
-	updater = Updater(daily_info_toke)
-
-
+	# https://api.telegram.org/535111053:AAHIL89_ZsQUjy43-a4JWmsvtGfuxLRKb-o/getMe
+	updater = Updater(daily_info_token)
 
 	# Get the dispatcher to register handlers
 	dp = updater.dispatcher
@@ -98,12 +95,13 @@ def main():
 	# log all errors
 	dp.add_error_handler(error)
 
-
-
 	# Start the Bot
 	updater.start_polling()
 
+	return updater
 
+def main():
+	updater  = start_chat()
 
 	# Run the bot until you press Ctrl-C or the process receives SIGINT,
 	# SIGTERM or SIGABRT. This should be used most of the time, since
