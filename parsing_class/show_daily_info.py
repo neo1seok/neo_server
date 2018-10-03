@@ -1,3 +1,4 @@
+import json
 from io import StringIO
 
 from neolib import neo_class
@@ -22,6 +23,7 @@ class GetShowDailyInfo(neo_class.NeoRunnableClass):
 	patt_realtime = r'04_Lineup/04_2_실시간/([가-힣]+)/([\w가-힣 \-]+)-mini\.gif'
 	patt_remove_str ='http://369am.diskn.com/맛동산/'
 	cmp_str = "06_ETC/전화연결.gif"
+	meejean_nickname = "뮤즈"
 
 	def __init__(self):
 		neo_class.NeoRunnableClass.__init__(self)
@@ -52,8 +54,8 @@ class GetShowDailyInfo(neo_class.NeoRunnableClass):
 			if match:
 				day_night = match.group(1)
 				name = match.group(2)
-				if name == "팅커벨":
-					append_map("팅커벨", dict(day_night=day_night, name=name, url=img))
+				if name == self.meejean_nickname:
+					append_map(self.meejean_nickname, dict(day_night=day_night, name=name, url=img))
 					#continue
 				append_map("실시간", dict(day_night=day_night, name=name, url=img))
 			# list_real_time = self.map_img_src.get("실시간",[])
@@ -107,8 +109,12 @@ class GetShowDailyInfo(neo_class.NeoRunnableClass):
 
 	def get_html(self):
 		map_list = self.get_contents()
+
+		with open("out.json","w",encoding="utf-8") as fo:
+			json.dump(map_list, fo,indent=4, separators=(',', ': '),ensure_ascii=False)
+
 		real_time = map_list['실시간']
-		tinca = map_list.get('팅커벨',"")
+		tinca = map_list.get(self.meejean_nickname,"")
 		phone = map_list['전화'][0]
 		status = map_list['출근현황']
 		print(phone)
@@ -182,7 +188,10 @@ class GetShowDailyInfo(neo_class.NeoRunnableClass):
 
 if __name__ == '__main__':
 
-	result = GetShowDailyInfo().simul().get_html()
+	result = GetShowDailyInfo().run().get_html()
+	neoutil.simple_view_list(result)
+	#print(result)
+	exit()
 	neoutil.StrToFile(result,"out/out.html")
 	exit()
 	map_list = GetShowDailyInfo().run().get_contents()
