@@ -17,12 +17,21 @@ def download(url, file_name):
 		file.write(response.content)
 
 class GetShowDailyInfo(neo_class.NeoRunnableClass):
-	url = 'https://www.koreaspot.com/profile/21130/'
-	img_src_patt = r'<img\s+src="([^"]+)"\s+alt="([^"]+)"\s*/'
-	patt_summary=r'04_Lineup/04_1_전체현황/출근현황-([가-힣]+).png'
-	patt_realtime = r'04_Lineup/04_2_실시간/([가-힣]+)/([\w가-힣 \-]+)-mini\.gif'
-	patt_remove_str ='http://369am.diskn.com/맛동산/'
+	#url = 'https://www.koreaspot.com/profile/21130/'
+
+	# img_src_patt = r'<img\s+src="([^"]+)"\s+alt="([^"]+)"\s*/'
+	# patt_summary=r'04_Lineup/04_1_전체현황/출근현황-([가-힣]+).png'
+	# patt_realtime = r'04_Lineup/04_2_실시간/([가-힣]+)/([\w가-힣 \-]+)-mini\.gif'
+	# patt_remove_str ='http://369am.diskn.com/맛동산/'
+	# cmp_str = "06_ETC/전화연결.gif"
+
+	url = 'http://369am.diskn.com/MDS/2.Lineup.htm'
+	img_src_patt = r'<img\s+src="([^"]+)"\s*/'
+	patt_summary = r'05-Lineup/출근현황-([가-힣]+).jpg'
+	patt_realtime = r'05-Lineup/([가-힣]+)/([\w가-힣 \-]+)-mini\.gif'
+	patt_remove_str = 'http://369am.diskn.com/MDS/'
 	cmp_str = "06_ETC/전화연결.gif"
+
 	meejean_nickname = "뮤즈"
 
 	def __init__(self):
@@ -43,7 +52,7 @@ class GetShowDailyInfo(neo_class.NeoRunnableClass):
 
 		comp = re.compile(self.patt_realtime)
 		comp2 = re.compile(self.patt_summary)
-		for img, alt in re.findall(self.img_src_patt, text):
+		for img in re.findall(self.img_src_patt, text):
 			is_ok = False
 			conv_img = unquote(img).replace(self.patt_remove_str, "")
 			#fi.write(conv_img + "\n")
@@ -93,10 +102,15 @@ class GetShowDailyInfo(neo_class.NeoRunnableClass):
 		self.parsing(text)
 		return self
 	def run(self):
-		ret = requests.get(self.url)
 
+		ret = requests.get(self.url)
+		ret.encoding = 'utf-8'
+		print(ret.content)
+		neoutil.StrToFile(ret.text, "out/contents.out")
+		with open("out/contents.org.html","wb") as fo:
+			fo.write(ret.content)
 		self.parsing(ret.text)
-		neoutil.StrToFile(ret.text,"out/contents.out")
+
 
 		#img_src_patt = r'<img\s+src="([^"]+)"\s+alt="([^"]+)"\s*/'
 
@@ -115,7 +129,8 @@ class GetShowDailyInfo(neo_class.NeoRunnableClass):
 
 		real_time = map_list['실시간']
 		tinca = map_list.get(self.meejean_nickname,"")
-		phone = map_list['전화'][0]
+		#phone = map_list['전화'][0]
+		phone ={"url":"","name":""}
 		status = map_list['출근현황']
 		print(phone)
 		print(real_time)
