@@ -140,7 +140,8 @@ class GetShowDailyInfo(neo_class.NeoRunnableClass):
 		sio.write(fmt_real_time.format(**phone))
 		sio.write("<br/>" )
 
-		ret =[fmt_real_time.format(url=self.url,name="원본"),fmt_real_time.format(**phone)]
+		#ret =[fmt_real_time.format(url=self.url,name="원본"),fmt_real_time.format(**phone)]
+		ret = [fmt_real_time.format(url=self.url, name="원본")]
 
 		#ret['전화'] = [fmt_real_time.format(**phone)]
 
@@ -204,8 +205,8 @@ class GetShowDailyInfo(neo_class.NeoRunnableClass):
 if __name__ == '__main__':
 
 	result = GetShowDailyInfo().run().get_html()
-	neoutil.simple_view_list(result)
-	#print(result)
+	#neoutil.simple_view_list(result)
+	print(result)
 	exit()
 	neoutil.StrToFile(result,"out/out.html")
 	exit()

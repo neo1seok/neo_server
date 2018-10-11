@@ -37,12 +37,13 @@ def mot(bot, update):
 	"""Send a message when the command /start is issued."""
 	logger.info("mot")
 	list_html  = GetShowDailyInfo().run().get_html()
+	logger.info(list_html)
 	for tmp in list_html:
 		logger.info(tmp)
 		update.message.reply_html(tmp)
 
 
-# print([tmp['name'] for tmp in map_list['실시간'] if tmp['day_night'] == '야간'])
+# print([tmp['name'] for tmp in map_list['실시간'] if tmp['day_niddght'] == '야간'])
 	#
 	# for key, val in map_list.items():
 	# 	# print(key,val)
