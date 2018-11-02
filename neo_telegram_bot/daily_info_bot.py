@@ -38,9 +38,17 @@ def mot(bot, update):
 	logger.info("mot")
 	list_html  = GetShowDailyInfo().run().get_html()
 	logger.info(list_html)
-	for tmp in list_html:
-		logger.info(tmp)
-		update.message.reply_html(tmp)
+
+	dict_proc = {
+		"html":lambda content:update.message.reply_html(content),
+		"text": lambda content: update.message.reply_text(content),
+		"img": lambda content: update.message.reply_photo(content),
+	}
+	for content,type in list_html:
+		logger.info(content)
+		if content =="":
+			continue
+		dict_proc[type](content)
 
 
 # print([tmp['name'] for tmp in map_list['실시간'] if tmp['day_niddght'] == '야간'])
