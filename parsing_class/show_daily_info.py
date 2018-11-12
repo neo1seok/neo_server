@@ -25,7 +25,7 @@ class GetShowDailyInfo(neo_class.NeoRunnableClass):
 	# patt_remove_str ='http://369am.diskn.com/맛동산/'
 	# cmp_str = "06_ETC/전화연결.gif"
 
-	url = 'http://369am.diskn.com/MDS/2.Lineup.htm'
+	url = 'http://hgw8574.diskn.com/MDS/2.Lineup.htm'
 	img_src_patt = r'<img\s+src="([^"]+)"\s*/'
 	patt_summary = r'05-Lineup/출근현황-([가-힣]+).jpg'
 	patt_realtime = r'05-Lineup/([가-힣]+)/([\w가-힣 \-]+)-mini\.gif'
