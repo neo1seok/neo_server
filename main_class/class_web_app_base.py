@@ -18,7 +18,7 @@ tag_login = "login"
 tag_user = "user"
 tag_time ="log_in_time"
 tag_redirect = "redirect"
-
+tag_session_no = "session_no"
 
 class WebAppBase():
 	name:str
@@ -54,7 +54,7 @@ class WebAppBase():
 		not_empty_map ={ key:val for key,val in kwargs.items() if val !=""}
 		self.__dict__.update(not_empty_map)
 
-
+		self.global_args = dict()
 
 		self.data = neoutil.Struct(**self.__dict__)
 		#print(self.data.get_dict())
@@ -128,9 +128,11 @@ class WebAppBase():
 		return ret_render
 
 
-	def update_params(self,mysql):
+	def update_params(self,**kwargs):
 		# self.navigation =navigation
 		# print("navigation",self.navigation)
+		self.global_args = kwargs
+		mysql = kwargs.get("mysql")
 		conn = mysql.connect()
 		self.cur = conn.cursor(pymysql.cursors.DictCursor)
 		return self
@@ -248,7 +250,11 @@ class BaseDBWebApp(WebAppBase):
 		return last_seq,"{}_{}".format(self.uid_prefix,last_seq)
 
 	def select(self, sql):
-		self.cur.execute(sql)
+		try:
+			self.cur.execute(sql)
+		except Exception as ext:
+			print(sql)
+			raise ext
 		return self.cur.fetchall()
 
 	def ready_extra_condition(self):

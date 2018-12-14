@@ -110,6 +110,55 @@ var hexstr = sha256_from_hexstr('aa');
 console.log('login',toHex('aaaaaaa'),hexstr);
 show_message('id_warning','fuck korea');
 }
+
+function start_log_in_telegram(){
+	console.log('login_telegram');
+
+
+
+
+		$('#status').text( 'connected' );
+	      temp_query('/query/login/start_log_in_telegram', {
+		  }, function(response) {
+	            console.log("responseaaa",response);
+	            //location.href =response.redirect;
+
+	      },
+		function(response) {
+			console.log("login error",response);
+			alert(response.error);
+			location.reload();
+
+			}
+		);
+
+var hexstr = sha256_from_hexstr('aa');
+console.log('login',toHex('aaaaaaa'),hexstr);
+show_message('id_warning','fuck korea');
+}
+
+function check_log_in_telegram(){
+	console.log('check_log_in_telegram');
+
+		$('#status').text( 'connected' );
+	      temp_query('/query/login/check_log_in_telegram', {
+		  }, function(response) {
+	            console.log("responseaaa",response);
+	            location.href =response.redirect;
+
+	      },
+		function(response) {
+			console.log("login error",response);
+			alert(response.error);
+			location.reload();
+
+			}
+		);
+
+var hexstr = sha256_from_hexstr('aa');
+console.log('login',toHex('aaaaaaa'),hexstr);
+show_message('id_warning','fuck korea');
+}
 {% endblock%}
 
 
@@ -147,6 +196,8 @@ $('#status').val( 'TEST');
 	</form>
 	<div class="w3-container" align="center">
 	<button  class="btn btn-lg btn-primary" align="center" onclick="login()" type="button">Sign up</button>
+	<button  class="btn btn-lg btn-primary" align="center" onclick="start_log_in_telegram()" type="button">Sign with telegram</button>
+		<button  class="btn btn-lg btn-primary" align="center" onclick="check_log_in_telegram()" type="button">Sign with telegram</button>
 
 		<fb:login-button size="xlarge"
 		                 onlogin='checkLoginState();' align="center">

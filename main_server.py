@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, render_template, url_for, Markup, json
+from flask import Flask, request, render_template, url_for, Markup, json, session
 from flaskext.mysql import MySQL
 from flask import jsonify
 from werkzeug.security import generate_password_hash
@@ -37,10 +37,10 @@ app.config['SESSION_TYPE'] = 'filesystem'
 
 mysql.init_app(app)
 
+telebot_inst = None
 
 def get_main_inst(app_name):
-
-	return map_general_map[app_name].update_params( mysql)
+	return map_general_map[app_name].update_params( mysql=mysql,telebot_inst=telebot_inst)
 @app.route('/')
 def main():
 	url_for('static', filename='style.css')
@@ -575,5 +575,6 @@ if __name__ == '__main__':
 	#import tool_xls_to_json
 	#tool_xls_to_json.main()
 	from neo_telegram_bot import neo_chat_bot
-	neo_chat_bot.start_chat()
+	telebot_inst = neo_chat_bot.start()
+
 	app.run(host='0.0.0.0' ,port=5555,threaded=True)
