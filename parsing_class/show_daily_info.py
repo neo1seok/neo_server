@@ -24,8 +24,9 @@ class GetShowDailyInfo(neo_class.NeoRunnableClass):
 	# patt_realtime = r'04_Lineup/04_2_실시간/([가-힣]+)/([\w가-힣 \-]+)-mini\.gif'
 	# patt_remove_str ='http://369am.diskn.com/맛동산/'
 	# cmp_str = "06_ETC/전화연결.gif"
+	url = 'https://www.koreaspot.com/g5/bbs/board.php?bo_table=profile&wr_id=21130&sca=안마'
 
-	url = 'http://369am.diskn.com/MDS/2.Lineup.htm'
+	#url = 'http://369am.diskn.com/MDS/2.Lineup.htm'
 	img_src_patt = r'<img\s+src="([^"]+)"\s*/'
 	patt_summary = r'05-Lineup/출근현황-([가-힣]+).jpg'
 	patt_realtime = r'05-Lineup/([가-힣]+)/([\w가-힣 \-]+)-mini\.gif'
