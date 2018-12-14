@@ -7,17 +7,22 @@ import re
 
 
 def comm_parser(contents:str,patt_title:str,start_tag:str,end_tag:str):
-	st = contents.index(start_tag)
-	ed = contents.index(end_tag, st)
-	narrow_contents = contents[st:ed]
+
+	try:
+		st = contents.index(start_tag)
+		ed = contents.index(end_tag, st)
+		narrow_contents = contents[st:ed]
+	except:
+		narrow_contents = contents
+
 
 #	print(re.findall(patt_title, narrow_contents))
 	return re.findall(patt_title, narrow_contents)
 
 def parse_naver(contents:str):
 	patt_title =r'<span class="ah_r">(\d+)</span>s*\n\s*<span class="ah_k">(.+)</span>'
-	start_tag = '<h3 class="blind">실시간 급상승 검색어</h3>'
-	end_tag = '<h3 class="ah_ltit">실시간 급상승</h3>'
+	start_tag = '<div class="ah_roll_area PM_CL_realtimeKeyword_rolling">'
+	end_tag = '</div>'
 	return comm_parser(contents,patt_title,start_tag,end_tag)
 
 def parse_daum(contents:str):
@@ -46,12 +51,15 @@ class CheckNaverDaumOrder(neo_class.NeoRunnableClass):
 
 	def result(self):
 		return self.list_result
+
+
 	def run(self):
 
 		for title, url, outfile, search, parser in self.list_tuples:
 			# url = "https://www.naver.com"
 			r = requests.get(url)
-			# neoutil.StrToFile(r.text, outfile)
+
+			neoutil.StrToFile(r.text, outfile)
 			parse_name = parser(r.text)
 
 			self.list_result.append(
