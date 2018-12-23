@@ -575,13 +575,20 @@ def page_test():
 
 	return jsonify(data)
 
-if __name__ == '__main__':
-	#import tool_xls_to_json
-	#tool_xls_to_json.main()
+
+def init():
+	global telebot_inst
 	from neo_telegram_bot import neo_chat_bot
 	api_token = neo_bot_token
-	if sys.argv.__len__() >1 and  sys.argv[1] == 'debug':
+	if sys.argv.__len__() > 1 and sys.argv[1] == 'debug':
 		api_token = temptest_bot
 	telebot_inst = neo_chat_bot.start(api_token)
+	#telebot_inst = neo_chat_bot.start(api_token)
 
+
+
+
+if __name__ == '__main__':
+
+	init()
 	app.run(host='0.0.0.0' ,port=5555,threaded=True)
