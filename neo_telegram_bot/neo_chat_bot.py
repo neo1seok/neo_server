@@ -20,9 +20,9 @@ import enum
 import random
 from enum import Enum
 
-from telegram import ReplyKeyboardMarkup
+from telegram import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, RegexHandler,
-						  ConversationHandler)
+                          ConversationHandler, CallbackQueryHandler)
 
 import logging
 
@@ -47,6 +47,8 @@ class AUTH_STATUS(Enum):
 def conv_keyboard (list_keyboard):
 	return ReplyKeyboardMarkup(list_keyboard, one_time_keyboard=True)
 
+def conv_keyboard_inner (list_keyboard):
+	return ReplyKeyboardMarkup(list_keyboard, one_time_keyboard=True)
 class NeoChatBot(BaseNeoChatBot):
 	CHOOSING, TYPING_REPLY, TYPING_CHOICE = range(3)
 
@@ -78,6 +80,10 @@ class NeoChatBot(BaseNeoChatBot):
 	# 	#self.session = session
 	# 	self.auth_info = dict()
 		#self.clear_auth_info()
+	def __init__(self, api_token, logger=None):
+		super().__init__(api_token, logger=None)
+
+
 	def _init(self):
 		#self.conv_rep_keybaord = lambda list_keyboard:ReplyKeyboardMarkup(list_keyboard, one_time_keyboard=True)
 
@@ -156,7 +162,7 @@ class NeoChatBot(BaseNeoChatBot):
 
 			fallbacks=[RegexHandler('^Done$', self._cancel, pass_user_data=True)]
 		)
-
+		self.dp.add_handler(CallbackQueryHandler(self._ok_button))
 		self.dp.add_handler(auth_handler)
 		self.dp.add_handler(conv_handler_keyword)
 
@@ -175,6 +181,14 @@ class NeoChatBot(BaseNeoChatBot):
 			facts.append('{} - {}'.format(key, value))
 
 		return "\n".join(facts).join(['\n', '\n'])
+
+	def _ok_button(self,bot, update):
+		query = update.callback_query
+
+		bot.edit_message_text(text="Selected option: {}".format(query.data),
+		                      chat_id=query.message.chat_id,
+		                      message_id=query.message.message_id)
+
 	def _start(self,bot, update):
 		self.logger.debug("start")
 		update.message.reply_text(
@@ -190,8 +204,15 @@ class NeoChatBot(BaseNeoChatBot):
 
 		session_no = self.auth_info[tag_session_no]
 		self.auth_info["session_status"] = "start"
+		keyboard = [[InlineKeyboardButton("Option 1", callback_data='1'),
+		             InlineKeyboardButton("Option 2", callback_data='2')],
+
+		            [InlineKeyboardButton("Option 3", callback_data='3')]]
+
+		reply_markup = InlineKeyboardMarkup(keyboard)
+
 		update.message.reply_text(
-			f"인증을 시작하겠습니다. {session_no}",reply_markup=conv_keyboard(self.reply_ok_cmd)
+			f"인증을 시작하겠습니다. {session_no}",reply_markup=reply_markup
 			)
 
 		return AUTH_STATUS.GIVE_HINT.value
@@ -320,15 +341,15 @@ class NeoChatBot(BaseNeoChatBot):
 		"""Log Errors caused by Updates."""
 		self.logger.warning('Update "%s" caused error "%s"', update, error)
 
-def start():
-	inst = NeoChatBot(api_token=neo_bot_token)
+def start(api_token):
+	inst = NeoChatBot(api_token=api_token )
 	updater = inst.start()
 	#inst.set_session_no('00000')
 	return inst
 
 def main():
 	session = dict()
-	inst =start()
+	inst =start(temptest_bot)
 	inst.start_auth('00000')
 	inst.updater.idle()
 
