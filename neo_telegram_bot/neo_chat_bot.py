@@ -185,14 +185,14 @@ class NeoChatBot(BaseNeoChatBot):
 	def _ok_button(self,bot, update):
 		query = update.callback_query
 
-		bot.edit_message_text(text="Selected option: {}".format(query.data),
+		bot.edit_message_text(text="ok".format(query.data),
 		                      chat_id=query.message.chat_id,
 		                      message_id=query.message.message_id)
 
 	def _start(self,bot, update):
 		self.logger.debug("start")
 		update.message.reply_text(
-			"네오셕의 개인 앱입니다. "
+			"네오셕의 개인 앱입니 다. "
 			"다음을 선택 하시겠습니까??",
 			reply_markup=conv_keyboard(self.reply_keyboard_cmd))
 
@@ -204,17 +204,18 @@ class NeoChatBot(BaseNeoChatBot):
 
 		session_no = self.auth_info[tag_session_no]
 		self.auth_info["session_status"] = "start"
-		keyboard = [[InlineKeyboardButton("Option 1", callback_data='1'),
-		             InlineKeyboardButton("Option 2", callback_data='2')],
-
-		            [InlineKeyboardButton("Option 3", callback_data='3')]]
+		keyboard = [[InlineKeyboardButton("OK?", callback_data='1'),
+		             InlineKeyboardButton("cancel", callback_data='2')],
+		       ]
 
 		reply_markup = InlineKeyboardMarkup(keyboard)
 
+		# update.message.reply_text(
+		# 	f"인증을 시작하겠습니다. {session_no}",reply_markup=reply_markup
+		# 	)
 		update.message.reply_text(
-			f"인증을 시작하겠습니다. {session_no}",reply_markup=reply_markup
-			)
-
+			f"인증을 시작하겠습니다. {session_no}", reply_markup=conv_keyboard(self.reply_ok_cmd)
+		)
 		return AUTH_STATUS.GIVE_HINT.value
 
 	def _give_hint(self,bot, update, user_data):
