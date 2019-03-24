@@ -582,7 +582,7 @@ def init():
 	api_token = neo_bot_token
 	if sys.argv.__len__() > 1 and sys.argv[1] == 'debug':
 		api_token = temptest_bot
-	telebot_inst = neo_chat_bot.start(api_token)
+	#telebot_inst = neo_chat_bot.start(api_token)
 	#telebot_inst = neo_chat_bot.start(api_token)
 
 

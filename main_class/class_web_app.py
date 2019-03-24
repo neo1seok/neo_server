@@ -409,6 +409,57 @@ class PasswdWebApp(BaseDBWebApp):
 		pass
 
 
+class HealthWebApp(BaseDBWebApp):
+	def post_process(self):
+
+
+		list_input_row = [
+
+			dict(name="cur_uid", id="input_cur_uid", type='hidden'),
+			dict(title="수축혈압", name="sys_bp", id="input_sys_bp", row_type="left", type="input"),
+			dict(title="이완혈압", name="dia_bp", id="input_dia_bp", row_type="right", type="input"),
+			dict(title="펄스", name="pulse", id="input_pulse", row_type="left", type="input"),
+			dict(title="체중", name="weight", id="input_weight", row_type="right", type="input"),
+			dict(title="status", name="status", id="input_status", row_type="right", type="hidden"),
+			dict(title="type", name="type", id="input_type", row_type="right", type="hidden"),
+			dict(title="param", name="param", id="input_param", row_type="right", type="hidden"),
+
+		]
+		#return
+
+		list_attr = [dict(key="data-toggle",val="modal"),
+		             dict(key="data-target", val="#id_modal_input"),
+		             ]
+		list_attr_ext = [dict(key="onclick", proc=lambda item:"edit_content('{cur_uid}')".format(cur_uid=item['cur_uid']))]
+		text_ext = lambda item: item['title']
+
+		this_table = dict(title="전체리스트",
+				form_title="title",
+
+			     list_input_row=list_input_row,
+			     list_col_info=[
+				     dict(title="제목", type="btn_ext", onclick="edit_content",href_key="link", title_key="title",
+				          list_attr=list_attr,
+				          list_attr_ext=list_attr_ext,
+				          text_ext=lambda
+					          item: item['title'],
+
+				          ),
+				     dict(title="날짜", type="title",  title_key="updt_date"),
+				     dict(title="삭제", type="btn_no_modal", onclick="delete_content"),
+			     ],
+			     list_data=self.list_data)
+
+		self.list_tables[0].update(this_table)
+		neoutil.simple_view_list(self.list_data)
+		pass
+	def excute_templete(self,fmt):
+		sql = ''
+		print("excute_templete")
+
+		sql = fmt.format(**self.data.get_dict())
+		print("excute_templete",sql)
+		self.cur.execute(sql)
 class TestWebApp(WebtoonWebApp):
 	pass
 

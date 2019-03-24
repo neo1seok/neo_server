@@ -10,7 +10,10 @@ function show_input_enable(input_class,is_enable){
     return is_enable;
 
 }
-function temp_query(url,data,ok_process,err_process=function(error) {console.log(error);}){
+function temp_query(url,data,ok_process,err_process=function(error) {
+                alert(error);
+                console.log(error);
+            }){
     $.ajax({
         url: url,
         data: data,
@@ -24,7 +27,7 @@ function temp_query(url,data,ok_process,err_process=function(error) {console.log
             }
 
             console.log(response);
-            err_process(response);
+            err_process(response.error);
 
         },
         error: err_process
