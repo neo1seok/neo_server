@@ -201,14 +201,14 @@ function page_nav(page_no){
 			{%else%}
            {% if row.row_type!="right"  %} <tr>  {% endif %}
 
-            <td> {{row.title}} </td>
+            <td style="width:20%"> {{row.title}} </td>
 
 
 	          <td  {% if row.row_type=="all"  %} colspan= '3' {% endif %}>
 		        {%if row.type == "input"%}
 	            <input class="w3-input w3-border {{table.input_class}}"
 	                   type="text" id ="{{row.id}}"
-						 name="{{row.name}}" placeholder="{{row.title}}">
+						 name="{{row.name}}" placeholder="{{row.title}}" >
 
 				{%elif row.type == "select"%}
 
