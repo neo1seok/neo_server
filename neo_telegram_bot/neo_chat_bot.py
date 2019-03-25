@@ -20,9 +20,9 @@ import enum
 import random
 from enum import Enum
 
-from telegram import ReplyKeyboardMarkup
+from telegram import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, RegexHandler,
-						  ConversationHandler)
+                          ConversationHandler, CallbackQueryHandler)
 
 import logging
 
@@ -159,10 +159,14 @@ class NeoChatBot(BaseNeoChatBot):
 
 		self.dp.add_handler(auth_handler)
 		self.dp.add_handler(conv_handler_keyword)
+		self.dp.add_handler(CommandHandler("test", self._test))
+		self.dp.add_handler(CallbackQueryHandler(self._button))
 
 #		self.dp.add_error_handler(self._error)
 
+
 		self.bot.sendMessage(chat_id="61951841", text="시작",reply_markup=conv_keyboard(self.reply_keyboard_cmd))
+		#self.bot.sendMessage(chat_id="61951841", text="시작", reply_markup=reply_markup)
 
 
 
@@ -177,12 +181,57 @@ class NeoChatBot(BaseNeoChatBot):
 		return "\n".join(facts).join(['\n', '\n'])
 	def _start(self,bot, update):
 		self.logger.debug("start")
+
+
+
 		update.message.reply_text(
 			"네오셕의 개인 앱입니다. "
 			"다음을 선택 하시겠습니까??",
+
 			reply_markup=conv_keyboard(self.reply_keyboard_cmd))
 
-		#return BOT_STATUS.CHOOSING.value
+	#return BOT_STATUS.CHOOSING.value
+	def _test(self,bot, update):
+		self.logger.debug("_test")
+		button_list = [
+			InlineKeyboardButton("col1", url="www.google.com"),
+			InlineKeyboardButton("col2", url="www.google.com"),
+			InlineKeyboardButton("row 2", url="www.google.com")
+		]
+
+		def build_menu(buttons,
+		               n_cols,
+		               header_buttons=None,
+		               footer_buttons=None):
+			menu = [buttons[i:i + n_cols] for i in range(0, len(buttons), n_cols)]
+			if header_buttons:
+				menu.insert(0, header_buttons)
+			if footer_buttons:
+				menu.append(footer_buttons)
+			return menu
+
+		reply_markup = InlineKeyboardMarkup(build_menu(button_list, n_cols=2))
+		# update.message.reply_text(
+		# 		# 	"네오셕의 개인 앱입니다. "
+		# 		# 	"다음을 선택 하시겠습니까??",
+		# 		# 	reply_markup =reply_markup
+		# 		#
+		# 		# 	)
+		keyboard = [[InlineKeyboardButton("Option 1", callback_data='1'),
+		             InlineKeyboardButton("Option 2", callback_data='2')],
+
+		            [InlineKeyboardButton("Option 3", callback_data='3')]]
+
+		reply_markup = InlineKeyboardMarkup(keyboard)
+
+		update.message.reply_text('Please choose:', reply_markup=reply_markup)
+
+	def _button(self,bot, update):
+		query = update.callback_query
+
+		bot.edit_message_text(text="Selected option: {}".format(query.data),
+		                      chat_id=query.message.chat_id,
+		                      message_id=query.message.message_id)
 
 	def _auth(self,bot, update, user_data):
 
@@ -320,15 +369,15 @@ class NeoChatBot(BaseNeoChatBot):
 		"""Log Errors caused by Updates."""
 		self.logger.warning('Update "%s" caused error "%s"', update, error)
 
-def start():
-	inst = NeoChatBot(api_token=neo_bot_token)
+def start(api_token=neo_bot_token):
+	inst = NeoChatBot(api_token=api_token)
 	updater = inst.start()
 	#inst.set_session_no('00000')
 	return inst
 
 def main():
 	session = dict()
-	inst =start()
+	inst =start(temptest_bot)
 	inst.start_auth('00000')
 	inst.updater.idle()
 
