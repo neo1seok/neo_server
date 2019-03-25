@@ -24,7 +24,7 @@ function {{table.new_input_function}}() {
 
 
 	{%for row in table.list_input_row%}
-	$('#{{row.id}}').val("");;
+	$('#{{row.id}}').val("{{row.def_value}}");;
 	{% endfor %}
 
 
@@ -197,7 +197,7 @@ function page_nav(page_no){
 
 	        {%for row in table.list_input_row%}
 	        {% if row.type=="hidden"  %}
-			<input type="text" id ="{{row.id}}"  class="neo_form" name="{{row.name}}" hidden>
+			<input type="text" id ="{{row.id}}"  class="neo_form" name="{{row.name}}"  value="{{row.val}}" hidden>
 			{%else%}
            {% if row.row_type!="right"  %} <tr>  {% endif %}
 

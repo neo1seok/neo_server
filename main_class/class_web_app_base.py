@@ -20,6 +20,13 @@ tag_time ="log_in_time"
 tag_redirect = "redirect"
 tag_session_no = "session_no"
 
+
+def row_dict(**kwargs):
+	# if "dev_value" in kwargs:
+	# 	kwargs["dev_value"] = ""
+	return dict(**kwargs)
+
+
 class WebAppBase():
 	name:str
 	class_name:str
@@ -243,15 +250,18 @@ class BaseDBWebApp(WebAppBase):
 		self.ready_extra_condition()
 		self.update_from_db()
 		self.post_process()
-
-	def get_next_uid(self):
+	def get_last_uid(self):
 		ret = self.select("SELECT max(seq) as last_seq FROM neo_pwinfo.{table_name};".format(**self.data.get_dict()))
 		if ret[0]['last_seq'] == None:
-			last_seq =1
+			last_seq =0
 		else:
 			print(ret[0]['last_seq'])
-			last_seq = int(ret[0]['last_seq'])+1
+			last_seq = int(ret[0]['last_seq'])
 		return last_seq,"{}_{}".format(self.uid_prefix,last_seq)
+
+	def get_next_uid(self):
+		last_seq,last_uid = self.get_last_uid()
+		return last_seq+1,"{}_{}".format(self.uid_prefix,last_seq+1)
 
 	def select(self, sql):
 		try:

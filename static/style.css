@@ -74,6 +74,16 @@ a:link, a:visited {
 }
 
 a:hover, a:active {
- color: white;
+    color: white;
     background-color: gray;
+}
+
+p.cell{
+   vertical-align: text-bottom;
+}
+td.cell{
+   vertical-align: baseline;
+}
+tr.cell{
+   vertical-align: baseline;
 }

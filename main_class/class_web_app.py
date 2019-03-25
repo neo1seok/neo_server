@@ -70,11 +70,11 @@ class WebtoonWebApp(BaseDBWebApp):
 
 		list_input_row = [
 
-			dict(name="cur_uid", id="input_cur_uid", type='hidden'),
-			dict(title="웹툰이름",name="title",id="input_title",row_type="all",type="input"),
-			dict(title="웹툰아이디", name="id", id="input_id", row_type="left", type="input"),
-			dict(title="요일",name="dates",id="input_dates",row_type="right",type="input"),
-			dict(title="포탈", name="prt_uid", id="input_prt_uid",
+			row_dict(name="cur_uid", id="input_cur_uid", type='hidden'),
+			row_dict(title="웹툰이름",name="title",id="input_title",row_type="all",type="input"),
+			row_dict(title="웹툰아이디", name="id", id="input_id", row_type="left", type="input"),
+			row_dict(title="요일",name="dates",id="input_dates",row_type="right",type="input"),
+			row_dict(title="포탈", name="prt_uid", id="input_prt_uid",
 			row_type='all',type="select",
 			list_options=[ dict(value=map_portal['prt_uid'],name=map_portal["title"]) for map_portal in list_portals])
 		                  ]
@@ -136,9 +136,9 @@ class FavLinkDBWebApp(BaseDBWebApp):
 
 		list_input_row = [
 
-			dict(name="cur_uid", id="input_cur_uid", type='hidden'),
-			dict(title="제목", name="title", id="input_title", row_type="all", type="input"),
-			dict(title="링크", name="link", id="input_link", row_type="all", type="input"),
+			row_dict(name="cur_uid", id="input_cur_uid", type='hidden'),
+			row_dict(title="제목", name="title", id="input_title", row_type="all", type="input"),
+			row_dict(title="링크", name="link", id="input_link", row_type="all", type="input"),
 
 		]
 
@@ -169,10 +169,10 @@ class TodayContentsWebApp(BaseDBWebApp):
 
 		list_input_row = [
 
-			dict(name="cur_uid", id="input_cur_uid", type='hidden'),
-			dict(title="제목", name="title", id="input_title", row_type="all", type="input"),
-			dict(title="이슈", name="issue", id="input_issue", row_type="all", type="text"),
-			dict(title="솔루션", name="solution", id="input_solution", row_type="all", type="text"),
+			row_dict(name="cur_uid", id="input_cur_uid", type='hidden'),
+			row_dict(title="제목", name="title", id="input_title", row_type="all", type="input"),
+			row_dict(title="이슈", name="issue", id="input_issue", row_type="all", type="text"),
+			row_dict(title="솔루션", name="solution", id="input_solution", row_type="all", type="text"),
 
 		]
 
@@ -311,22 +311,22 @@ class PasswdWebApp(BaseDBWebApp):
 
 		list_input_site = [
 
-			dict(name="cur_uid", id="input_cur_uid", type='hidden'),
-			dict(title="site", name="site", id="input_site", row_type="left", type="input"),
-			dict(title="header", name="phd_uid", id="input_header", row_type="right",
+			row_dict(name="cur_uid", id="input_cur_uid", type='hidden'),
+			row_dict(title="site", name="site", id="input_site", row_type="left", type="input"),
+			row_dict(title="header", name="phd_uid", id="input_header", row_type="right",
 			     type="select",
 			     list_options = [ dict(value=map_portal['phd_uid'], name=map_portal["title"]) for map_portal in self.list_header]),
-			dict(title="ptail", name="ptail", id="input_ptail", row_type="left", type="input"),
-			dict(title="id", name="id", id="input_id", row_type="right", type="input"),
-			dict(title="etc", name="etc", id="input_etc", row_type="all", type="text"),
+			row_dict(title="ptail", name="ptail", id="input_ptail", row_type="left", type="input"),
+			row_dict(title="id", name="id", id="input_id", row_type="right", type="input"),
+			row_dict(title="etc", name="etc", id="input_etc", row_type="all", type="text"),
 
 		]
 		list_input_header = [
 
-			dict(name="phd_uid", id="input_phd_uid", type='hidden'),
-			dict(title="헤더이름", name="title", id="input_title_header", row_type="left", type="input"),
-			dict(title="특수문자", name="special_letter", id="input_special_letter", row_type="right", type="input"),
-			dict(title="힌트", name="hint", id="input_hint", row_type="all", type="input"),
+			row_dict(name="phd_uid", id="input_phd_uid", type='hidden'),
+			row_dict(title="헤더이름", name="title", id="input_title_header", row_type="left", type="input"),
+			row_dict(title="특수문자", name="special_letter", id="input_special_letter", row_type="right", type="input"),
+			row_dict(title="힌트", name="hint", id="input_hint", row_type="all", type="input"),
 
 
 
@@ -412,17 +412,36 @@ class PasswdWebApp(BaseDBWebApp):
 class HealthWebApp(BaseDBWebApp):
 	def post_process(self):
 
+		def_sys_bp = ""
+		def_dia_bp = ""
+		def_pulse = ""
+		def_weight = ""
+
+		last_seq, last_uid = self.get_last_uid()
+
+		list_dict_col = self.select("select * from {table_name} where hlt_uid = '{last_uid}'".format(table_name = self.table_name,last_uid=last_uid))
+		print(list_dict_col)
+		if len(list_dict_col)>0:
+			rows = list_dict_col[0]
+			#rows = self.list_data[len(self.list_data) - 1]
+			def_sys_bp = rows['sys_bp']
+			def_dia_bp = rows['dia_bp']
+			def_pulse = rows['pulse']
+			def_weight = rows['weight']
+
+
+
 
 		list_input_row = [
 
-			dict(name="cur_uid", id="input_cur_uid", type='hidden'),
-			dict(title="수축혈압", name="sys_bp", id="input_sys_bp", row_type="left", type="input"),
-			dict(title="이완혈압", name="dia_bp", id="input_dia_bp", row_type="right", type="input"),
-			dict(title="펄스", name="pulse", id="input_pulse", row_type="left", type="input"),
-			dict(title="체중", name="weight", id="input_weight", row_type="right", type="input"),
-			dict(title="status", name="status", id="input_status", row_type="right", type="hidden"),
-			dict(title="type", name="type", id="input_type", row_type="right", type="hidden"),
-			dict(title="param", name="param", id="input_param", row_type="right", type="hidden"),
+			row_dict(name="cur_uid", id="input_cur_uid", type='hidden'),
+			row_dict(title="수축혈압", name="sys_bp", id="input_sys_bp", row_type="left", type="input",def_value = def_sys_bp),
+			row_dict(title="이완혈압", name="dia_bp", id="input_dia_bp", row_type="right", type="input",def_value = def_dia_bp),
+			row_dict(title="맥박", name="pulse", id="input_pulse", row_type="left", type="input",def_value = def_pulse),
+			row_dict(title="체중", name="weight", id="input_weight", row_type="right", type="input",def_value = def_weight),
+			row_dict(title="status", name="status", id="input_status", row_type="right", type="hidden"),
+			row_dict(title="type", name="type", id="input_type", row_type="right", type="hidden",def_value = "BP"),
+			row_dict(title="param", name="param", id="input_param", row_type="right", type="hidden"),
 
 		]
 		#return
@@ -460,6 +479,29 @@ class HealthWebApp(BaseDBWebApp):
 		sql = fmt.format(**self.data.get_dict())
 		print("excute_templete",sql)
 		self.cur.execute(sql)
+
+	def update_from_db(self):
+		self.list_data =[]
+		if not neoutil.get_safe_mapvalue(session, tag_login, False):
+			return
+
+		type = neoutil.get_safe_mapvalue(request.values, "type", "")
+		sql = self.fmt_list.format(extra_condition="")
+		if type == "":
+			sql += " limit 10"
+			self.extra_condition = "and status != 'HIDDEN' "
+		elif type == "all":
+			self.extra_condition = ""
+
+		print("sql", sql)
+		self.cur.execute(sql)
+		self.list_data = self.cur.fetchall()
+		#print(self.list_data)
+
+	def ready_extra_condition(self):
+
+
+		pass
 class TestWebApp(WebtoonWebApp):
 	pass
 
