@@ -416,7 +416,7 @@ class HealthWebApp(BaseDBWebApp):
 		def_dia_bp = ""
 		def_pulse = ""
 		def_weight = ""
-
+		def_comment = ""
 		last_seq, last_uid = self.get_last_uid()
 
 		list_dict_col = self.select("select * from {table_name} where hlt_uid = '{last_uid}'".format(table_name = self.table_name,last_uid=last_uid))
@@ -428,6 +428,7 @@ class HealthWebApp(BaseDBWebApp):
 			def_dia_bp = rows['dia_bp']
 			def_pulse = rows['pulse']
 			def_weight = rows['weight']
+			def_comment = rows['comment']
 
 
 
@@ -439,6 +440,7 @@ class HealthWebApp(BaseDBWebApp):
 			row_dict(title="이완혈압", name="dia_bp", id="input_dia_bp", row_type="right", type="input",def_value = def_dia_bp),
 			row_dict(title="맥박", name="pulse", id="input_pulse", row_type="left", type="input",def_value = def_pulse),
 			row_dict(title="체중", name="weight", id="input_weight", row_type="right", type="input",def_value = def_weight),
+			row_dict(title="커맨트", name="comment", id="input_comment", row_type="all", type="text"),
 			row_dict(title="status", name="status", id="input_status", row_type="right", type="hidden"),
 			row_dict(title="type", name="type", id="input_type", row_type="right", type="hidden",def_value = "BP"),
 			row_dict(title="param", name="param", id="input_param", row_type="right", type="hidden"),
