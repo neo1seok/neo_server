@@ -246,7 +246,11 @@ class BaseDBWebApp(WebAppBase):
 
 	def get_next_uid(self):
 		ret = self.select("SELECT max(seq) as last_seq FROM neo_pwinfo.{table_name};".format(**self.data.get_dict()))
-		last_seq = int(ret[0]['last_seq'])+1
+		if ret[0]['last_seq'] == None:
+			last_seq =1
+		else:
+			print(ret[0]['last_seq'])
+			last_seq = int(ret[0]['last_seq'])+1
 		return last_seq,"{}_{}".format(self.uid_prefix,last_seq)
 
 	def select(self, sql):
@@ -301,7 +305,9 @@ class BaseDBWebApp(WebAppBase):
 
 	def excute_templete(self,fmt):
 		sql = ''
+		print("excute_templete")
 		if not neoutil.get_safe_mapvalue(session, tag_login, False):
+			raise Exception("not login ")
 			return dict(result="fail", error="not login ")
 		sql = fmt.format(**self.data.get_dict())
 		print("excute_templete",sql)

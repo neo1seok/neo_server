@@ -1,0 +1,53 @@
+{% extends "layout_with_list_form.html" %}
+
+
+{% block json_on_load %}
+{{super()}}
+
+
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function() {
+        /* Toggle between adding and removing the "active" class,
+        to highlight the button that controls the panel */
+        this.classList.toggle("active");
+
+        /* Toggle between hiding and showing the active panel */
+        var panel = this.nextElementSibling;
+        if (panel.style.display === "block") {
+            panel.style.display = "none";
+        } else {
+            panel.style.display = "block";
+        }
+    });
+}
+{% endblock %}
+
+
+
+{% block list_contents %}
+{%for table in list_tables%}
+
+<div class="w3-container" id='{{table.id_div_list}}'>
+<h2>{{table.title}}</h2>
+<table class="table table-striped">
+
+		 {% for item in table.list_data %}
+		<tr><td>
+		<button class="w3-btn w3-ripple " data-toggle="modal" data-target="#{{table.modal_id}}"  onclick="edit_content('{{item.cur_uid}}')" >&#9998;{{ item.title }}</button>
+		</td>
+		</tr>
+		{% endfor %}
+
+</table>
+
+  </div>
+
+</div>
+{%endfor%}
+{% endblock %}
+
+
+
