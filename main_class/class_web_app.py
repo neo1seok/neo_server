@@ -464,7 +464,7 @@ class HealthWebApp(BaseDBWebApp):
 			row_dict(title="수축혈압", name="sys_bp", id="input_sys_bp", row_type="left", type="input",def_value = def_sys_bp),
 			row_dict(title="이완혈압", name="dia_bp", id="input_dia_bp", row_type="right", type="input",def_value = def_dia_bp),
 			row_dict(title="맥박", name="pulse", id="input_pulse", row_type="left", type="input",def_value = def_pulse),
-#			row_dict(title="체중", name="weight", id="input_weight", row_type="right", type="input",def_value = def_weight),
+			row_dict(title="체중", name="weight", id="input_weight", row_type="right", type="hidden",def_value = "0"),
 			row_dict(title="커맨트", name="comment", id="input_comment", row_type="all", type="text"),
 			row_dict(title="status", name="status", id="input_status", row_type="right", type="hidden"),
 			row_dict(title="type", name="type", id="input_type", row_type="right", type="hidden",def_value = "BP"),
@@ -472,14 +472,16 @@ class HealthWebApp(BaseDBWebApp):
 
 		]
 		list_input_row_weight = [
-
-			row_dict(name="cur_uid", id="input_cur_uid", type='hidden'),
-			row_dict(title="체중", name="weight", id="input_weight", row_type="right", type="input",
+			row_dict(title="수축혈압", name="sys_bp", id="input_sys_bp_wt", row_type="left", type="hidden",def_value = "0"	),
+			row_dict(title="이완혈압", name="dia_bp", id="input_dia_bp_wt", row_type="right", type="hidden",def_value = "0"),
+			row_dict(title="맥박", name="pulse", id="input_pulse_wt", row_type="left", type="hidden",def_value = "0"),
+			row_dict(name="cur_uid", id="input_cur_uid_wt", type='hidden'),
+			row_dict(title="체중", name="weight", id="input_weight_wt", row_type="right", type="input",
 			         def_value=def_weight),
-			row_dict(title="커맨트", name="comment", id="input_comment", row_type="all", type="text"),
-			row_dict(title="status", name="status", id="input_status", row_type="right", type="hidden"),
-			row_dict(title="type", name="type", id="input_type", row_type="right", type="hidden", def_value="WT"),
-			row_dict(title="param", name="param", id="input_param", row_type="right", type="hidden"),
+			row_dict(title="커맨트", name="comment", id="input_comment_wt", row_type="all", type="text"),
+			row_dict(title="status", name="status", id="input_status_wt", row_type="right", type="hidden"),
+			row_dict(title="type", name="type", id="input_type_wt", row_type="right", type="hidden", def_value="WT"),
+			row_dict(title="param", name="param", id="input_param_wt", row_type="right", type="hidden"),
 
 		]
 		#return
