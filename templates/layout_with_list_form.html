@@ -207,8 +207,8 @@ function page_nav(page_no){
 	          <td  {% if row.row_type=="all"  %} colspan= '3' {% endif %}>
 		        {%if row.type == "input"%}
 	            <input class="w3-input w3-border {{table.input_class}}"
-	                   type="text" id ="{{row.id}}"
-						 name="{{row.name}}" placeholder="{{row.title}}" >
+	                   type="{{row.input_type}}" id ="{{row.id}}"
+						 name="{{row.name}}" placeholder="{{row.title}}"   {%for attr in row.list_attr%} {{attr.key}}="{{attr.val}}" {%endfor %}>
 
 				{%elif row.type == "select"%}
 

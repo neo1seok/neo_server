@@ -22,8 +22,12 @@ tag_session_no = "session_no"
 
 
 def row_dict(**kwargs):
-	# if "dev_value" in kwargs:
-	# 	kwargs["dev_value"] = ""
+	if "input_type" not in kwargs:
+		kwargs["input_type"] = "text"
+
+	if "list_attr" not in kwargs:
+		kwargs["list_attr"] = []
+
 	return dict(**kwargs)
 
 
