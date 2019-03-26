@@ -197,7 +197,7 @@ function page_nav(page_no){
 
 	        {%for row in table.list_input_row%}
 	        {% if row.type=="hidden"  %}
-			<input type="text" id ="{{row.id}}"  class="neo_form" name="{{row.name}}"  value="{{row.val}}" hidden>
+			<input type="text" id ="{{row.id}}"  class="{{table.input_class}}" name="{{row.name}}"  value="{{row.val}}" hidden>
 			{%else%}
            {% if row.row_type!="right"  %} <tr>  {% endif %}
 
@@ -246,9 +246,9 @@ function page_nav(page_no){
 
 
 	      <div class="modal-footer">
-		      <button class="w3-btn w3-green w3-ripple neo_form"  data-dismiss="modal" onclick="confirm_form('/query/{{name}}/hide')" >&#10004; 숨김</button>
-		      <button class="w3-btn w3-green w3-ripple neo_form"  data-dismiss="modal" onclick="confirm_form('/query/{{name}}/delete')" >&#10004; 삭제</button>
-            <button class="w3-btn w3-green w3-ripple neo_form" id="{{table.button_id}}" data-dismiss="modal" onclick="confirm_form('/query/{{name}}/update')" >&#10004; 확인</button>
+		      <button class="w3-btn w3-green w3-ripple {{table.input_class}}"  data-dismiss="modal" onclick="confirm_form('/query/{{name}}/hide')" >&#10004; 숨김</button>
+		      <button class="w3-btn w3-green w3-ripple {{table.input_class}}"  data-dismiss="modal" onclick="confirm_form('/query/{{name}}/delete')" >&#10004; 삭제</button>
+            <button class="w3-btn w3-green w3-ripple {{table.input_class}}" id="{{table.button_id}}" data-dismiss="modal" onclick="confirm_form('/query/{{name}}/update')" >&#10004; 확인</button>
           </div>
 
 	</div> <!-- Modal content-->
