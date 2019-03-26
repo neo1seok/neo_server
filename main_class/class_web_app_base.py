@@ -27,7 +27,10 @@ def row_dict(**kwargs):
 
 	if "list_attr" not in kwargs:
 		kwargs["list_attr"] = []
-
+	if "rows" not in kwargs:
+		kwargs["rows"] = 5
+	if "cols" not in kwargs:
+		kwargs["cols"] = 100
 	return dict(**kwargs)
 
 

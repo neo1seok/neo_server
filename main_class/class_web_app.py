@@ -465,7 +465,7 @@ class HealthWebApp(BaseDBWebApp):
 			row_dict(title="이완혈압", name="dia_bp", id="input_dia_bp", row_type="right", type="input",input_type="number",def_value = def_dia_bp),
 			row_dict(title="맥박", name="pulse", id="input_pulse", row_type="left", type="input",input_type="number",def_value = def_pulse),
 			row_dict(title="체중", name="weight", id="input_weight", row_type="right", type="hidden",def_value = "0"),
-			row_dict(title="커맨트", name="comment", id="input_comment", row_type="all", type="text"),
+			row_dict(title="커맨트", name="comment", id="input_comment", row_type="all", type="text",rows=2),
 			row_dict(title="status", name="status", id="input_status", row_type="right", type="hidden"),
 			row_dict(title="type", name="type", id="input_type", row_type="right", type="hidden",def_value = "BP"),
 			row_dict(title="param", name="param", id="input_param", row_type="right", type="hidden"),
@@ -479,7 +479,7 @@ class HealthWebApp(BaseDBWebApp):
 			row_dict(title="체중", name="weight", id="input_weight_wt", row_type="right", type="input",
 			         input_type="number",list_attr=[dict(key="step",val="0.01")],
 			         def_value=def_weight),
-			row_dict(title="커맨트", name="comment", id="input_comment_wt", row_type="all", type="text"),
+			row_dict(title="커맨트", name="comment", id="input_comment_wt", row_type="all", type="text" ,rows=2),
 			row_dict(title="status", name="status", id="input_status_wt", row_type="right", type="hidden"),
 			row_dict(title="type", name="type", id="input_type_wt", row_type="right", type="hidden", def_value="WT"),
 			row_dict(title="param", name="param", id="input_param_wt", row_type="right", type="hidden"),
@@ -499,10 +499,8 @@ class HealthWebApp(BaseDBWebApp):
 			     list_input_row=list_input_row,
 			     list_col_info=[
 				     dict(title="편집", type="btn", onclick="edit_content"),
-				     dict(title="수축", type="title", title_key="sys_bp"),
-				     dict(title="이완", type="title", title_key="dia_bp"),
-				     dict(title="맥박", type="title", title_key="pulse"),
-				     dict(title="날짜", type="title",  title_key="updt_date"),
+				     dict(title="혈압", type="title", title_key="bp"),
+				     dict(title="날짜", type="title",  title_key="dt"),
 				   #  dict(title="삭제", type="btn_no_modal", onclick="delete_content"),
 			     ],
 			     list_data=self.list_data)
@@ -526,7 +524,7 @@ class HealthWebApp(BaseDBWebApp):
 			                            list_col_info=[
 				                            dict(title="편집", type="btn", onclick="edit_content_wt"),
 				                            dict(title="체중", type="title", title_key="weight"),
-				                            dict(title="날짜", type="title", title_key="updt_date"),
+				                            dict(title="날짜", type="title", title_key="dt"),
 				                            #  dict(title="삭제", type="btn_no_modal", onclick="delete_content"),
 			                            ],
 		                                )

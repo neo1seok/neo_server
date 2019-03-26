@@ -218,7 +218,7 @@ function page_nav(page_no){
 					{%endfor%}
 		           </select>
 				{%elif row.type == "text"%}
-		           <TEXTAREA class="w3-input w3-border {{table.input_class}}" name="{{row.name}}"  id ="{{row.id}}"  ROWS=10 COLS=100 placeholder="{{row.title}}"  tabindex='2' disabled>
+		           <TEXTAREA class="w3-input w3-border {{table.input_class}}" name="{{row.name}}"  id ="{{row.id}}"  ROWS={{row.rows}} COLS={{row.cols}} placeholder="{{row.title}}"  tabindex='2' disabled>
 			            </TEXTAREA>
 		        {%endif%}
 
