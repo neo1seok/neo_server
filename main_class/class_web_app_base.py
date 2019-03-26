@@ -215,6 +215,10 @@ class BaseDBWebApp(WebAppBase):
 				SET status = 'HIDDEN'  
                 WHERE  {uid_prefix}_uid  = '{cur_uid}'"""
 	fmt_cond_get_contents = "and {uid_prefix}_uid = '{cur_uid}'"
+	fmt_last_contents = """SELECT * FROM {table_name} A ,
+	(SELECT max(seq) as last_seq FROM {table_name} where True {extra_condition}) B 
+	where a.seq = B.last_seq;"""
+
 	list_col_name = ["제목", "날짜"]
 
 	uid_prefix = ""

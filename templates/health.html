@@ -27,11 +27,11 @@ for (i = 0; i < acc.length; i++) {
 
 
 
-{% block list_contents %}
-{%for table in list_tables%}
+{% block list_contents_ %}
 
-<div class="w3-container" id='{{table.id_div_list}}'>
-<h2>{{table.title}}</h2>
+
+<div class="w3-container" id='{{list_tables[0].id_div_list}}'>
+<h2>{{list_tables[0].title}}</h2>
 <table class="table table-striped">
           <thead>
             <tr>
@@ -44,7 +44,7 @@ for (i = 0; i < acc.length; i++) {
             </tr>
         </thead>
 
-		 {% for item in table.list_data %}
+		 {% for item in list_tables[0].list_data %}
 		<tr>
          <td><button class="w3-btn w3-ripple " data-toggle="modal" data-target="#{{table.modal_id}}"  onclick="edit_content('{{item.cur_uid}}')" >&#9998;{{ item.title }}</button></td>
          <td><p class="cell">{{item.sys_bp}}/{{item.dia_bp}} (맥박:{{item.pulse}})</p></td>
@@ -59,7 +59,7 @@ for (i = 0; i < acc.length; i++) {
   </div>
 
 </div>
-{%endfor%}
+
 {% endblock %}
 
 

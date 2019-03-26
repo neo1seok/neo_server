@@ -1,5 +1,6 @@
 import random
 import urllib
+from copy import deepcopy
 
 import pymysql
 import time
@@ -410,6 +411,26 @@ class PasswdWebApp(BaseDBWebApp):
 
 
 class HealthWebApp(BaseDBWebApp):
+	def init(self):
+		BaseDBWebApp.init(self)
+
+		self.list_tables.append(deepcopy(self.list_tables[0]))
+	def __get_last_value(self, type):
+		extra_condition = "and type = '{}'".format(type)
+		sql = self.fmt_last_contents.format(table_name=self.table_name,extra_condition=extra_condition)
+
+		list_dict_col = self.select(sql)
+		if list_dict_col == None:
+			return []
+
+		return list_dict_col
+	def __get_list(self,type,app_type):
+		extra_condition = "and type = '{}'".format(type)
+		sql = self.fmt_list.format(extra_condition=extra_condition)
+		if app_type == "":
+			sql += " limit 10"
+
+		return self.select(sql)
 	def post_process(self):
 
 		def_sys_bp = ""
@@ -419,7 +440,8 @@ class HealthWebApp(BaseDBWebApp):
 		def_comment = ""
 		last_seq, last_uid = self.get_last_uid()
 
-		list_dict_col = self.select("select * from {table_name} where hlt_uid = '{last_uid}'".format(table_name = self.table_name,last_uid=last_uid))
+		list_dict_col = self.__get_last_value("BP")
+		list_dict_col_wt = self.__get_last_value("WT")
 		print(list_dict_col)
 		if len(list_dict_col)>0:
 			rows = list_dict_col[0]
@@ -427,10 +449,13 @@ class HealthWebApp(BaseDBWebApp):
 			def_sys_bp = rows['sys_bp']
 			def_dia_bp = rows['dia_bp']
 			def_pulse = rows['pulse']
-			def_weight = rows['weight']
 			def_comment = rows['comment']
 
 
+		if len(list_dict_col_wt)>0:
+			rows = list_dict_col_wt[0]
+			def_weight = rows['weight']
+			def_comment = rows['comment']
 
 
 		list_input_row = [
@@ -439,10 +464,21 @@ class HealthWebApp(BaseDBWebApp):
 			row_dict(title="수축혈압", name="sys_bp", id="input_sys_bp", row_type="left", type="input",def_value = def_sys_bp),
 			row_dict(title="이완혈압", name="dia_bp", id="input_dia_bp", row_type="right", type="input",def_value = def_dia_bp),
 			row_dict(title="맥박", name="pulse", id="input_pulse", row_type="left", type="input",def_value = def_pulse),
-			row_dict(title="체중", name="weight", id="input_weight", row_type="right", type="input",def_value = def_weight),
+#			row_dict(title="체중", name="weight", id="input_weight", row_type="right", type="input",def_value = def_weight),
 			row_dict(title="커맨트", name="comment", id="input_comment", row_type="all", type="text"),
 			row_dict(title="status", name="status", id="input_status", row_type="right", type="hidden"),
 			row_dict(title="type", name="type", id="input_type", row_type="right", type="hidden",def_value = "BP"),
+			row_dict(title="param", name="param", id="input_param", row_type="right", type="hidden"),
+
+		]
+		list_input_row_weight = [
+
+			row_dict(name="cur_uid", id="input_cur_uid", type='hidden'),
+			row_dict(title="체중", name="weight", id="input_weight", row_type="right", type="input",
+			         def_value=def_weight),
+			row_dict(title="커맨트", name="comment", id="input_comment", row_type="all", type="text"),
+			row_dict(title="status", name="status", id="input_status", row_type="right", type="hidden"),
+			row_dict(title="type", name="type", id="input_type", row_type="right", type="hidden", def_value="WT"),
 			row_dict(title="param", name="param", id="input_param", row_type="right", type="hidden"),
 
 		]
@@ -454,24 +490,51 @@ class HealthWebApp(BaseDBWebApp):
 		list_attr_ext = [dict(key="onclick", proc=lambda item:"edit_content('{cur_uid}')".format(cur_uid=item['cur_uid']))]
 		text_ext = lambda item: item['title']
 
-		this_table = dict(title="전체리스트",
-				form_title="title",
-
+		this_table = dict(title="혈압리스트",
+				form_title="bp",
+		          new_input_button="혈압입력",
 			     list_input_row=list_input_row,
 			     list_col_info=[
-				     dict(title="제목", type="btn_ext", onclick="edit_content",href_key="link", title_key="title",
-				          list_attr=list_attr,
-				          list_attr_ext=list_attr_ext,
-				          text_ext=lambda
-					          item: item['title'],
-
-				          ),
+				     dict(title="편집", type="btn", onclick="edit_content"),
+				     dict(title="수축", type="title", title_key="sys_bp"),
+				     dict(title="이완", type="title", title_key="dia_bp"),
+				     dict(title="맥박", type="title", title_key="pulse"),
 				     dict(title="날짜", type="title",  title_key="updt_date"),
-				     dict(title="삭제", type="btn_no_modal", onclick="delete_content"),
+				   #  dict(title="삭제", type="btn_no_modal", onclick="delete_content"),
 			     ],
 			     list_data=self.list_data)
+		this_table_weight = 		dict(title="체중",
+			     modal_id="id_modal_input_wt",
+			     form_id="form_input_wt",
+			     form_title="title_wt",
+			     id_div_list="div_list_wt",
+			     new_input_button="채중입력",
+			     button_id="",
+			     enable_function="enable_input_wt",
+			     input_class="neo_form_wt",
+			     edit_function="edit_content_wt",
+			     delete_function="delete_content_wt",
+			     new_input_function="new_input_function_wt",
+
+			     query_option="",
+
+			     list_input_row=list_input_row_weight,
+			     list_data=self.list_data_wt,
+			                            list_col_info=[
+				                            dict(title="편집", type="btn", onclick="edit_content_wt"),
+				                            dict(title="체중", type="title", title_key="weight"),
+				                            dict(title="날짜", type="title", title_key="updt_date"),
+				                            #  dict(title="삭제", type="btn_no_modal", onclick="delete_content"),
+			                            ],
+		                                )
+
+
 
 		self.list_tables[0].update(this_table)
+
+
+		self.list_tables[1] = this_table_weight
+		print()
 		neoutil.simple_view_list(self.list_data)
 		pass
 	def excute_templete(self,fmt):
@@ -484,20 +547,15 @@ class HealthWebApp(BaseDBWebApp):
 
 	def update_from_db(self):
 		self.list_data =[]
+		self.list_data_wt =[]
 		if not neoutil.get_safe_mapvalue(session, tag_login, False):
 			return
 
-		type = neoutil.get_safe_mapvalue(request.values, "type", "")
-		sql = self.fmt_list.format(extra_condition="")
-		if type == "":
-			sql += " limit 10"
-			self.extra_condition = "and status != 'HIDDEN' "
-		elif type == "all":
-			self.extra_condition = ""
 
-		print("sql", sql)
-		self.cur.execute(sql)
-		self.list_data = self.cur.fetchall()
+
+		type = neoutil.get_safe_mapvalue(request.values, "type", "")
+		self.list_data = self.__get_list("BP",type)
+		self.list_data_wt =self.__get_list("WT",type)
 		#print(self.list_data)
 
 	def ready_extra_condition(self):
