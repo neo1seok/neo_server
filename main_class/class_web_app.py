@@ -501,6 +501,7 @@ class HealthWebApp(BaseDBWebApp):
 				     dict(title="편집", type="btn", onclick="edit_content"),
 				     dict(title="혈압", type="title", title_key="bp"),
 				     dict(title="날짜", type="title",  title_key="dt"),
+				     dict(title="요일", type="title", title_key="week"),
 				   #  dict(title="삭제", type="btn_no_modal", onclick="delete_content"),
 			     ],
 			     list_data=self.list_data)
@@ -525,6 +526,7 @@ class HealthWebApp(BaseDBWebApp):
 				                            dict(title="편집", type="btn", onclick="edit_content_wt"),
 				                            dict(title="체중", type="title", title_key="weight"),
 				                            dict(title="날짜", type="title", title_key="dt"),
+				                            dict(title="요일", type="title", title_key="week"),
 				                            #  dict(title="삭제", type="btn_no_modal", onclick="delete_content"),
 			                            ],
 		                                )

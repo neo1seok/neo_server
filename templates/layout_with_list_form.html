@@ -153,6 +153,8 @@ function page_nav(page_no){
 	  <button class="w3-btn w3-ripple "  onclick="{{col.onclick}}('{{item.cur_uid}}')">&#9998; {{col.title}}</button>
 {%elif col.type == "title"%}
 	  <p>{{item[col.title_key] }}</p>
+{%elif col.type == "title_ext"%}
+<p>{{col.ext_prc(item,col.title_key) }}</p>
 {% endif %}</td>
 {% endfor %}
 </tr>
