@@ -24,7 +24,11 @@ function {{table.new_input_function}}() {
 
 
 	{%for row in table.list_input_row%}
+    {%if row.type == 'dynamic'%}
+    {{row.ext_set_value_function(table,row,"init")|safe}}
+    {%else%}
 	$('#{{row.id}}').val("{{row.def_value}}");;
+    {%endif%}
 	{% endfor %}
 
 
@@ -61,10 +65,17 @@ function {{table.edit_function}}(cur_uid) {
     cur_uid: cur_uid,
 	option:'{{table.query_option}}'
   }, function(response) {
-    console.log("confirm ok");
+    console.log("get_content",response );
 
 	{%for row in table.list_input_row%}
+    {%if row.type == 'dynamic'%}
+    {{row.ext_set_value_function(table,row,"edit")|safe}}
+
+    {%else%}
 	$('#{{row.id}}').val(response.{{row.name}});;
+    {%endif%}
+
+
 	{% endfor %}
 
 
@@ -153,8 +164,8 @@ function page_nav(page_no){
 	  <button class="w3-btn w3-ripple "  onclick="{{col.onclick}}('{{item.cur_uid}}')">&#9998; {{col.title}}</button>
 {%elif col.type == "title"%}
 	  <p>{{item[col.title_key] }}</p>
-{%elif col.type == "title_ext"%}
-<p>{{col.ext_prc(item,col.title_key) }}</p>
+{%elif col.type == "dynamic"%}
+{{col.ext_function(table,item,col)|safe  }}
 {% endif %}</td>
 {% endfor %}
 </tr>
@@ -200,7 +211,11 @@ function page_nav(page_no){
 	        {%for row in table.list_input_row%}
 	        {% if row.type=="hidden"  %}
 			<input type="text" id ="{{row.id}}"  class="{{table.input_class}}" name="{{row.name}}"  value="{{row.val}}" hidden>
+            {%elif row.type == "dynamic"%}
+                  {{row.ext_function(table,row)|safe  }}
 			{%else%}
+
+
            {% if row.row_type!="right"  %} <tr>  {% endif %}
 
             <td style="width:20%"> {{row.title}} </td>
@@ -220,8 +235,11 @@ function page_nav(page_no){
 					{%endfor%}
 		           </select>
 				{%elif row.type == "text"%}
-		           <TEXTAREA class="w3-input w3-border {{table.input_class}}" name="{{row.name}}"  id ="{{row.id}}"  ROWS={{row.rows}} COLS={{row.cols}} placeholder="{{row.title}}"  tabindex='2' disabled>
+		           <TEXTAREA class="w3-input w3-border {{table.input_class}}" name="{{row.name}}"  id ="{{row.id}}"
+                             ROWS={{row.rows}} COLS={{row.cols}} placeholder="{{row.title}}"  tabindex='2' disabled>
 			            </TEXTAREA>
+
+
 		        {%endif%}
 
 	          </td>

@@ -457,6 +457,27 @@ class HealthWebApp(BaseDBWebApp):
 			def_weight = rows['weight']
 			def_comment = rows['comment']
 
+		def row_input_function(table,row):
+			return f"<td> 날짜 </td><td> <p id='{row['id']}' >  </p></td>"
+
+		def row_input_set_value_function(table,row,option):
+			text = "''" if option =="init" else "response.dt+' '+response.week"
+
+
+			return f"$('#{row['id']}').text({text});"
+
+		def edit_function_btn(table,item,  col):
+			table = neoutil.Struct(**table)
+			item = neoutil.Struct(**item)
+			col = neoutil.Struct(**col)
+			value = getattr(item,col.title_key)
+
+
+
+			return f"<button class='w3-btn w3-ripple '  data-toggle='modal' data-target='#{table.modal_id}' onclick=\"{col.onclick}('{item.cur_uid}')\">&#9998;{value}</button>"
+
+		def date_function(table,item, col):
+			return f"<p> {item['reg_date']:%m/%d}({item['week']}) {item['reg_date']:%H:%M}</p>"
 
 		list_input_row = [
 
@@ -469,6 +490,7 @@ class HealthWebApp(BaseDBWebApp):
 			row_dict(title="status", name="status", id="input_status", row_type="right", type="hidden"),
 			row_dict(title="type", name="type", id="input_type", row_type="right", type="hidden",def_value = "BP"),
 			row_dict(title="param", name="param", id="input_param", row_type="right", type="hidden"),
+			row_dict(name="등록날짜", id="input_dynamic", type='dynamic',ext_set_value_function = row_input_set_value_function ,ext_function = row_input_function),
 
 		]
 		list_input_row_weight = [
@@ -483,6 +505,7 @@ class HealthWebApp(BaseDBWebApp):
 			row_dict(title="status", name="status", id="input_status_wt", row_type="right", type="hidden"),
 			row_dict(title="type", name="type", id="input_type_wt", row_type="right", type="hidden", def_value="WT"),
 			row_dict(title="param", name="param", id="input_param_wt", row_type="right", type="hidden"),
+			row_dict(name="등록날짜", id="input_dynamic_wt", type='dynamic', ext_set_value_function = row_input_set_value_function ,ext_function = row_input_function),
 
 		]
 		#return
@@ -493,16 +516,21 @@ class HealthWebApp(BaseDBWebApp):
 		list_attr_ext = [dict(key="onclick", proc=lambda item:"edit_content('{cur_uid}')".format(cur_uid=item['cur_uid']))]
 		text_ext = lambda item: item['title']
 
+
+
 		this_table = dict(title="혈압리스트",
 				form_title="bp",
 		          new_input_button="혈압입력",
 			     list_input_row=list_input_row,
 			     list_col_info=[
-				     dict(title="편집", type="btn", onclick="edit_content"),
-				     dict(title="혈압", type="title", title_key="bp"),
-				     dict(title="날짜", type="title",  title_key="dt"),
-				     dict(title="요일", type="title", title_key="week"),
-				   #  dict(title="삭제", type="btn_no_modal", onclick="delete_content"),
+				     #dict(title="편집", type="btn", onclick="edit_content"),
+				     dict(title="혈압", type="dynamic",title_key="bp", onclick="edit_content",ext_function=edit_function_btn),
+
+				    # dict(title="혈압", type="title", title_key="bp"),
+				     #dict(title="날짜", type="title",  title_key="dt"),
+
+				     dict(title="날짜", type="dynamic", ext_function=date_function),
+
 			     ],
 			     list_data=self.list_data)
 		this_table_weight = 		dict(title="체중",
@@ -523,10 +551,12 @@ class HealthWebApp(BaseDBWebApp):
 			     list_input_row=list_input_row_weight,
 			     list_data=self.list_data_wt,
 			                            list_col_info=[
-				                            dict(title="편집", type="btn", onclick="edit_content_wt"),
-				                            dict(title="체중", type="title", title_key="weight"),
-				                            dict(title="날짜", type="title", title_key="dt"),
-				                            dict(title="요일", type="title", title_key="week"),
+				                            #dict(title="편집", type="btn", onclick="edit_content_wt"),
+				                            dict(title="체중",title_key="weight", type="dynamic", onclick="edit_content_wt",
+				                                 ext_function=edit_function_btn),
+				                            #dict(title="체중", type="title", title_key="weight"),
+				                            #dict(title="날짜", type="title", title_key="dt"),
+				                            dict(title="날짜", type="dynamic", ext_function= date_function),
 				                            #  dict(title="삭제", type="btn_no_modal", onclick="delete_content"),
 			                            ],
 		                                )
