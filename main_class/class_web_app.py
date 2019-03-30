@@ -609,6 +609,7 @@ class LogOut(WebAppBase):
 
 class LogIn(BaseDBWebApp):
 	def init(self):
+
 		WebAppBase.init(self)
 
 
@@ -621,6 +622,8 @@ class LogIn(BaseDBWebApp):
 			"sewol_sadday": "0416",
 		}
 
+	def set_redirect_for_login(self):
+		pass
 
 	def update_from_db(self):
 		pass
@@ -630,12 +633,14 @@ class LogIn(BaseDBWebApp):
 		print('hash_passwd', hash_passwd)
 		if calc_hash != tobytes(hash_passwd):
 			raise Exception("password is not match")
+		#session:dict
+
 		redirect = neoutil.get_safe_mapvalue(session, tag_redirect, "/main.neo")
 		session[tag_login] = True
 		session[tag_user] = user_info.name
 		session[tag_time] = time.time()
 		# redirect = session[tag_redirect]
-
+		#session[tag_redirect] = "/main.neo"
 		#session[tag_redirect] = "/main.neo"
 		return dict(result="ok", redirect=redirect)
 
@@ -759,8 +764,8 @@ def get_lists(dir_path):
 		           description ='이 홈페이지는 신원석(neo1seok)의 집에 있는 라즈베리파이의 아파치 서버위에서 돌아가고 있습니다..'),
 
 
-		LogIn(name="login",title="로그인"),
-		LogOut(name="logout",title="로그아웃")
+		LogIn(name="login",title="로그인",type='login'),
+		LogOut(name="logout",title="로그아웃",type='logout')
 	]
 	for idx,val in enumerate( list_map_from_json):
 		list_general_map.insert(1+idx,val)

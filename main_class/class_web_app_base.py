@@ -18,6 +18,7 @@ tag_login = "login"
 tag_user = "user"
 tag_time ="log_in_time"
 tag_redirect = "redirect"
+#tag_prev_href_without_login="prev_href_without_login"
 tag_session_no = "session_no"
 
 
@@ -59,6 +60,8 @@ class WebAppBase():
 		self.table_name = self.name
 		self.description =  self.name
 		self.href = "/" + self.name+".neo"
+
+
 		self.id = self.name
 		self.temp_file = self.name + ".html"
 		self.column_names =""
@@ -80,9 +83,15 @@ class WebAppBase():
 		#self.navigation = []
 		#self.param_dict  = kwargs
 		self.init()
+
 	def init(self):
 
+
 		pass
+	def set_redirect_for_login(self):
+		session[tag_redirect] = self.href
+		#session[tag_prev_href_without_login] = self.href
+
 	def end_session(self):
 		session[tag_login] = False
 		session[tag_user] = ""
@@ -96,6 +105,7 @@ class WebAppBase():
 	def main_process(self):
 		print("main_process session", session)
 		print("main_process", self.__class__.__name__, self.name)
+		self.set_redirect_for_login()
 		for value in request.values:
 			print("value",value)
 
@@ -108,9 +118,15 @@ class WebAppBase():
 		if tk_time > 60*60:
 			self.end_session()
 		self.navigation = self.navigation_org
+		list_show_type =[]
 		if not self.is_login():
-			self.navigation = [tmp for tmp in self.navigation_org if tmp['type'] != "private"]
-
+			list_show_type = ['general','login']
+			#self.navigation = [tmp for tmp in self.navigation_org if tmp['type'] != "private"]
+		else:
+			list_show_type = ['general','private', 'logout']
+			#3	self.navigation = [tmp for tmp in self.navigation_org if tmp['type'] != "private"]
+			pass
+		self.navigation = [tmp for tmp in self.navigation_org if tmp['type']  in list_show_type]
 		# neoutil.get_safe_mapvalue(session, tag_login, False)
 
 		type = neoutil.get_safe_mapvalue(request.values, "type", "")
@@ -156,7 +172,7 @@ class WebAppBase():
 
 	def direct_login(self):
 
-		session[tag_redirect]=self.href
+
 		ret = redirect("/login")
 		print(tag_redirect,ret)
 
@@ -231,7 +247,7 @@ class BaseDBWebApp(WebAppBase):
 	uid_prefix = ""
 
 	def init(self):
-
+		WebAppBase.init(self)
 		self.list_col_name = self.column_names.split("|")
 		self.list_tables = [
 			dict(title="title",
