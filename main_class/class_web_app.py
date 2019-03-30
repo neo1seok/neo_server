@@ -479,12 +479,18 @@ class HealthWebApp(BaseDBWebApp):
 		def date_function(table,item, col):
 			return f"<p> {item['reg_date']:%m/%d}({item['week']}) {item['reg_date']:%H:%M}</p>"
 
+		dict_select =dict(key="onClick",val="this.select();")
+
+
 		list_input_row = [
 
 			row_dict(name="cur_uid", id="input_cur_uid", type='hidden'),
-			row_dict(title="수축혈압", name="sys_bp", id="input_sys_bp", row_type="left", type="input",input_type="number",def_value = def_sys_bp),
-			row_dict(title="이완혈압", name="dia_bp", id="input_dia_bp", row_type="right", type="input",input_type="number",def_value = def_dia_bp),
-			row_dict(title="맥박", name="pulse", id="input_pulse", row_type="left", type="input",input_type="number",def_value = def_pulse),
+			row_dict(title="수축혈압", name="sys_bp", id="input_sys_bp", row_type="left", type="input",
+			 list_attr = [dict_select],input_type="number",def_value = def_sys_bp),
+			row_dict(title="이완혈압", name="dia_bp", id="input_dia_bp", row_type="right", type="input",
+			list_attr = [dict_select],input_type="number",def_value = def_dia_bp),
+			row_dict(title="맥박", name="pulse", id="input_pulse", row_type="left", type="input",
+			         list_attr=[dict_select],input_type="number",def_value = def_pulse),
 			row_dict(title="체중", name="weight", id="input_weight", row_type="right", type="hidden",def_value = "0"),
 			row_dict(title="커맨트", name="comment", id="input_comment", row_type="all", type="text",rows=2),
 			row_dict(title="status", name="status", id="input_status", row_type="right", type="hidden"),
@@ -499,7 +505,7 @@ class HealthWebApp(BaseDBWebApp):
 			row_dict(title="맥박", name="pulse", id="input_pulse_wt", row_type="left", type="hidden",def_value = "0"),
 			row_dict(name="cur_uid", id="input_cur_uid_wt", type='hidden'),
 			row_dict(title="체중", name="weight", id="input_weight_wt", row_type="right", type="input",
-			         input_type="number",list_attr=[dict(key="step",val="0.01")],
+			         input_type="number",list_attr=[dict(key="step",val="0.01" ),dict_select],
 			         def_value=def_weight),
 			row_dict(title="커맨트", name="comment", id="input_comment_wt", row_type="all", type="text" ,rows=2),
 			row_dict(title="status", name="status", id="input_status_wt", row_type="right", type="hidden"),

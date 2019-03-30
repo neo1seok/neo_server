@@ -48,8 +48,11 @@ var table =  $('#example').DataTable( {
 
 
 {% block list_contents %}
-<button id="button">Delete selected row</button>
 
+<input onClick="this.setSelectionRange(0, this.value.length)" value="Sample Text" />
+<input onClick="this.select();" value="Sample Text" />
+
+<button id="button">Delete selected row</button>
 <table id="example" class="display" style="width:100%">
         <thead>
             <tr>
