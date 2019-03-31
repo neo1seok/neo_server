@@ -592,7 +592,7 @@ class HealthWebApp(BaseDBWebApp):
 		self.list_data =[]
 		self.list_data_wt =[]
 
-		type = neoutil.get_safe_mapvalue(request.values, "type", "")
+		self.type = neoutil.get_safe_mapvalue(request.values, "type", "")
 		self.open_type = neoutil.get_safe_mapvalue(request.values, "open", "")
 
 		if not neoutil.get_safe_mapvalue(session, tag_login, False):
@@ -601,9 +601,10 @@ class HealthWebApp(BaseDBWebApp):
 
 
 
+
 		print("self.open_type",self.open_type)
-		self.list_data = self.__get_list("BP",type)
-		self.list_data_wt =self.__get_list("WT",type)
+		self.list_data = self.__get_list("BP",self.type)
+		self.list_data_wt =self.__get_list("WT",self.type)
 
 		#print(self.list_data)
 
