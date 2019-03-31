@@ -103,7 +103,7 @@ function page_nav(page_no){
 <div class="w3-container">
 	{{super()}}
 {% for table in list_tables %}
- <button class="btn btn-primary btn-md" onclick="{{table.new_input_function}}()" data-toggle="modal" data-target="#{{table.modal_id}}">&#10004; {{table.new_input_button}} </button>
+ <button class="btn btn-primary btn-md" id= '{{table.id_new_input_button}}' onclick="{{table.new_input_function}}()" data-toggle="modal" data-target="#{{table.modal_id}}">&#10004; {{table.new_input_button}} </button>
 
 {% endfor %}
 

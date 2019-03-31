@@ -366,6 +366,7 @@ class PasswdWebApp(BaseDBWebApp):
 		     button_id="",
 		     query_option="header",
 		     new_input_button="헤더 새로 입력",
+		                        id_new_input_button="id_new_input_button_hd",
 
 		     enable_function="enable_input_header",
 		     input_class="neo_form_header",
@@ -527,6 +528,7 @@ class HealthWebApp(BaseDBWebApp):
 		this_table = dict(title="혈압리스트",
 				form_title="bp",
 		          new_input_button="혈압입력",
+		                  id_new_input_button="id_new_input_bp",
 			     list_input_row=list_input_row,
 			     list_col_info=[
 				     #dict(title="편집", type="btn", onclick="edit_content"),
@@ -545,6 +547,7 @@ class HealthWebApp(BaseDBWebApp):
 			     form_title="title_wt",
 			     id_div_list="div_list_wt",
 			     new_input_button="채중입력",
+			     id_new_input_button="id_new_input_wt",
 			     button_id="",
 			     enable_function="enable_input_wt",
 			     input_class="neo_form_wt",
@@ -593,8 +596,10 @@ class HealthWebApp(BaseDBWebApp):
 
 
 		type = neoutil.get_safe_mapvalue(request.values, "type", "")
+		self.open = neoutil.get_safe_mapvalue(request.values, "open", "")
 		self.list_data = self.__get_list("BP",type)
 		self.list_data_wt =self.__get_list("WT",type)
+
 		#print(self.list_data)
 
 	def ready_extra_condition(self):

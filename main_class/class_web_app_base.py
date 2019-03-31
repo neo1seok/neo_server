@@ -256,6 +256,7 @@ class BaseDBWebApp(WebAppBase):
 			     form_title="title",
 			     id_div_list ="div_list",
 				new_input_button ="새 글쓰기",
+				 id_new_input_button="id_new_input_button",
 			     button_id="",
 			     enable_function="enable_input",
 				 input_class ="neo_form",
