@@ -591,13 +591,17 @@ class HealthWebApp(BaseDBWebApp):
 	def update_from_db(self):
 		self.list_data =[]
 		self.list_data_wt =[]
+
+		type = neoutil.get_safe_mapvalue(request.values, "type", "")
+		self.open_type = neoutil.get_safe_mapvalue(request.values, "open", "")
+
 		if not neoutil.get_safe_mapvalue(session, tag_login, False):
 			return
 
 
 
-		type = neoutil.get_safe_mapvalue(request.values, "type", "")
-		self.open_type = neoutil.get_safe_mapvalue(request.values, "open", "")
+
+		print("self.open_type",self.open_type)
 		self.list_data = self.__get_list("BP",type)
 		self.list_data_wt =self.__get_list("WT",type)
 
