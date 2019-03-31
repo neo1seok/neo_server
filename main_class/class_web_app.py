@@ -526,8 +526,9 @@ class HealthWebApp(BaseDBWebApp):
 
 
 		this_table = dict(title="혈압리스트",
-				form_title="bp",
+
 		          new_input_button="혈압입력",
+		                  form_title="혈압입력",
 		                  id_new_input_button="id_new_input_bp",
 			     list_input_row=list_input_row,
 			     list_col_info=[
@@ -544,7 +545,7 @@ class HealthWebApp(BaseDBWebApp):
 		this_table_weight = 		dict(title="체중",
 			     modal_id="id_modal_input_wt",
 			     form_id="form_input_wt",
-			     form_title="title_wt",
+			     form_title="채중입력",
 			     id_div_list="div_list_wt",
 			     new_input_button="채중입력",
 			     id_new_input_button="id_new_input_wt",
