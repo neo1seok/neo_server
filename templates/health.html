@@ -25,6 +25,11 @@ for (i = 0; i < acc.length; i++) {
 }
 var open_type = '{{open_type}}';
 console.log('open_type',open_type);
+{{%if open_type=='bp' %}}
+alert('{{open_type}}')
+{{%elif open_type=='wt'%}}
+alert('{{open_type}}')
+{{%endif%}}
 if(open_type=='bp')
    $("#id_new_input_bp").trigger("click");
 else if (open_type=='wt')
