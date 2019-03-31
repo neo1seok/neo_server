@@ -597,7 +597,7 @@ class HealthWebApp(BaseDBWebApp):
 
 
 		type = neoutil.get_safe_mapvalue(request.values, "type", "")
-		self.open = neoutil.get_safe_mapvalue(request.values, "open", "")
+		self.open_type = neoutil.get_safe_mapvalue(request.values, "open", "")
 		self.list_data = self.__get_list("BP",type)
 		self.list_data_wt =self.__get_list("WT",type)
 
