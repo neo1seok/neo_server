@@ -480,7 +480,7 @@ class HealthWebApp(BaseDBWebApp):
 		def date_function(table,item, col):
 			return f"<p> {item['reg_date']:%m/%d}({item['week']}) {item['reg_date']:%H:%M}</p>"
 
-		dict_select =dict(key="onClick",val="this.select();")
+		dict_select =dict(key="onfocus",val="this.select();")
 
 
 		list_input_row = [
