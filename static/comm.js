@@ -34,14 +34,14 @@ function temp_query(url,data,ok_process,err_process=function(error) {
     });
 
 }
-function confirm_form(url){
+function confirm_form(url,reload_url){
     console.log("btn_confirm",$('#form_input').serializeArray());
 
 
 
     temp_query(url,$('form').serializeArray(),function(response){
         console.log("confirm ok aaaa");
-        location.reload();
+        location = reload_url ;
     })
 //
 //     $.ajax({

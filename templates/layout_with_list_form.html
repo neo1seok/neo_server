@@ -266,9 +266,9 @@ function page_nav(page_no){
 
 
 	      <div class="modal-footer">
-		      <button class="w3-btn w3-green w3-ripple {{table.input_class}}"  data-dismiss="modal" onclick="confirm_form('/query/{{name}}/hide')" >&#10004; 숨김</button>
-		      <button class="w3-btn w3-green w3-ripple {{table.input_class}}"  data-dismiss="modal" onclick="confirm_form('/query/{{name}}/delete')" >&#10004; 삭제</button>
-            <button class="w3-btn w3-green w3-ripple {{table.input_class}}" id="{{table.button_id}}" data-dismiss="modal" onclick="confirm_form('/query/{{name}}/update')" >&#10004; 확인</button>
+		      <button class="w3-btn w3-green w3-ripple {{table.input_class}}"  data-dismiss="modal" onclick="confirm_form('/query/{{name}}/hide','/{{name}}.neo')" >&#10004; 숨김</button>
+		      <button class="w3-btn w3-green w3-ripple {{table.input_class}}"  data-dismiss="modal" onclick="confirm_form('/query/{{name}}/delete','/{{name}}.neo')" >&#10004; 삭제</button>
+            <button class="w3-btn w3-green w3-ripple {{table.input_class}}" id="{{table.button_id}}" data-dismiss="modal" onclick="confirm_form('/query/{{name}}/update','/{{name}}.neo')" >&#10004; 확인</button>
           </div>
 
 	</div> <!-- Modal content-->
