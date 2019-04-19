@@ -12,7 +12,7 @@ class CurUpdateInitAndCommit(UpdateInitAndCommit):
 if __name__ == '__main__':
 	print(neolib)
 	msg = """
-location.href -> location
+location.href -> window.location.href = '/health.neo';
 
 	"""
 	CurUpdateInitAndCommit().run(msg)
