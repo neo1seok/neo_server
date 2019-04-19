@@ -8,7 +8,7 @@ from neolib.tool.update_history_and_git import UpdateInitAndCommit
 class CurUpdateInitAndCommit(UpdateInitAndCommit):
 	def push_all(self):
 		os.system("git push origin master")
-		os.system("git push github master")
+		#os.system("git push github master")
 if __name__ == '__main__':
 	print(neolib)
 	msg = """
