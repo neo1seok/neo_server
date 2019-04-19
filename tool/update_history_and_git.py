@@ -12,7 +12,7 @@ class CurUpdateInitAndCommit(UpdateInitAndCommit):
 if __name__ == '__main__':
 	print(neolib)
 	msg = """
-update redirect bp wt system
+location.href -> location
 
 	"""
 	CurUpdateInitAndCommit().run(msg)
