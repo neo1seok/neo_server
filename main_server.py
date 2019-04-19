@@ -1,7 +1,7 @@
 import os
 import sys
 
-from flask import Flask, request, render_template, url_for, Markup, json, session
+from flask import Flask, request, render_template, url_for, Markup, json, session, send_from_directory
 from flaskext.mysql import MySQL
 from flask import jsonify
 from werkzeug.security import generate_password_hash
@@ -83,7 +83,10 @@ def query_app(app_name=None,cmd=None):
 	# print("ret",ret)
 	return get_main_inst(app_name).do_query(cmd,request.form)
 
-
+@app.route('/health_rd.neo',methods=['GET'])
+def health_redirect():
+	dict_type = dict(wt='id_new_input_wt',bp='id_new_input_bp')
+	return render_template("health_redirect.html")
 
 @app.route('/<app_name>/',methods=['GET'])
 @app.route('/<app_name>',methods=['GET'])
@@ -92,9 +95,14 @@ def no_neo_redirection(app_name=None):
 	return redirect("/"+app_name+".neo")
 
 
+@app.route('/<path:path>')
+def send_static(path):
+	return send_from_directory('static', path)
+
 @app.route('/test')
 def test():
-	return render_template("test.html",**dict())
+	return send_from_directory('static', "sample.html")
+	#//return render_template("test.html",**dict())
 
 @app.route('/page_test_2')
 def page_test_2():
@@ -591,4 +599,4 @@ def init():
 if __name__ == '__main__':
 
 	init()
-	app.run(host='0.0.0.0' ,port=5555,threaded=True)
+	app.run(host='localhost' ,port=5555,threaded=True)

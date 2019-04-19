@@ -1,0 +1,25 @@
+{% extends "base_form.html" %}
+
+{% block json_function %}
+function health_redirect(open_dlg_id){
+
+    console.log('open_dlg_id',open_dlg_id)
+    setCookie("open_dlg","TRUE",3);
+    setCookie("cur_uid","id_new_input_wt",3);
+    console.log(getCookie("open_dlg"),getCookie("cur_uid"))
+    location.href='/health.neo'
+
+}
+{% endblock %}
+
+
+<h1>이동</h1>
+<!-- The text field -->
+{% block body%}
+
+<!-- The button used to copy the text -->
+<button class="w3-button w3-metro-purple   w3-xxxlarge w3-round-large" onclick="health_redirect('id_new_input_wt')">체중입력창</button>
+<button class="w3-button w3-metro-dark-red   w3-xxxlarge w3-round-large" onclick="health_redirect('id_new_input_bp')">혈압입력창</button>
+
+
+{% endblock %}

@@ -12,7 +12,8 @@ class CurUpdateInitAndCommit(UpdateInitAndCommit):
 if __name__ == '__main__':
 	print(neolib)
 	msg = """
-update 
+update redirect bp wt system
+
 	"""
 	CurUpdateInitAndCommit().run(msg)
 	#commmit("1.2.3",msg)

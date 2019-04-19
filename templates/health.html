@@ -30,12 +30,25 @@ console.log('open_type',open_type);
 
 
 
-if(type=='open_bp')
-   $("#id_new_input_bp").trigger("click");
-else if (type=='open_wt')
-    $("#id_new_input_wt").trigger("click");
+<!--if(type=='open_bp')-->
+   <!--$("#id_new_input_bp").trigger("click");-->
+<!--else if (type=='open_wt')-->
+    <!--$("#id_new_input_wt").trigger("click");-->
+
+//console.log("option ",g_option);
+ck_open_dlg = getCookie("open_dlg");
+console.log("ck_open_dlg ",ck_open_dlg);
+if(ck_open_dlg=='TRUE'){
+    ck_cur_uid = getCookie("cur_uid");
+    btnid = '#'+ck_cur_uid;
+    console.log("option open",btnid);
+    console.log("cookie",document.cookie,ck_open_dlg);
+
+    $(btnid).click();
+    setCookie("open_dlg","",3);
 
 
+}
 
 {% endblock %}
 
