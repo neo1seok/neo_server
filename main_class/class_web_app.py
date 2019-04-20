@@ -1,3 +1,4 @@
+import datetime
 import random
 import urllib
 from copy import deepcopy
@@ -425,8 +426,14 @@ class HealthWebApp(BaseDBWebApp):
 			return []
 
 		return list_dict_col
-	def __get_list(self,type,app_type):
+	def __get_list(self,type,app_type,is_login=True):
+
+
 		extra_condition = "and type = '{}'".format(type)
+
+		if not is_login:
+			onehourbefore = datetime.datetime.now() - datetime.timedelta(hours=1)
+			extra_condition += f" and reg_date > '{onehourbefore:%Y-%m-%d %H:%M:%S}'"
 		sql = self.fmt_list.format(extra_condition=extra_condition)
 		if app_type == "":
 			sql += " limit 10"
@@ -594,17 +601,17 @@ class HealthWebApp(BaseDBWebApp):
 
 		self.type = neoutil.get_safe_mapvalue(request.values, "type", "")
 		self.open_type = neoutil.get_safe_mapvalue(request.values, "open", "")
-
-		if not neoutil.get_safe_mapvalue(session, tag_login, False):
-			return
-
-
+		is_login = neoutil.get_safe_mapvalue(session, tag_login, False)
+		# if not neoutil.get_safe_mapvalue(session, tag_login, False):
+		# 	return
 
 
 
-		print("self.open_type",self.open_type)
-		self.list_data = self.__get_list("BP",self.type)
-		self.list_data_wt =self.__get_list("WT",self.type)
+
+
+		print("self.open_type",self.open_type,is_login)
+		self.list_data = self.__get_list("BP",self.type,is_login)
+		self.list_data_wt =self.__get_list("WT",self.type,is_login)
 
 		#print(self.list_data)
 

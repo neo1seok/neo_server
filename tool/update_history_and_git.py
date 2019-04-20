@@ -12,7 +12,7 @@ class CurUpdateInitAndCommit(UpdateInitAndCommit):
 if __name__ == '__main__':
 	print(neolib)
 	msg = """
-fix health_rd
+change health not login status
 
 	"""
 	CurUpdateInitAndCommit().run(msg)
