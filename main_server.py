@@ -88,6 +88,11 @@ def health_redirect():
 	dict_type = dict(wt='id_new_input_wt',bp='id_new_input_bp')
 	return render_template("health_redirect.html")
 
+@app.route('/netflix.neo',methods=['GET'])
+def netflix():
+	dict_type = dict(wt='id_new_input_wt',bp='id_new_input_bp')
+	list_genre = json.load(open(dir_path + '/rsc/netflix_genre.json'))
+	return render_template("netflix_genre.html",list_genre=list_genre)
 @app.route('/<app_name>/',methods=['GET'])
 @app.route('/<app_name>',methods=['GET'])
 def no_neo_redirection(app_name=None):
@@ -99,6 +104,9 @@ def no_neo_redirection(app_name=None):
 def send_static(path):
 	return send_from_directory('static', path)
 
+@app.route('/static/<path:path>')
+def send_static_2(path):
+	return send_from_directory('static', path)
 @app.route('/test')
 def test():
 	return send_from_directory('static', "sample.html")

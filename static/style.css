@@ -87,3 +87,28 @@ td.cell{
 tr.cell{
    vertical-align: baseline;
 }
+
+
+
+td.category_row{
+
+height: 214.5pt;
+border-top: none;
+width: 120px;
+vertical-align: middle;
+
+}
+
+td.netflix{
+border-top: 1px solid rgb(0, 0, 0);
+border-bottom: 1px solid rgb(0, 0, 0);
+border-right: 1px solid rgb(0, 0, 0);
+border-left: 1px solid rgb(0, 0, 0);
+vertical-align: middle;
+
+}
+.bar-chart {
+  display: inline-block;
+  margin-right: 1px;
+  background-color: hotpink;
+}

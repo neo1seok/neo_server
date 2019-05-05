@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+	<link rel="stylesheet" href="../static/style.css">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="../static/comm.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+{%for item in list_genre%}
+{%for row in item.list_genre%}
+ console.log('{{item.title|safe}}',{{loop.index0}},{{loop.index1}});
+{% endfor %}
+
+{% endfor %}
+
+</script>
+
+<h1>HELLO WOL</h1>
+<!-- The text field -->
+<input type="text" value="Hello World" id="myInput">
+
+<!-- The button used to copy the text -->
+<button onclick="copy_clipboard_from_input_id('myInput')">Copy text</button>
+<div class="w3-container">
+<table class="w3-table w3-bordered">
+	<tr>
+    <th>category</th>
+    <th>id</th>
+    <th>genre</th>
+  </tr>
+{%for item in list_genre%}
+
+
+
+  <!--rowspan={{item.list_genre|length}}-->
+	{%for row in item.list_genre%}
+
+
+  <tr>
+	  {%if loop.index0 ==0%}
+    <td  class = "netflix category_row" rowspan={{item.list_genre|length}} style ="background-color: {{item.color}};">{{item.title|safe}}   </td>
+
+	  {% endif %}
+
+	 <td class = "netflix" style ="background-color: {{item.color}};">{{row.id}}</td>
+    <td class = "netflix" style ="background-color: {{item.color}};"><a href="https://www.netflix.com/browse/genre/{{row.id}}">{{row.genre}}</a></td>
+  </tr>
+
+{% endfor %}
+
+{% endfor %}
+
+</table>
+</div>
+
+</body>
+</html>

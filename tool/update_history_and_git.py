@@ -12,7 +12,7 @@ class CurUpdateInitAndCommit(UpdateInitAndCommit):
 if __name__ == '__main__':
 	print(neolib)
 	msg = """
-change health not login status
+add extra page for netflix
 
 	"""
 	CurUpdateInitAndCommit().run(msg)

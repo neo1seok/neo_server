@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+	<link rel="stylesheet" href="../static/style.css">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<script src="https://d3js.org/d3.v5.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="../static/comm.js"></script>
 </head>
@@ -35,7 +38,79 @@ console.log(getCookie("open_dlg"),getCookie("cur_uid"))
 
 var query = window.location.search
 console.log(window.location.href ,GetURLParameter('test'))
-//location.href='/health.neo'
+
+var data = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+function test(){
+d3.select("body_").selectAll("div")
+  .data(data)
+  .enter()
+  .append("div")
+  .style("height", function (d) { // 높이 설정
+  return d + "px";
+}).style("width", function (d) { // 너비 설정
+  return "20px";
+}).attr("class", "bar-chart");;;
+}
+
+function test2(){
+d3.select("body_").selectAll("div")
+  .data(data)
+  .enter()
+  .append("div")
+  .style("height", function (d) { // 높이 설정
+  return d + "px";
+}).style("width", function (d) { // 너비 설정
+  return "20px";
+}).attr("class", "bar-chart");;;
+
+
+var w = 200, h = 100;
+var svg = d3.select("body")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+svg.attr("x", function(d, i) { // x 좌표 설정
+      return i * (w / data.length)
+    })
+    .attr("y", function(d) { // y 좌표 설정
+      return h - d;
+    })
+    .attr("width", w / data.length - 1) // 너비 설정
+    .attr("height", function(d) { // 높이 설정
+      return d;
+    })
+    .attr("fill", function(d) { // 색상 설정
+      return "hotpink";
+    });
+
+svg.selectAll("text")
+    .data(data)
+    .enter()
+    .append("text")
+    .text(function(d) {
+      return d;
+    })
+    .attr("x", function(d, i) {
+      return i * (w / data.length) + (w / data.length) / 2;
+    })
+    .attr("y", function(d) {
+      return h - d + 10;
+    })
+    .attr("font-family", "sans-serif")
+    .attr("font-size", "11px")
+    .attr("fill", "black")
+    .attr("text-anchor", "middle");
+    }
+
+ var fruits = ['apple', 'mango', 'banana', 'orange'];
+    d3.select('ul')
+        .selectAll('li')
+        .data(fruits)
+        .enter()
+        .append('li')
+        .text(function(d) { return d; });
+
+
 </script>
 
 <h1>HELLO WOL</h1>
@@ -44,5 +119,24 @@ console.log(window.location.href ,GetURLParameter('test'))
 
 <!-- The button used to copy the text -->
 <button onclick="copy_clipboard_from_input_id('myInput')">Copy text</button>
+
+<table class="w3-table w3-bordered">
+  <tr>
+    <th>Firstname</th>
+    <th>Lastname</th>
+    <th>Age</th>
+  </tr>
+  <tr>
+    <td>Jill</td>
+    <td>Smith</td>
+    <td>50</td>
+  </tr>
+  <tr>
+    <td>Eve</td>
+    <td>Jackson</td>
+    <td>94</td>
+  </tr>
+</table>
+
 </body>
 </html>

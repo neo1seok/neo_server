@@ -1,11 +1,15 @@
 
-__version__ = "1.0.9"
+__version__ = "1.0.10"
 #[ver].[majer].[miner]
 #ver: 전체 프레임의 격변이 있을때
 #majer:큰 기능 추가가 되었을때
 #miner:버그 수정및 작은 기능 추가.
 
 __history__ = """
+* 1.0.10
+add extra page for netflix
+
+	
 * 1.0.9
 change health not login status
 
