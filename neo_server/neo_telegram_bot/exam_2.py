@@ -5,7 +5,7 @@ import telegram
 # ictk_token = '649283772:AAElSi9wuksWFEdRTf2Ucvv721iY8qNlD5g'
 #https://api.telegram.org/bot535111053:AAHIL89_ZsQUjy43-a4JWmsvtGfuxLRKb-o/sendMessage?chat_id=61951841&text=test
 #https://api.telegram.org/bot535111053:AAHIL89_ZsQUjy43-a4JWmsvtGfuxLRKb-o/getUpdates
-from neo_telegram_bot.api_token import neo_bot_token
+from neo_server.neo_telegram_bot.api_token import neo_bot_token
 
 bot = telegram.Bot(token=neo_bot_token)
 # 우선 테스트 봇이니까 가장 마지막으로 bot에게 말을 건 사람의 id를 지정해줄게요.

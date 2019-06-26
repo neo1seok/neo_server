@@ -8,8 +8,8 @@ from werkzeug.security import generate_password_hash
 import pymysql
 from werkzeug.utils import redirect
 
-from main_class import class_web_app
-from neo_telegram_bot.api_token import neo_bot_token, temptest_bot
+from neo_server.main_class import class_web_app
+from neo_server.neo_telegram_bot.api_token import neo_bot_token, temptest_bot
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 map_general_map = class_web_app.get_lists(dir_path)
@@ -116,8 +116,8 @@ def get_ip():
 	return jsonify(data)
 
 
-@app.route('/test')
-def test():
+@app.route('/exam')
+def exam():
 	return send_from_directory('static', "sample.html")
 	#//return render_template("test.html",**dict())
 
@@ -603,7 +603,7 @@ def page_test():
 
 def init():
 	global telebot_inst
-	from neo_telegram_bot import neo_chat_bot
+	from neo_server.neo_telegram_bot import neo_chat_bot
 	api_token = neo_bot_token
 	if sys.argv.__len__() > 1 and sys.argv[1] == 'debug':
 		api_token = temptest_bot

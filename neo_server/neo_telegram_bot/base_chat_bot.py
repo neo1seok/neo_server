@@ -6,7 +6,7 @@ from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, Rege
 
 import logging
 
-from neo_telegram_bot.api_token import temptest_bot
+from neo_server.neo_telegram_bot.api_token import temptest_bot
 
 
 class BaseNeoChatBot(neo_class.NeoRunnableClass):

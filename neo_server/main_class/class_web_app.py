@@ -10,10 +10,10 @@ import collections,os
 from neolib import neoutil,crypto_util_bin
 from neolib.hexstr_util import *
 
-from main_class.class_web_app_base import *
-from neo_telegram_bot.neo_chat_bot import NeoChatBot
-from parsing_class.show_naverweb import GetLateestWebtoon
-from parsing_class.show_portal_order import CheckNaverDaumOrder
+from neo_server.main_class.class_web_app_base import *
+from neo_server.neo_telegram_bot.neo_chat_bot import NeoChatBot
+from neo_server.parsing_class.show_naverweb import GetLateestWebtoon
+from neo_server.parsing_class.show_portal_order import CheckNaverDaumOrder
 
 
 class SampleWebApp(BaseDBWebApp):

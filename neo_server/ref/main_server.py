@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash
 import pymysql
 from werkzeug.utils import redirect
 
-from main_class import class_web_app
+from neo_server.main_class import class_web_app
 dir_path = os.path.dirname(os.path.realpath(__file__))
 map_general_map = class_web_app.get_lists(dir_path)
 

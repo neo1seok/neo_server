@@ -17,8 +17,8 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
 
 # Enable logging
-from neo_telegram_bot.api_token import neo_bot_token, daily_info_token
-from parsing_class.show_daily_info import GetShowDailyInfo
+from neo_server.neo_telegram_bot.api_token import neo_bot_token, daily_info_token
+from neo_server.parsing_class.show_daily_info import GetShowDailyInfo
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
 					level=logging.INFO)
