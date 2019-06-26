@@ -1,9 +1,9 @@
 import sys
 sys.path.insert(0,'/var/www/neo_server')
 print(sys.path)
-import main_server
+from neo_server import main_server
 main_server.init()
-from main_server import app as application
+from neo_server.main_server import app as application
 
 
 
