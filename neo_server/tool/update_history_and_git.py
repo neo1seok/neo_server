@@ -12,7 +12,7 @@ class CurUpdateInitAndCommit(UpdateInitAndCommit):
 if __name__ == '__main__':
 	print(neolib)
 	msg = """
-fix private fav link update 
+merge master
 
 	"""
 	CurUpdateInitAndCommit().run(msg)
