@@ -11,9 +11,7 @@ import collections,os
 from neolib import neoutil,crypto_util_bin
 from neolib.hexstr_util import *
 
-
-
-
+import neo_server
 
 tag_login = "login"
 tag_user = "user"
@@ -83,7 +81,8 @@ class WebAppBase():
 		#print(self.__dict__)
 		#self.navigation = []
 		#self.param_dict  = kwargs
-		#self.version = __version__
+
+		self.version = neo_server.__version__
 		self.init()
 
 	def init(self):
