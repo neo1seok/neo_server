@@ -126,7 +126,7 @@ class WebtoonWebApp(BaseDBWebApp):
 class FavLinkDBWebApp(BaseDBWebApp):
 	def ready_extra_condition(self):
 		type= neoutil.get_safe_mapvalue(request.values,"type","main")
-
+		self.fav_type = type
 		print("FavLinkDBWebApp ready_extra_condition",type)
 
 		self.extra_condition = "and type = '{type}'".format(type=type.upper())
@@ -139,6 +139,7 @@ class FavLinkDBWebApp(BaseDBWebApp):
 		list_input_row = [
 
 			row_dict(name="cur_uid", id="input_cur_uid", type='hidden'),
+			row_dict(name="type", id="input_type", type='hidden' ,val= self.fav_type),
 			row_dict(title="제목", name="title", id="input_title", row_type="all", type="input"),
 			row_dict(title="링크", name="link", id="input_link", row_type="all", type="input"),
 
