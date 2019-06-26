@@ -14,6 +14,7 @@ from neolib.hexstr_util import *
 
 
 
+
 tag_login = "login"
 tag_user = "user"
 tag_time ="log_in_time"
@@ -82,6 +83,7 @@ class WebAppBase():
 		#print(self.__dict__)
 		#self.navigation = []
 		#self.param_dict  = kwargs
+		#self.version = __version__
 		self.init()
 
 	def init(self):
