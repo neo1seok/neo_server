@@ -62,8 +62,14 @@ class CheckNaverDaumOrder(neo_class.NeoRunnableClass):
 	def __init__(self):
 		neo_class.NeoRunnableClass.__init__(self)
 		self.list_tuples =[
-			("naver.com","https://www.naver.com", 'naver.html','https://search.naver.com/search.naver?where=nexearch&query={}&ie=utf8&sm=tab_lve',parse_naver),
-			("daum.net","https://www.daum.net", 'daum.html', 'https://search.daum.net/search?w=tot&DA=1TH&rtmaxcoll=1TH&q={}',parse_daum),
+			("naver.com","https://www.naver.com", 'naver.html',
+			 'https://search.naver.com/search.naver?where=nexearch&query={}&ie=utf8&sm=tab_lve',parse_naver),
+			("daum.net","https://www.daum.net",
+			 'daum.html', 'https://search.daum.net/search?w=tot&DA=1TH&rtmaxcoll=1TH&q={}',parse_daum),
+			("zum.com","http://zum.com",
+			 'zum.html','http://search.zum.com/search.zum?query={}',parse_zum),
+			("nate.com", "http://nate.com",
+			 'nate.html', 'https://search.daum.net/nate?w=tot&q={}', parse_nate),
 
 		]
 		self.list_result =[]
@@ -134,11 +140,11 @@ if __name__ == "__main__":
 
 
 	#print('https://search.naver.com/search.naver?where=nexearch&query={}&ie=utf8&sm=tab_lve'.format(urllib.parse.quote("박근헤")))
-	contents = neoutil.StrFromFile('rsc/nate.html')
-	#parse_zum(contents)
-
-	parse_nate(contents)
-	exit()
+	# contents = neoutil.StrFromFile('rsc/nate.html')
+	# #parse_zum(contents)
+	#
+	# parse_nate(contents)
+	# exit()
 	# url = unquote('https://search.naver.com/search.naver?where=nexearch&query={}&ie=utf8&sm=tab_lve'.format("박근헤"))
 	# print(url)
 	result = CheckNaverDaumOrder().run().result()
