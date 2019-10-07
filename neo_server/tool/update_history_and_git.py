@@ -12,7 +12,7 @@ class CurUpdateInitAndCommit(UpdateInitAndCommit):
 if __name__ == '__main__':
 	print(neolib)
 	msg = """
-merge master
+add parse
 
 	"""
 	CurUpdateInitAndCommit().run(msg)

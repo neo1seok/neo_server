@@ -4,7 +4,7 @@ import json
 import requests
 from neolib import neo_class, neoutil
 import re
-
+from bs4 import BeautifulSoup, Tag
 
 
 def comm_parser(contents:str,patt_title:str,start_tag:str,end_tag:str):
@@ -34,16 +34,43 @@ def parse_daum(contents:str):
 	return comm_parser(contents, patt_title, start_tag, end_tag)
 
 
+def parse_zum(contents:str):
+	soup = BeautifulSoup(contents, 'html.parser')
+	div_issue_keyword = soup.find('div', class_='issue_keyword')
+	for tmp in  div_issue_keyword.find_all("li"):
+		print(tmp)
+
+		f_nump = tmp.find("span",class_='r_num')
+		f_a = tmp.find("a", class_='d_btn_keyword')
+		print(f_nump.text,f_a.text)
+
+	return
 
 
+def parse_nate(contents:str):
+	soup = BeautifulSoup(contents, 'html.parser')
+	div_issue_keyword = soup.find('div', class_='kwd_list')
+	for tmp in  div_issue_keyword.find_all("li"):
+		#
+		f_nump = tmp.find("span",class_='nHide')
+		f_a = tmp.find("a")
+		print(f_nump.text,f_a.text)
+
+	return
 class CheckNaverDaumOrder(neo_class.NeoRunnableClass):
 	url_portal_order = "http://localhost/query/keyword_order/update"
 
 	def __init__(self):
 		neo_class.NeoRunnableClass.__init__(self)
 		self.list_tuples =[
-			("naver.com","https://www.naver.com", 'naver.html','https://search.naver.com/search.naver?where=nexearch&query={}&ie=utf8&sm=tab_lve',parse_naver),
-			("daum.net","https://www.daum.net", 'daum.html', 'https://search.daum.net/search?w=tot&DA=1TH&rtmaxcoll=1TH&q={}',parse_daum),
+			("naver.com","https://www.naver.com", 'naver.html',
+			 'https://search.naver.com/search.naver?where=nexearch&query={}&ie=utf8&sm=tab_lve',parse_naver),
+			("daum.net","https://www.daum.net",
+			 'daum.html', 'https://search.daum.net/search?w=tot&DA=1TH&rtmaxcoll=1TH&q={}',parse_daum),
+			("zum.com","http://zum.com",
+			 'zum.html','http://search.zum.com/search.zum?query={}',parse_zum),
+			("nate.com", "http://nate.com",
+			 'nate.html', 'https://search.daum.net/nate?w=tot&q={}', parse_nate),
 
 		]
 		self.list_result =[]
@@ -112,9 +139,13 @@ if __name__ == "__main__":
 
 	import urllib.parse
 
+
 	#print('https://search.naver.com/search.naver?where=nexearch&query={}&ie=utf8&sm=tab_lve'.format(urllib.parse.quote("박근헤")))
-
-
+	# contents = neoutil.StrFromFile('rsc/nate.html')
+	# #parse_zum(contents)
+	#
+	# parse_nate(contents)
+	# exit()
 	# url = unquote('https://search.naver.com/search.naver?where=nexearch&query={}&ie=utf8&sm=tab_lve'.format("박근헤"))
 	# print(url)
 	result = CheckNaverDaumOrder().run().result()
