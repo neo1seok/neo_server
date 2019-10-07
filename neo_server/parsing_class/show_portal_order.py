@@ -1,3 +1,4 @@
+import datetime
 import json
 
 import requests
@@ -117,9 +118,22 @@ if __name__ == "__main__":
 	# url = unquote('https://search.naver.com/search.naver?where=nexearch&query={}&ie=utf8&sm=tab_lve'.format("박근헤"))
 	# print(url)
 	result = CheckNaverDaumOrder().run().result()
+	list_str =[]
+
 	for portal, list_keyword in result:
 		print(portal)
-		for keyword in list_keyword:
-			print(keyword)
-
+		for order,keyword in list_keyword:
+			list_str.append(f"{order}\t{keyword}")
+			print(order,keyword)
+	print("", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "현재")
+	exit()
+	max_length = -1
+	for wd in list_str:
+		max_length = max(len(wd),max_length)
+	print(max_length)
+	def make_fill(src):
+		diflenth = max_length - len(src)
+		return src+" "*diflenth
+	for idx in range(10):
+		print(f"%s\t%s\t%s"%(make_fill(list_str[idx]),make_fill(list_str[10+idx]),make_fill(list_str[20+idx])))
 	pass
