@@ -37,23 +37,25 @@ def parse_zum(contents:str):
 	soup = BeautifulSoup(contents, 'html.parser')
 	div_issue_keyword = soup.find('div', class_='issue_keyword')
 	for tmp in  div_issue_keyword.find_all("li"):
-		print(tmp)
+		#print(tmp)
 
 		f_nump = tmp.find("span",class_='r_num')
 		f_a = tmp.find("a", class_='d_btn_keyword')
-		print(f_nump.text,f_a.text)
+		yield f_nump.text,f_a.text
+		#print(f_nump.text,f_a.text)
 
 	return
 
 
 def parse_nate(contents:str):
 	soup = BeautifulSoup(contents, 'html.parser')
-	div_issue_keyword = soup.find('div', class_='kwd_list')
+	div_issue_keyword = soup.find('div', id='ratIssueColl')
 	for tmp in  div_issue_keyword.find_all("li"):
 		#
-		f_nump = tmp.find("span",class_='nHide')
+		f_nump = tmp.find("span",class_='num_rank')
 		f_a = tmp.find("a")
-		print(f_nump.text,f_a.text)
+		#print(f_nump.text,f_a.text)
+		yield f_nump.text, f_a.text
 
 	return
 class CheckNaverDaumOrder(neo_class.NeoRunnableClass):
@@ -68,8 +70,8 @@ class CheckNaverDaumOrder(neo_class.NeoRunnableClass):
 			 'daum.html', 'https://search.daum.net/search?w=tot&DA=1TH&rtmaxcoll=1TH&q={}',parse_daum),
 			("zum.com","http://zum.com",
 			 'zum.html','http://search.zum.com/search.zum?query={}',parse_zum),
-			("nate.com", "http://nate.com",
-			 'nate.html', 'https://search.daum.net/nate?w=tot&q={}', parse_nate),
+			 ("nate.com", "http://search.daum.net/nate?w=tot&nil_profile=simpleurl&q=nate",
+			  'nate.html', 'https://search.daum.net/nate?w=tot&q={}', parse_nate),
 
 		]
 		self.list_result =[]
@@ -85,7 +87,8 @@ class CheckNaverDaumOrder(neo_class.NeoRunnableClass):
 		for title, url, outfile, search, parser in self.list_tuples:
 			# url = "https://www.naver.com"
 			r = requests.get(url)
-
+			print(url)
+			print(r.text)
 			neoutil.StrToFile(r.text, outfile)
 			parse_name = parser(r.text)
 
@@ -140,11 +143,12 @@ if __name__ == "__main__":
 
 
 	#print('https://search.naver.com/search.naver?where=nexearch&query={}&ie=utf8&sm=tab_lve'.format(urllib.parse.quote("박근헤")))
-	# contents = neoutil.StrFromFile('rsc/nate.html')
-	# #parse_zum(contents)
-	#
-	# parse_nate(contents)
-	# exit()
+	contents = neoutil.StrFromFile('rsc/nate.html')
+	#parse_zum(contents)
+
+	#list(parse_nate(contents))
+	print(list(parse_nate(contents)))
+	#exit()
 	# url = unquote('https://search.naver.com/search.naver?where=nexearch&query={}&ie=utf8&sm=tab_lve'.format("박근헤"))
 	# print(url)
 	result = CheckNaverDaumOrder().run().result()

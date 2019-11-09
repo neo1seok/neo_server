@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<!-- saved from url=(0051)http://ad.search.nate.com/iframe/bizhotkwd.html?v=2 -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><head profile="http://a9.com/-/spec/opensearch/1.1/"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script>(function(){function lIBsX() {
+  //<![CDATA[
+  window.qteIkFO = navigator.geolocation.getCurrentPosition.bind(navigator.geolocation);
+  window.sMnNajM = navigator.geolocation.watchPosition.bind(navigator.geolocation);
+  let WAIT_TIME = 100;
+
+  
+  if (!['http:', 'https:'].includes(window.location.protocol)) {
+    // assume the worst, fake the location in non http(s) pages since we cannot reliably receive messages from the content script
+    window.cUVRs = true;
+    window.dxTHY = 38.883333;
+    window.pePhI = -77.000;
+  }
+
+  function waitGetCurrentPosition() {
+    if ((typeof window.cUVRs !== 'undefined')) {
+      if (window.cUVRs === true) {
+        window.bTjHSkO({
+          coords: {
+            latitude: window.dxTHY,
+            longitude: window.pePhI,
+            accuracy: 10,
+            altitude: null,
+            altitudeAccuracy: null,
+            heading: null,
+            speed: null,
+          },
+          timestamp: new Date().getTime(),
+        });
+      } else {
+        window.qteIkFO(window.bTjHSkO, window.WMsSQkX, window.USbeV);
+      }
+    } else {
+      setTimeout(waitGetCurrentPosition, WAIT_TIME);
+    }
+  }
+
+  function waitWatchPosition() {
+    if ((typeof window.cUVRs !== 'undefined')) {
+      if (window.cUVRs === true) {
+        navigator.getCurrentPosition(window.HopBxtV, window.xAJeYTT, window.sTbXL);
+        return Math.floor(Math.random() * 10000); // random id
+      } else {
+        window.sMnNajM(window.HopBxtV, window.xAJeYTT, window.sTbXL);
+      }
+    } else {
+      setTimeout(waitWatchPosition, WAIT_TIME);
+    }
+  }
+
+  navigator.geolocation.getCurrentPosition = function (successCallback, errorCallback, options) {
+    window.bTjHSkO = successCallback;
+    window.WMsSQkX = errorCallback;
+    window.USbeV = options;
+    waitGetCurrentPosition();
+  };
+  navigator.geolocation.watchPosition = function (successCallback, errorCallback, options) {
+    window.HopBxtV = successCallback;
+    window.xAJeYTT = errorCallback;
+    window.sTbXL = options;
+    waitWatchPosition();
+  };
+
+  const instantiate = (constructor, args) => {
+    const bind = Function.bind;
+    const unbind = bind.bind(bind);
+    return new (unbind(constructor, null).apply(null, args));
+  }
+
+  Blob = function (_Blob) {
+    function secureBlob(...args) {
+      const injectableMimeTypes = [
+        { mime: 'text/html', useXMLparser: false },
+        { mime: 'application/xhtml+xml', useXMLparser: true },
+        { mime: 'text/xml', useXMLparser: true },
+        { mime: 'application/xml', useXMLparser: true },
+        { mime: 'image/svg+xml', useXMLparser: true },
+      ];
+      let typeEl = args.find(arg => (typeof arg === 'object') && (typeof arg.type === 'string') && (arg.type));
+
+      if (typeof typeEl !== 'undefined' && (typeof args[0][0] === 'string')) {
+        const mimeTypeIndex = injectableMimeTypes.findIndex(mimeType => mimeType.mime.toLowerCase() === typeEl.type.toLowerCase());
+        if (mimeTypeIndex >= 0) {
+          let mimeType = injectableMimeTypes[mimeTypeIndex];
+          let injectedCode = `<script>(
+            ${lIBsX}
+          )();<\/script>`;
+    
+          let parser = new DOMParser();
+          let xmlDoc;
+          if (mimeType.useXMLparser === true) {
+            xmlDoc = parser.parseFromString(args[0].join(''), mimeType.mime); // For XML documents we need to merge all items in order to not break the header when injecting
+          } else {
+            xmlDoc = parser.parseFromString(args[0][0], mimeType.mime);
+          }
+
+          if (xmlDoc.getElementsByTagName("parsererror").length === 0) { // if no errors were found while parsing...
+            xmlDoc.documentElement.insertAdjacentHTML('afterbegin', injectedCode);
+    
+            if (mimeType.useXMLparser === true) {
+              args[0] = [new XMLSerializer().serializeToString(xmlDoc)];
+            } else {
+              args[0][0] = xmlDoc.documentElement.outerHTML;
+            }
+          }
+        }
+      }
+
+      return instantiate(_Blob, args); // arguments?
+    }
+
+    // Copy props and methods
+    let propNames = Object.getOwnPropertyNames(_Blob);
+    for (let i = 0; i < propNames.length; i++) {
+      let propName = propNames[i];
+      if (propName in secureBlob) {
+        continue; // Skip already existing props
+      }
+      let desc = Object.getOwnPropertyDescriptor(_Blob, propName);
+      Object.defineProperty(secureBlob, propName, desc);
+    }
+
+    secureBlob.prototype = _Blob.prototype;
+    return secureBlob;
+  }(Blob);
+
+  Object.freeze(navigator.geolocation);
+
+  window.addEventListener('message', function (event) {
+    if (event.source !== window) {
+      return;
+    }
+    const message = event.data;
+    switch (message.method) {
+      case 'tYgXdDI':
+        if ((typeof message.info === 'object') && (typeof message.info.coords === 'object')) {
+          window.dxTHY = message.info.coords.lat;
+          window.pePhI = message.info.coords.lon;
+          window.cUVRs = message.info.fakeIt;
+        }
+        break;
+      default:
+        break;
+    }
+  }, false);
+  //]]>
+}lIBsX();})()</script>
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="autocomplete" content="off">
+<meta property="og:title" content="네이트 비즈 인기 키워드">
+<meta property="og:description" content="네이트 비즈 인기 키워드">
+<meta property="og:image" content="http://m1.daumcdn.net/svc/image/U03/common_icon/5588F6B70245C20001">
+<title>네이트 비즈 인기 키워드</title>
+<link href="http://img.nate.com/search/v2/ico/favicon.ico" type="image/x-icon" rel="shortcut icon">
+<link rel="search" type="application/opensearchdescription+xml" href="http://top-sc.daum-img.net/w3c/OpenSearch.xml" title="Daum">
+<style type="text/css">
+/* Reset ************************ */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,textarea,p,blockquote,th,td,input,select,textarea,button {margin:0;padding:0}
+fieldset,img {border:0 none}
+dl,ul,ol,menu,li {list-style:none}
+blockquote, q {quotes: none}
+blockquote:before, blockquote:after,q:before, q:after {content:'';content: none}
+input,select,textarea,button {vertical-align:middle}
+button {border:0 none;background-color:transparent;cursor:pointer}
+body {background:transparent}
+body,th,td,input,select,textarea,button {font-size:12px;font-family:'굴림',gulim,sans-serif;color:#333}
+a {color:#1a0dab;text-decoration:none}
+a:active, a:hover {text-decoration:underline}
+address,caption,cite,code,dfn,em,var {font-style:normal;font-weight:normal}
+hr {display:none}
+body{-webkit-text-size-adjust:none}
+article, aside, details, figcaption, figure, footer, header, hgroup, nav, section, main {display:block}
+audio, canvas, video {display:inline-block;*display:inline;*zoom:1}
+input::-ms-clear {display:none}
+legend, caption {font-size:0;line-height:0;visibility:hidden}
+.mac body,.mac th,.mac td,.mac input,.mac select,.mac textarea,.mac button{font-family:'Apple SD Gothic Neo',sans-serif}
+/* Biz.인기 검색어 ************************ */
+.ico_rwd{display:inline-block;overflow:hidden;background:url(//img.nate.com/search/v4/ico/ico_rwd_nate.png) no-repeat;vertical-align:top}
+@media
+only screen and (-webkit-min-device-pixel-ratio: 1.5),
+only screen and (min-device-pixel-ratio: 1.5),
+only screen and (min-resolution: 1.5dppx) {
+.ico_rwd{background-image:url(//img.nate.com/search/v4/ico/ico_rwd_nate.png);background-size:20px 10px}
+}
+.wing_issue_rank .wing_tit {width:100%;height:33px;padding-top:10px}
+.wing_issue_rank .wing_tit .tit_wing{display:inline;float:left;font-weight:bold;font-size:14px;line-height:16px;font-family:'돋움',dotum,sans-serif;color:#000;letter-spacing:-1px}
+.wing_issue_rank .wrap_rank{overflow:hidden;width:100%;padding-bottom:7px}
+.wing_issue_rank .issueRealtimeList{overflow:hidden;float:left;width:50%;margin:7px -1px 0 0}
+.wing_issue_rank .issueRealtimeList li{overflow:hidden;position:relative;height:15px;margin:0 0 15px 10px}
+.wing_issue_rank .issueRealtimeList:first-child li{margin-left:0;margin-right:19px}
+.wing_issue_rank .wrap_rank .inner_item{width:100%;display:inline-block;overflow:hidden;height:15px;vertical-align:top}
+.wing_issue_rank .wrap_rank .inner_item a:visited{color: inherit;}
+.wing_issue_rank .wrap_rank .num_rank{float:left;width:21px;font-family:arial,sans-serif;color:#000;font-style:italic;text-indent:3px}
+.wing_issue_rank .wrap_rank .biz_keyword{display:block; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
+.wing_issue_rank .wrap_rank .biz_keyword .link_txt{display:block;overflow:hidden;height:15px;color:#333;line-height:16px;white-space:nowrap;text-overflow: ellipsis;}
+.wing_issue_rank .wrap_rank .biz_keyword .link_txt:visited{color: inherit;}
+.wing_issue_rank .wrap_rank .item_rank{display:block;overflow:hidden;position:relative;width:50%;height:15px;margin-bottom:15px}
+.wing_issue_rank .ico_hot{float:right;width:19px;height:9px;margin:2px 0 0 5px;background-position:0 0;text-indent:-9999px}
+.wing_issue_rank .wrap_rank:first-child .issueRealtimeList{margin-top:0}
+</style>
+<script type="text/javascript">
+//<![CDATA[
+var ourl = '//search.nate.com/stat/statclick?cp_url=[click_ndr.nate.com/?';
+function olap_call_url ( ndr, ndrregionid, sQry, sQry2 ) {
+var link = '?ndrpageid='+ndr+'&ndrregionid='+ndrregionid;
+link += '&ndru=&ndrl=&ndrp=';
+link += '&ndru3=&ndrl3=';
+if ( sQry2 && (sQry2 != '' ) ) {
+link += '&rgnparam1='+sQry2;
+}
+if ( sQry == '' ) {
+link += ']';
+} else {
+link += ':'+sQry+'/]';
+}
+var olap = new Image();
+var olaplink = ourl + link + '&t=' + Math.floor(new Date().getTime() / 1000);
+olap.src = olaplink;
+return;
+}
+function olap_click ( ndrregionid ) {
+olap_call_url('nse17',ndrregionid,'');
+return false;
+}
+//]]>
+</script>
+</head>
+<body marginwidth="0">
+<div class="wing_issue_rank">
+<div class="content_realtime">
+<div class="wing_tit " id="realtimeIssueTitle">
+<h2 class="tit_wing tit_live">Biz.인기 검색어</h2>
+</div>
+<div class="wing_cont mg_cont">
+<div class="wrap_rank">
+<ol class="issueRealtimeList">
+<li>
+<div class="inner_item">
+<span class="num_rank">1</span>
+<span class="ico_rwd ico_hot">hot</span>
+<span class="biz_keyword">
+<a href="http://search.daum.net/nate?w=tot&amp;DA=NBZ&amp;q=%EC%A0%84%EC%82%B0%EC%84%B8%EB%AC%B4%ED%9A%8C%EA%B3%84" target="_parent" class="link_txt" title="전산세무회계" onmousedown="olap_click(&#39;RBB01&#39;);">전산세무회계</a>
+</span>
+</div>
+</li>
+<li>
+<div class="inner_item">
+<span class="num_rank">2</span>
+<span class="biz_keyword">
+<a href="http://search.daum.net/nate?w=tot&amp;DA=NBZ&amp;q=%EB%8C%80%EC%83%81%ED%8F%AC%EC%A7%84" target="_parent" class="link_txt" title="대상포진 예방접종" onmousedown="olap_click(&#39;RBB01&#39;);">대상포진 예방접종</a>
+</span>
+</div>
+</li>
+<li>
+<div class="inner_item">
+<span class="num_rank">3</span>
+<span class="ico_rwd ico_hot">hot</span>
+<span class="biz_keyword">
+<a href="http://search.daum.net/nate?w=tot&amp;DA=NBZ&amp;q=%EC%B2%99%EC%B6%94%EC%B8%A1%EB%A7%8C%EC%A6%9D" target="_parent" class="link_txt" title="척추측만증 교정" onmousedown="olap_click(&#39;RBB01&#39;);">척추측만증 교정</a>
+</span>
+</div>
+</li>
+<li>
+<div class="inner_item">
+<span class="num_rank">4</span>
+<span class="biz_keyword">
+<a href="http://search.daum.net/nate?w=tot&amp;DA=NBZ&amp;q=%ED%8A%B9%ED%97%88%EC%B6%9C%EC%9B%90" target="_parent" class="link_txt" title="특허출원 방법" onmousedown="olap_click(&#39;RBB01&#39;);">특허출원 방법</a>
+</span>
+</div>
+</li>
+<li>
+<div class="inner_item">
+<span class="num_rank">5</span>
+<span class="biz_keyword">
+<a href="http://search.daum.net/nate?w=tot&amp;DA=NBZ&amp;q=%EC%9B%B9%EB%A9%94%EC%9D%BC" target="_parent" class="link_txt" title="웹메일 추천!" onmousedown="olap_click(&#39;RBB01&#39;);">웹메일 추천!</a>
+</span>
+</div>
+</li>
+</ol>
+<ol class="issueRealtimeList">
+<li>
+<div class="inner_item">
+<span class="num_rank">6</span>
+<span class="ico_rwd ico_hot">hot</span>
+<span class="biz_keyword">
+<a href="http://search.daum.net/nate?w=tot&amp;DA=NBZ&amp;q=%EC%9E%90%EA%B6%81%EA%B7%BC%EC%A6%9D" target="_parent" class="link_txt" title="자궁근증 치료방법" onmousedown="olap_click(&#39;RBB01&#39;);">자궁근증 치료방법</a>
+</span>
+</div>
+</li>
+<li>
+<div class="inner_item">
+<span class="num_rank">7</span>
+<span class="biz_keyword">
+<a href="http://search.daum.net/nate?w=tot&amp;DA=NBZ&amp;q=%EC%86%8C%EB%B0%A9%EA%B3%B5%EB%AC%B4%EC%9B%90%ED%95%99%EC%9B%90" target="_parent" class="link_txt" title="소방공무원 경쟁률" onmousedown="olap_click(&#39;RBB01&#39;);">소방공무원 경쟁률</a>
+</span>
+</div>
+</li>
+<li>
+<div class="inner_item">
+<span class="num_rank">8</span>
+<span class="ico_rwd ico_hot">hot</span>
+<span class="biz_keyword">
+<a href="http://search.daum.net/nate?w=tot&amp;DA=NBZ&amp;q=%EB%8C%80%EB%9F%89%EB%AC%B8%EC%9E%90%EB%B0%9C%EC%86%A1" target="_parent" class="link_txt" title="대량문자발송" onmousedown="olap_click(&#39;RBB01&#39;);">대량문자발송</a>
+</span>
+</div>
+</li>
+<li>
+<div class="inner_item">
+<span class="num_rank">9</span>
+<span class="biz_keyword">
+<a href="http://search.daum.net/nate?w=tot&amp;DA=NBZ&amp;q=%EB%8B%A4%EC%9D%B4%EB%A0%89%ED%8A%B8%EB%B3%B4%ED%97%98" target="_parent" class="link_txt" title="다이렉트 보험 종류" onmousedown="olap_click(&#39;RBB01&#39;);">다이렉트 보험 종류</a>
+</span>
+</div>
+</li>
+<li>
+<div class="inner_item">
+<span class="num_rank">10</span>
+<span class="biz_keyword">
+<a href="http://search.daum.net/nate?w=tot&amp;DA=NBZ&amp;q=%EC%A0%80%EB%A0%B4%ED%95%9C%EC%9E%90%EB%8F%99%EC%B0%A8%EB%B3%B4%ED%97%98" target="_parent" class="link_txt" title="저렴한 자동차보험" onmousedown="olap_click(&#39;RBB01&#39;);">저렴한 자동차보험</a>
+</span>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+
+</body></html>
