@@ -4,7 +4,7 @@ import requests
 from neolib import neo_class, neoutil
 import re
 from bs4 import BeautifulSoup, Tag
-
+import urllib.parse
 
 def comm_parser(contents:str,patt_title:str,start_tag:str,end_tag:str):
 
