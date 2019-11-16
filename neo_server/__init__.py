@@ -1,11 +1,16 @@
-
-__version__ = "1.0.16"
+# -*- coding: utf-8 -*- 	
+__version__ = "1.0.17"
+"""
 #[ver].[majer].[miner]
 #ver: 전체 프레임의 격변이 있을때
 #majer:큰 기능 추가가 되었을때
 #miner:버그 수정및 작은 기능 추가.
-
+"""
 __history__ = """
+* 1.0.17
+add parse
+
+	
 * 1.0.16
 add parse
 
