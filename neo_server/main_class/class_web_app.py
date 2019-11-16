@@ -227,7 +227,12 @@ class KeywordOrderWebApp(BaseDBWebApp):
 			tmp['list_col_name'] = self.list_col_name
 		print("self.list_portals ",self.list_portals )
 		print("self.list_col_name ", self.list_col_name)
-
+		self.list_portals =[]
+		for main_url, list_order in self.list_result:
+			for order,key_word in list_order:
+				pass
+			self.list_portals.append(dict(title=main_url,list_order=list_order))
+			pass
 		pass
 	def db_format(self, prt_uid, len_order):
 		sql = self.fmt_select_keyword_order.format(prt_uid)
@@ -278,7 +283,7 @@ class KeywordOrderWebApp(BaseDBWebApp):
 
 		map_portal = { tmp['main_url']:neoutil.Struct(**tmp) for tmp in list_portals}
 
-		for main_url,list_order in self.list_result:
+		for main_url,search,list_order in self.list_result:
 			obj = map_portal[main_url]
 			print(obj.prt_uid)
 			self.db_format(obj.prt_uid,len(list_order))
