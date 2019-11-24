@@ -56,7 +56,13 @@ class WebtoonWebApp(BaseDBWebApp):
 			self.extra_condition = ""
 
 		pass
+	
+	def update_from_db(self):
+		pass
+	
 	def post_process(self):
+		type = neoutil.get_safe_mapvalue(request.values, "type", "")
+		
 		sql = """
 				SELECT prt_uid, main_url,name as title 	FROM neo_pwinfo.portal;
 				"""
@@ -110,18 +116,22 @@ class WebtoonWebApp(BaseDBWebApp):
 	# 	print(self.list_portals)
 	# 	pass
 	def update_custom(self):
-		sql = """SELECT id FROM neo_pwinfo.webtoon where dates regexp '{}' ;""".format(self.get_today_date())
-		print(sql)
+		date = neoutil.get_safe_mapvalue(request.values, "date", "")
+		
+		#get list of ids on not hidden in db
+		sql = """SELECT id FROM neo_pwinfo.webtoon where  status != 'HIDDEN';"""
 		list_ids = self.select(sql)
+		
 		print(sql,list_ids)
-		list_result = GetLateestWebtoon().set_list_ids([tmp['id'] for tmp in list_ids]).run().result()
-		for tmp_dic in list_result:
-			sql_update ="""UPDATE neo_pwinfo.webtoon 
-						SET  today_title = '{today_title}',  lastno = '{lastno}', updt_date = now()
-						WHERE id='{id}';""".format(**tmp_dic)
-			self.cur.execute(sql_update)
-		print(list_result)
-		return dict(result='ok')
+		self.list_result_webtoon = GetLateestWebtoon(date=date,list_ids=list_ids).run().result()
+		
+		# for tmp_dic in list_result:
+		# 	sql_update ="""UPDATE neo_pwinfo.webtoon
+		# 				SET  today_title = '{today_title}',  lastno = '{lastno}', updt_date = now()
+		# 				WHERE id='{id}';""".format(**tmp_dic)
+		# 	self.cur.execute(sql_update)
+		# print(list_result)
+		# return dict(result='ok')
 
 
 class FavLinkDBWebApp(BaseDBWebApp):
