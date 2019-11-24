@@ -163,6 +163,7 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 		return self
 
 	def run(self):
+		self.cur_web_date = ""
 		self.filterd_ids = self.list_ids
 		if not self.date =='all':
 			today_list_ids = list(self.parse_main())
@@ -184,6 +185,7 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 	def parse_main(self):
 		url ='https://comic.naver.com/webtoon/weekdayList.nhn'
 		date = self.date
+		
 		if date:
 			#eng_date = self.map_date[date]
 			eng_date = self.date
@@ -209,7 +211,7 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 		
 		sub_title_tag = soup.find('div',class_='view_type').find("h3", class_='sub_tit')
 		#print(sub_title_tag.text)
-		date = re.match(r'(월|화|수|목|금|토|일)요 전체 웹툰',sub_title_tag.text).group(1)
+		self.cur_web_date = re.match(r'(월|화|수|목|금|토|일)요 전체 웹툰',sub_title_tag.text).group(1)
 		#print(date)
 		
 		

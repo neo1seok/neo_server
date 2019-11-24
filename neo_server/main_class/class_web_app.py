@@ -48,16 +48,16 @@ class WebtoonWebApp(BaseDBWebApp):
 		# print('오늘 요일: %s요일' % date_name)
 		BaseDBWebApp.ready_extra_condition(self)
 		type = neoutil.get_safe_mapvalue(request.values, "type", "")
-		self.title = "{} ({}요일)".format(self.title_org,self.get_today_date())
+		
+		
+		ids = ",".join([f"'{tmp['id']}'" for tmp in self.list_result_webtoon])
+		
 
-		self.extra_condition += "and dates regexp '%s'" % self.get_today_date()
+		self.extra_condition += "and id in (%s) " % ids
 
 		if type == "all":
 			self.extra_condition = ""
 
-		pass
-	
-	def update_from_db(self):
 		pass
 	
 	def post_process(self):
@@ -69,9 +69,12 @@ class WebtoonWebApp(BaseDBWebApp):
 		list_portals = self.select(sql)
 
 		for map_line in self.list_data:
-
-			map_line['list_url'] =map_line['list_url'].format(map_line['id'])
-			map_line['detail_url'] = map_line['detail_url'].format(map_line['id'],map_line['lastno'])
+			id = map_line['id']
+			map_line['list_url'] =map_line['list_url'].format(id)
+			map_line['detail_url'] = map_line['detail_url'].format(id,map_line['lastno'])
+			webtoon_info = self.dict_result_webtoon[id]
+			map_line.update(**webtoon_info)
+			
 			#print("map_url", map_line['list_url'], map_line['detail_url'])
 
 
@@ -98,7 +101,28 @@ class WebtoonWebApp(BaseDBWebApp):
 				dict(title="삭제", type="btn_no_modal",onclick="delete_content"),
 			],
 			     list_data = self.list_data)
-
+		map_date = {
+			'월': 'mon',
+			'화': 'tue',
+			'수': 'wed',
+			'목': 'thu',
+			'금': 'fri',
+			'토': 'sat',
+			'일': 'sun',
+			
+		}
+		week = map_date.get(self.cur_web_date,"all")
+		self.url_naver_date_webtoon=f"https://comic.naver.com/webtoon/weekdayList.nhn?week={week}" \
+			if week !='all' else 'https://comic.naver.com/webtoon/weekday.nhn'
+		
+		self.date_btn_info = []
+		for name,eng in map_date.items():
+			is_cur_date= (name == self.cur_web_date)
+			
+			self.date_btn_info.append(dict(name=name,eng=eng,is_cur_date=is_cur_date))
+		
+			
+		
 		self.list_tables[0].update(this_table)
 		neoutil.simple_view_list(self.list_data)
 		pass
@@ -123,13 +147,26 @@ class WebtoonWebApp(BaseDBWebApp):
 		list_ids = self.select(sql)
 		
 		print(sql,list_ids)
-		self.list_result_webtoon = GetLateestWebtoon(date=date,list_ids=list_ids).run().result()
+		inst = GetLateestWebtoon(date=date,list_ids=[tmp['id'] for tmp in list_ids]).run()
+		self.list_result_webtoon = inst.result()
+		self.cur_web_date = inst.cur_web_date
+		'''
+		[{'id': '723714', 'lastno': '126', 'today_title': '126화',
+		'img_src': 'https://shared-comic.pstatic.net/thumb/webtoon/723714/126/thumbnail_202x120_0c4a6d38-b9cd-4106-aced-9c45f2795bf9.jpg',
+		'status_icon': '', 'writer': '류기운 / 문정후', 'web_title': '용비불패 완전판', 'reg_date': '2019.11.21'},
+		]
+		'''
 		
-		# for tmp_dic in list_result:
-		# 	sql_update ="""UPDATE neo_pwinfo.webtoon
-		# 				SET  today_title = '{today_title}',  lastno = '{lastno}', updt_date = now()
-		# 				WHERE id='{id}';""".format(**tmp_dic)
-		# 	self.cur.execute(sql_update)
+		self.title = "{} ({}요일)".format(self.title_org, self.cur_web_date)
+		
+		
+		self.dict_result_webtoon = {tmp['id']:tmp for tmp in self.list_result_webtoon}
+		
+		for tmp_dic in self.list_result_webtoon:
+			sql_update ="""UPDATE neo_pwinfo.webtoon
+						SET title='{web_title}', today_title = '{today_title}',  lastno = '{lastno}', updt_date = now()
+						WHERE id='{id}';""".format(**tmp_dic)
+			self.cur.execute(sql_update)
 		# print(list_result)
 		# return dict(result='ok')
 
