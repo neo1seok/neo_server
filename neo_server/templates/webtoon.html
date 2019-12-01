@@ -23,6 +23,19 @@ for (i = 0; i < acc.length; i++) {
         }
     });
 }
+
+
+
+temp_query('/query/{{name}}/update_custom', {
+      }, function(response) {
+        console.log("confirm ok",response);
+        $('#table_contents').html(response.table_html);
+
+
+
+ })
+
+
 {% endblock %}
 
 
@@ -42,32 +55,9 @@ for (i = 0; i < acc.length; i++) {
 
 <a href="{{url_naver_date_webtoon}}" class="w3-button" target="_blank">네이버 웹툰 화면으로 가기</a>
 
-
-{%for table in list_tables%}
-
-<div class="w3-container" id='{{table.id_div_list}}'>
-<h2>{{table.title}}</h2>
-
-<table class="table table-striped">
-
-		 {% for item in table.list_data %}
-		<tr><td width="5%">
-		<button class="w3-btn w3-ripple " data-toggle="modal" data-target="#{{table.modal_id}}"  onclick="edit_content('{{item.cur_uid}}')" >&#9998;</button>
-		</td>
-		<td>
-			<a href="{{ item.list_url }}" target="_blank"> {{ item.title }} </a>
-		</td>
-		<td>
-			<a href="{{ item.detail_url }}" target="_blank"> {{ item.today_title }} </a>
-		</td></tr>
-		{% endfor %}
-
-</table>
-
-  </div>
-
+<div class="w3-container" id='table_contents'>
 </div>
-{%endfor%}
+
 {% endblock %}
 
 

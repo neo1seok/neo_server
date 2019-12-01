@@ -332,7 +332,7 @@ if __name__ == '__main__':
 	#dict_res = inst = GetLateestWebtoon(date='mon', list_ids=list_all).parse_main_with_dash()
 	#print(dict_res)
 	#exit()
-	inst = GetLateestWebtoon(date='org'
+	inst = GetLateestWebtoon(date=''
 	                              '',list_ids=list_all).run()
 	result = 	inst.result()
 	for tmp in result:

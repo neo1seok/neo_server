@@ -1,0 +1,28 @@
+
+
+<div class="w3-container" id='{{id_div_list}}'>
+<h2>{{title}}</h2>
+
+<table class="table table-striped">
+
+		 {% for item in list_result_webtoon %}
+		<tr><td width="5%">
+		<button class="w3-btn w3-ripple " data-toggle="modal" data-target="#{{modal_id}}"
+                onclick="edit_content('{{item.cur_uid}}')" >&#9998;</button>
+		</td>
+		<td>
+			<a href="{{ item.list_url }}" target="_blank"> {{ item.title }} </a>
+		</td>
+		<td>
+			<a href="{{ item.detail_url }}" target="_blank"> {{ item.today_title }} </a>
+		</td></tr>
+		{% endfor %}
+
+</table>
+
+  </div>
+
+
+
+
+
