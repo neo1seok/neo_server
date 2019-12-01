@@ -70,8 +70,8 @@ class CheckNaverDaumOrder(neo_class.NeoRunnableClass):
 			 'daum.html', 'https://search.daum.net/search?w=tot&DA=1TH&rtmaxcoll=1TH&q={}',parse_daum),
 			("zum.com","http://zum.com",
 			 'zum.html','http://search.zum.com/search.zum?query={}',parse_zum),
-			("nate.com", "https://search.daum.net/nate",
-			 'nate.html', 'https://search.daum.net/nate?w=tot&q={}', parse_nate),
+			# ("nate.com", "https://search.daum.net/nate",
+			#  'nate.html', 'https://search.daum.net/nate?w=tot&q={}', parse_nate),
 
 		]
 		self.list_result =[]
