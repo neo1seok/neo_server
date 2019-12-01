@@ -58,7 +58,7 @@ def parse_nate(contents:str):
 		yield f_nump.text, f_a.text
 
 	return
-class CheckNaverDaumOrder(neo_class.NeoRunnableClass):
+class CheckPortalOrder(neo_class.NeoRunnableClass):
 	url_portal_order = "http://localhost/query/keyword_order/update"
 
 	def __init__(self):
@@ -151,7 +151,7 @@ if __name__ == "__main__":
 	# exit()
 	# url = unquote('https://search.naver.com/search.naver?where=nexearch&query={}&ie=utf8&sm=tab_lve'.format("박근헤"))
 	# print(url)
-	result = CheckNaverDaumOrder().run().result()
+	result = CheckPortalOrder().run().result()
 	for portal,search, list_keyword in result:
 		print(portal)
 		for keyword in list_keyword:

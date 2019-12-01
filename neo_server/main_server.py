@@ -147,6 +147,23 @@ def webtoon_table():
 	result = inst.result()
 	return render_template("webtoon_table.html",id_div_list="id_div_list",title="TEST",result=result,modal_id="test_modal_id")
 
+@app.route('/page_test_4',methods=['GET'])
+def keyword_order_contents():
+	from neo_server.parsing_class.show_naverweb import GetLateestWebtoon
+	
+	from neo_server.parsing_class.show_portal_order import CheckPortalOrder
+	result = CheckPortalOrder().run().result()
+	list_portals = []
+	for main_url, search, list_order_org in result:
+		list_order = []
+		for order, key_word in list_order_org:
+			import urllib
+			list_order.append(
+				dict(order=order, keyword=key_word, url=search.format(urllib.parse.quote(key_word, safe=''))))
+			pass
+		
+		list_portals.append(dict(title=main_url, list_order=list_order[:10]))
+	return render_template("keyword_order_contents.html",list_portals=list_portals)
 
 @app.route('/page_test')
 def page_test():

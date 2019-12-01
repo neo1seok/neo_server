@@ -1,0 +1,24 @@
+
+<div class="row">
+
+
+  {% for portal in list_portals %}
+  <div class="col-lg-6" style="background-color:grey;">
+    <h2>{{portal.title}}</h2>
+
+    <div class="list-group">
+        {% for order in portal.list_order %}
+
+<p  class="list-group-item" > 
+  <!--<button class="w3-btn w3-ripple " href="{{ order.url }}" target="_blank">{{ order.order }} . {{order.keyword }}</button>-->
+<a href="{{ order.url }}" target="_blank"> {{ order.order }} . {{order.keyword }}</a>
+</p>
+
+        {% endfor %}
+</div>
+
+  </div>
+  {% endfor %}
+
+</div>
+

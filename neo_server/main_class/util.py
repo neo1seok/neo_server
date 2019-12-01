@@ -13,14 +13,15 @@ from neolib.hexstr_util import *
 
 from neo_server.main_class.class_web_app import *
 from neo_server.main_class.class_web_app_base import *
+from neo_server.main_class.keyword_order_web_app import KeywordOrderWebApp
 from neo_server.main_class.webtoon_web_app import WebtoonWebApp
 from neo_server.neo_telegram_bot.neo_chat_bot import NeoChatBot
 from neo_server.parsing_class.show_naverweb import GetLateestWebtoon
-from neo_server.parsing_class.show_portal_order import CheckNaverDaumOrder
+from neo_server.parsing_class.show_portal_order import CheckPortalOrder
 
 
 def get_lists(dir_path):
-	WebtoonWebApp
+	WebtoonWebApp,KeywordOrderWebApp
 
 	list_new_content = json.load(open(dir_path+'/rsc/webinfo.json'))
 	val_global = globals()
