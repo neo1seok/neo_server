@@ -32,13 +32,15 @@ for (i = 0; i < acc.length; i++) {
 
 <div class="w3-bar w3-gray">
     {%for btn_item in date_btn_info%}
-      <a href="/webtoon.neo?date={{btn_item.eng}}" class="w3-bar-item w3-button {{'w3-black' if btn_item.is_cur_date else ''}}" id="id_date_{{btn_item.eng}}">{{btn_item.name}}</a>
+      <a href="/webtoon.neo?date={{btn_item.eng}}"
+         class="w3-bar-item w3-button {{'w3-black' if btn_item.is_cur_date else ''}}"
+         id="id_date_{{btn_item.eng}}">{{btn_item.name}}</a>
     {%endfor%}
 
 
 </div>
 
-<a href="{{url_naver_date_webtoon}}" class="w3-button">네이버 웹툰 화면으로 가기</a>
+<a href="{{url_naver_date_webtoon}}" class="w3-button" target="_blank">네이버 웹툰 화면으로 가기</a>
 
 
 {%for table in list_tables%}

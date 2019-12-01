@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup, Tag, ResultSet
 
 
 class GetLateestWebtoon(neo_class.NeoRunnableClass):
-	webtoonurlfmt = "http://comic.naver.com/webtoon/list.nhn?titleId={0}"
+	webtoonurlfmt = "http://comic.naver.com/webtoon/list.nhn?titleId={0}&weekday={1}"
 	isAll = True
 	map_date ={
 		'월': 'mon',
@@ -29,6 +29,8 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 		neo_class.NeoRunnableClass.__init__(self)
 		self.date = date
 		self.list_ids=list_ids
+		
+		self.time_check = dict(requst_time=0,parse_time=0)
 		
 		pass
 	
@@ -49,11 +51,17 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 		safdsf = json.dumps(['foo', {'bar': ('baz', None, 1.0, 2)}])
 		fsdf = json.loads(safdsf)
 
-	def getTopId(self, id):
-		url = self.webtoonurlfmt.format(id)
+	def getTopId(self, id,date=''):
+		
+		url = self.webtoonurlfmt.format(id,date)
 		#print(url)
+		st = time.time()
+		print(url)
 		r = requests.get(url)
+		self.time_check['requst_time'] +=time.time()-st
 		#print(r.text)
+		st = time.time()
+		
 		soup = BeautifulSoup(r.text, 'html.parser')
 		soup_tbody = soup.find("table",class_='viewList')
 		
@@ -119,7 +127,7 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 		# get reg_date
 		reg_date = tr_tag.find("td", class_="num").text
 		
-		
+		self.time_check['parse_time'] += time.time() - st
 		return dict(id=id, lastno=lastno, today_title=conv_title(today_title), img_src=img_src,
 		            status_icon=status_icon,writer=conv_title(writer),web_title=conv_title(web_title),reg_date=reg_date )
 		
@@ -165,23 +173,117 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 	def run(self):
 		self.cur_web_date = ""
 		self.filterd_ids = self.list_ids
+		st = time.time()
+		if self.date != 'org':
+
+			main_info = self.parse_main_with_dash()
+			today_date = main_info['today_date']
+			self.cur_web_date = today_date
+			id_per_date = main_info['id_per_date']
+			if not self.date:
+				self.date = today_date
+				
+			
+			list_tuple_ids = id_per_date[today_date]
+			today_list_ids = [id for id,title in list_tuple_ids]
+			if self.date == 'all':
+				today_list_ids=[]
+				for tmpdate,list_tuple_ids in id_per_date.items():
+					today_list_ids += [id for id,title in list_tuple_ids]
+				#[[id for id,title in list_tuple_ids] for list_tuple_ids in id_per_date.items()]
+			
+			
+			self.filterd_ids = set(today_list_ids) & set(self.list_ids)
+		
+			
+		# if not self.date =='all':
+		# 	today_list_ids = list(self.parse_main())
+		# 	self.filterd_ids = set( today_list_ids) & set(self.list_ids)
+		# 	print('today_list_ids',today_list_ids)
+		# 	print('list_ids',self.list_ids)
+		# 	print('filterd_ids',self.filterd_ids)
+		print("total list part",time.time()-st)
+		st = time.time()
+		self.mapTopid = []
+		for id in self.filterd_ids:
+			tmp = self.getTopId(id)
+			if tmp == None: continue
+			self.mapTopid.append(tmp)
+		print("latest part", time.time() - st)
+		#print(self.mapTopid)
+		return self
+	
+	def run_old(self):
+		self.cur_web_date = ""
+		self.filterd_ids = self.list_ids
+		st = time.time()
 		if not self.date =='all':
 			today_list_ids = list(self.parse_main())
 			self.filterd_ids = set( today_list_ids) & set(self.list_ids)
 			print('today_list_ids',today_list_ids)
 			print('list_ids',self.list_ids)
 			print('filterd_ids',self.filterd_ids)
+		print("total list part",time.time()-st)
+		st = time.time()
 		self.mapTopid = []
 		for id in self.filterd_ids:
 			tmp = self.getTopId(id)
 			if tmp == None: continue
 			self.mapTopid.append(tmp)
-
+		print("latest part", time.time() - st)
 		#print(self.mapTopid)
 		return self
+	
 	def result(self):
 		return self.mapTopid
-
+	
+	def parse_main_with_dash(self):
+		url = 'https://comic.naver.com/webtoon/weekday.nhn'
+		date = self.date
+		r = requests.get(url)
+		# print(r.text)
+		soup = BeautifulSoup(r.text, 'html.parser')
+		soup: Tag
+		col_list_tag = soup.find("div", class_='list_area daily_all').find_all("div", class_='col')
+		result = {}
+		id_per_date ={}
+		today_date =""
+		for col in col_list_tag:
+			col:Tag
+			col_inner_tag = col.find("div", class_='col_inner')
+			week_date = col_inner_tag.find("h4").attrs['class'][0]
+			print("week_date",week_date)
+			
+			if "col_selected" in col.attrs['class']:
+				print("col_selected",week_date)
+				today_date =week_date
+			
+			img_list_tag = soup.find("ul", class_='img_list')
+			img_list_tag: Tag
+			
+			list_ids =[]
+			
+			for tmp_tag_list in col_inner_tag.find_all("li"):
+				thumb_tag = tmp_tag_list.find("div", class_='thumb')
+				alink = thumb_tag.find('a')
+				atitle = tmp_tag_list.find('a',class_='title')
+				link = alink.attrs['href']
+				title = atitle.attrs['title']
+				parts = urlparse(link)
+				dict_args = dict([tmp.split("=") for tmp in parts.query.split("&")])
+				print(dict_args['titleId'])
+				titleId = dict_args['titleId']
+				
+				list_ids.append((titleId,title))
+				
+				#yield dict_args['titleId']
+				# list_ids.append((dict_args['titleId'],title))
+				pass
+			id_per_date[week_date] = list_ids
+			print(col.attrs['class'])
+		return 	dict(id_per_date=id_per_date,today_date=today_date)
+		#print("img_list_tag",img_list_tag)
+	
 	def parse_main(self):
 		url ='https://comic.naver.com/webtoon/weekdayList.nhn'
 		date = self.date
@@ -223,13 +325,22 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 
 if __name__ == '__main__':
 	list_all = ["675554","665170","22897","21815","25455","570506","641253","670139","690503","703307","695321","696617","597478","710766","703836","723714","710751","712694","727268","726842","728750","730259","730148","729255","733413"]
+	#list_all = ["21815", ]
 
 	#result = GetLateestWebtoon().set_list_ids(['675554', '694191', '21815', '25613', '597478']).run().result()
 	#print(result)
-	result = GetLateestWebtoon(date='mon',list_ids=list_all).run().result()
+	#dict_res = inst = GetLateestWebtoon(date='mon', list_ids=list_all).parse_main_with_dash()
+	#print(dict_res)
+	#exit()
+	inst = GetLateestWebtoon(date='org'
+	                              '',list_ids=list_all).run()
+	result = 	inst.result()
 	for tmp in result:
 		print(tmp['id'],tmp['web_title'],tmp['today_title'],tmp['reg_date'])
 	print(result)
+	print(inst.time_check)
 	#parse_main
 	
+
+
 
