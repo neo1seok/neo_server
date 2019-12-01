@@ -12,7 +12,7 @@ class CurUpdateInitAndCommit(UpdateInitAndCommit):
 if __name__ == '__main__':
 	print(neolib)
 	msg = """
-add parse
+검색어 순위및 웹툰 파싱 방법 변화
 
 	"""
 	CurUpdateInitAndCommit().run(msg)
