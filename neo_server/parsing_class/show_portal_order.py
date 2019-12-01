@@ -4,7 +4,7 @@ import requests
 from neolib import neo_class, neoutil
 import re
 from bs4 import BeautifulSoup, Tag
-
+import urllib.parse
 
 def comm_parser(contents:str,patt_title:str,start_tag:str,end_tag:str):
 
@@ -37,23 +37,25 @@ def parse_zum(contents:str):
 	soup = BeautifulSoup(contents, 'html.parser')
 	div_issue_keyword = soup.find('div', class_='issue_keyword')
 	for tmp in  div_issue_keyword.find_all("li"):
-		print(tmp)
+		#print(tmp)
 
 		f_nump = tmp.find("span",class_='r_num')
 		f_a = tmp.find("a", class_='d_btn_keyword')
-		print(f_nump.text,f_a.text)
+		yield f_nump.text,f_a.text
+		#print(f_nump.text,f_a.text)
 
 	return
 
 
 def parse_nate(contents:str):
 	soup = BeautifulSoup(contents, 'html.parser')
-	div_issue_keyword = soup.find('div', class_='kwd_list')
+	div_issue_keyword = soup.find('div', class_='wrap_rank')
 	for tmp in  div_issue_keyword.find_all("li"):
 		#
-		f_nump = tmp.find("span",class_='nHide')
+		f_nump = tmp.find("span",class_='num_rank')
 		f_a = tmp.find("a")
 		print(f_nump.text,f_a.text)
+		yield f_nump.text, f_a.text
 
 	return
 class CheckNaverDaumOrder(neo_class.NeoRunnableClass):
@@ -68,8 +70,8 @@ class CheckNaverDaumOrder(neo_class.NeoRunnableClass):
 			 'daum.html', 'https://search.daum.net/search?w=tot&DA=1TH&rtmaxcoll=1TH&q={}',parse_daum),
 			("zum.com","http://zum.com",
 			 'zum.html','http://search.zum.com/search.zum?query={}',parse_zum),
-			("nate.com", "http://nate.com",
-			 'nate.html', 'https://search.daum.net/nate?w=tot&q={}', parse_nate),
+			# ("nate.com", "https://search.daum.net/nate",
+			#  'nate.html', 'https://search.daum.net/nate?w=tot&q={}', parse_nate),
 
 		]
 		self.list_result =[]
@@ -86,11 +88,13 @@ class CheckNaverDaumOrder(neo_class.NeoRunnableClass):
 			# url = "https://www.naver.com"
 			r = requests.get(url)
 
-			neoutil.StrToFile(r.text, outfile)
+			#neoutil.StrToFile(r.text, outfile)
 			parse_name = parser(r.text)
+			print(title)
+			print(parse_name)
 
 			self.list_result.append(
-				(title, [(ord, title) for ord, title in parse_name]))
+				(title, search,[(ord, title) for ord, title in parse_name]))
 			#print(search.format(urllib.parse.quote(title)))
 
 
@@ -148,7 +152,7 @@ if __name__ == "__main__":
 	# url = unquote('https://search.naver.com/search.naver?where=nexearch&query={}&ie=utf8&sm=tab_lve'.format("박근헤"))
 	# print(url)
 	result = CheckNaverDaumOrder().run().result()
-	for portal, list_keyword in result:
+	for portal,search, list_keyword in result:
 		print(portal)
 		for keyword in list_keyword:
 			print(keyword)
