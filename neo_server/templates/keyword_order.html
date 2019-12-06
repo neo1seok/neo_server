@@ -3,8 +3,26 @@
 
 {% block title %}Index{% endblock %}
 
+{% block json_function %}
+{{ super() }}
+
+function update_order(){
+
+temp_query('/query/{{name}}/update_custom', {
+      }, function(response) {
+        console.log("confirm ok",response);
+        $('#id_contents').html(response.table_html);
+
+
+
+ })
+
+}
+{% endblock %}
+
 {%block json_on_load%}
-window.setTimeout('window.location.reload()',5000);
+window.setInterval('update_order()',5000);
+update_order();
 {% endblock %}
 
 {% block head %}
@@ -12,38 +30,15 @@ window.setTimeout('window.location.reload()',5000);
   <style type="text/css">
     .important { color: #336699; }
   </style>
+
 {% endblock %}
 
 
 {% block list_contents %}
-
-<div class="row">
-
-
-  {% for portal in list_portals %}
-  <div class="col-lg-6" style="background-color:grey;">
-    <h2>{{portal.title}}</h2>
-
-    <div class="list-group">
-        {% for order in portal.list_order %}
-
-<p  class="list-group-item" > <button class="w3-btn w3-ripple ">&#9998;</button>
-  <!--<button class="w3-btn w3-ripple " href="{{ order.url }}" target="_blank">{{ order.order }} . {{order.keyword }}</button>-->
-<a href="{{ order.url }}" target="_blank"> {{ order.order }} . {{order.keyword }}</a>
-</p>
-
-        {% endfor %}
-</div>
-
-  </div>
-  {% endfor %}
-
-</div>
-
-
-
-
+<div id="id_contents"></div>
 {% endblock %}
+
+
 
 
 {% block form_contents %}

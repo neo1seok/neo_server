@@ -12,7 +12,7 @@ class CurUpdateInitAndCommit(UpdateInitAndCommit):
 if __name__ == '__main__':
 	print(neolib)
 	msg = """
-add parse
+web runtime update
 
 	"""
 	CurUpdateInitAndCommit().run(msg)
