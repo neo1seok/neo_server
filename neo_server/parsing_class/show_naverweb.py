@@ -179,12 +179,14 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 			main_info = self.parse_main_with_dash()
 			today_date = main_info['today_date']
 			self.cur_web_date = today_date
+			self.today_date =today_date
+
 			id_per_date = main_info['id_per_date']
 			if not self.date:
 				self.date = today_date
 				
 			
-			list_tuple_ids = id_per_date[today_date]
+			list_tuple_ids = id_per_date[self.date]
 			today_list_ids = [id for id,title in list_tuple_ids]
 			if self.date == 'all':
 				today_list_ids=[]
@@ -332,7 +334,7 @@ if __name__ == '__main__':
 	#dict_res = inst = GetLateestWebtoon(date='mon', list_ids=list_all).parse_main_with_dash()
 	#print(dict_res)
 	#exit()
-	inst = GetLateestWebtoon(date=''
+	inst = GetLateestWebtoon(date='mon'
 	                              '',list_ids=list_all).run()
 	result = 	inst.result()
 	for tmp in result:

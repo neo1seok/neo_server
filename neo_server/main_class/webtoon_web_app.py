@@ -100,7 +100,7 @@ class WebtoonWebApp(BaseDBWebApp):
 		sql = """SELECT id FROM neo_pwinfo.webtoon where  status != 'HIDDEN';"""
 		list_ids = self.select(sql)
 		
-		print(sql, list_ids)
+		print("########date#####",date)
 		inst = GetLateestWebtoon(date=date, list_ids=[tmp['id'] for tmp in list_ids]).run()
 		self.list_result_webtoon = inst.result()
 		self.cur_web_date = inst.cur_web_date
@@ -122,7 +122,8 @@ class WebtoonWebApp(BaseDBWebApp):
 			self.cur.execute(sql_update)
 
 		ids = ",".join([f"'{tmp['id']}'" for tmp in self.list_result_webtoon])
-		
+		if not ids:
+			ids = "''"
 		BaseDBWebApp.ready_extra_condition(self)
 		self.extra_condition += "and id in (%s) " % ids
 		
@@ -145,6 +146,6 @@ class WebtoonWebApp(BaseDBWebApp):
 		
 		table_html =render_template("webtoon_table.html", id_div_list="id_div_list", title="네이년 웹툰 ", list_result_webtoon=self.list_data,
 		                       modal_id="id_modal_input")
-		return dict(table_html=table_html)
+		return dict(table_html=table_html,cur_web_date=self.cur_web_date,date=inst.date)
 # print(list_result)
 # return dict(result='ok')

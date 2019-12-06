@@ -1,5 +1,27 @@
 {% extends "layout_with_list_form.html" %}
 
+{% block json_function %}
+{{super()}}
+function update_webtoon_list(date=""){
+    temp_query('/query/{{name}}/update_custom', {
+            date:date
+          }, function(response) {
+            console.log("confirm ok",response,response.cur_web_date,response.date);
+
+            $('#table_contents').html(response.table_html);
+            $(".list_week").each(function(index, item){
+                $(item).removeClass("w3-black");
+            })
+
+
+            $('#id_date_'+response.date).addClass("w3-black");
+
+
+
+
+     })
+}
+{% endblock %}
 
 {% block json_on_load %}
 {{super()}}
@@ -25,16 +47,7 @@ for (i = 0; i < acc.length; i++) {
 }
 
 
-
-temp_query('/query/{{name}}/update_custom', {
-      }, function(response) {
-        console.log("confirm ok",response);
-        $('#table_contents').html(response.table_html);
-
-
-
- })
-
+update_webtoon_list();
 
 {% endblock %}
 
@@ -45,8 +58,9 @@ temp_query('/query/{{name}}/update_custom', {
 
 <div class="w3-bar w3-gray">
     {%for btn_item in date_btn_info%}
-      <a href="/webtoon.neo?date={{btn_item.eng}}"
-         class="w3-bar-item w3-button {{'w3-black' if btn_item.is_cur_date else ''}}"
+      <a href="#"
+         class="w3-bar-item w3-button list_week {{'w3-black' if btn_item.is_cur_date else ''}}"
+         onclick="update_webtoon_list('{{btn_item.eng}}')"
          id="id_date_{{btn_item.eng}}">{{btn_item.name}}</a>
     {%endfor%}
 
