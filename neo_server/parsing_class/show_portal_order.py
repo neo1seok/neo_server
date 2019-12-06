@@ -38,25 +38,29 @@ def parse_zum(contents:str):
 	soup = BeautifulSoup(contents, 'html.parser')
 	div_issue_keyword = soup.find('div', class_='issue_keyword')
 	for tmp in  div_issue_keyword.find_all("li"):
-		print(tmp)
+		#print(tmp)
 
 		f_nump = tmp.find("span",class_='r_num')
 		f_a = tmp.find("a", class_='d_btn_keyword')
-		print(f_nump.text,f_a.text)
+		#print(f_nump.text, f_a.text)
+		yield f_nump.text, f_a.text
+
 
 	return
 
 
 def parse_nate(contents:str):
 	soup = BeautifulSoup(contents, 'html.parser')
-	div_issue_keyword = soup.find('div', class_='kwd_list')
+	div_issue_keyword = soup.find('div', class_='content_realtime')
 	for tmp in  div_issue_keyword.find_all("li"):
 		#
-		f_nump = tmp.find("span",class_='nHide')
+		f_nump = tmp.find("span",class_='num_rank')
 		f_a = tmp.find("a")
-		print(f_nump.text,f_a.text)
+		#print(f_nump.text, f_a.text)
+		yield f_nump.text,f_a.text
 
-	return
+
+	#return
 class CheckNaverDaumOrder(neo_class.NeoRunnableClass):
 	url_portal_order = "http://localhost/query/keyword_order/update"
 
@@ -69,8 +73,8 @@ class CheckNaverDaumOrder(neo_class.NeoRunnableClass):
 			 'daum.html', 'https://search.daum.net/search?w=tot&DA=1TH&rtmaxcoll=1TH&q={}',parse_daum),
 			("zum.com","http://zum.com",
 			 'zum.html','http://search.zum.com/search.zum?query={}',parse_zum),
-			("nate.com", "http://nate.com",
-			 'nate.html', 'https://search.daum.net/nate?w=tot&q={}', parse_nate),
+			("nate.com", "http://search.daum.net/nate?w=tot&nil_profile=simpleurl&q=nate",
+			'nate.html', 'https://search.daum.net/nate?w=tot&q={}', parse_nate),
 
 		]
 		self.list_result =[]
@@ -89,7 +93,9 @@ class CheckNaverDaumOrder(neo_class.NeoRunnableClass):
 
 			neoutil.StrToFile(r.text, outfile)
 			parse_name = parser(r.text)
-
+			if not parse_name:
+				continue
+			#print(parse_name)
 			self.list_result.append(
 				(title, [(ord, title) for ord, title in parse_name]))
 			#print(search.format(urllib.parse.quote(title)))
@@ -152,10 +158,13 @@ if __name__ == "__main__":
 	list_str =[]
 
 	for portal, list_keyword in result:
+
 		print(portal)
 		for order,keyword in list_keyword:
 			list_str.append(f"{order}\t{keyword}")
 			print(order,keyword)
+		print()
+
 	print("", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "현재")
 	exit()
 	max_length = -1
