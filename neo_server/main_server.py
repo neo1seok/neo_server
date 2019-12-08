@@ -9,10 +9,11 @@ import pymysql
 from werkzeug.utils import redirect
 
 from neo_server.main_class import class_web_app
+from neo_server.main_class.util import get_lists
 from neo_server.neo_telegram_bot.api_token import neo_bot_token, temptest_bot
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
-map_general_map = class_web_app.get_lists(dir_path)
+map_general_map = get_lists(dir_path)
 
 #print(map_general_map)
 app = Flask(__name__)
@@ -94,6 +95,7 @@ def netflix():
 	list_genre = json.load(open(dir_path + '/rsc/netflix_genre.json'))
 	return render_template("netflix_genre.html",list_genre=list_genre)
 
+
 @app.route('/<app_name>/',methods=['GET'])
 @app.route('/<app_name>',methods=['GET'])
 def no_neo_redirection(app_name=None):
@@ -133,6 +135,35 @@ def page_test_2():
 	#data = cur.fetchall()
 	print(data)
 	return jsonify(data)
+
+@app.route('/page_test_3',methods=['GET'])
+def webtoon_table():
+	from neo_server.parsing_class.show_naverweb import GetLateestWebtoon
+	list_all = ["675554", "665170", "22897", "21815", "25455", "570506", "641253", "670139", "690503", "703307",
+	            "695321", "696617", "597478", "710766", "703836", "723714", "710751", "712694", "727268", "726842",
+	            "728750", "730259", "730148", "729255", "733413"]
+	inst = GetLateestWebtoon(date=''
+	                              '', list_ids=list_all).run()
+	result = inst.result()
+	return render_template("webtoon_table.html",id_div_list="id_div_list",title="TEST",result=result,modal_id="test_modal_id")
+
+@app.route('/page_test_4',methods=['GET'])
+def keyword_order_contents():
+	from neo_server.parsing_class.show_naverweb import GetLateestWebtoon
+	
+	from neo_server.parsing_class.show_portal_order import CheckPortalOrder
+	result = CheckPortalOrder().run().result()
+	list_portals = []
+	for main_url, search, list_order_org in result:
+		list_order = []
+		for order, key_word in list_order_org:
+			import urllib
+			list_order.append(
+				dict(order=order, keyword=key_word, url=search.format(urllib.parse.quote(key_word, safe=''))))
+			pass
+		
+		list_portals.append(dict(title=main_url, list_order=list_order[:10]))
+	return render_template("keyword_order_contents.html",list_portals=list_portals)
 
 @app.route('/page_test')
 def page_test():

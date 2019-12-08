@@ -30,7 +30,7 @@ import logging
 from neo_server.main_class.class_web_app_base import tag_session_no
 from neo_server.neo_telegram_bot.api_token import neo_bot_token, temptest_bot
 from neo_server.neo_telegram_bot.base_chat_bot import BaseNeoChatBot
-from neo_server.parsing_class.show_portal_order import CheckNaverDaumOrder
+from neo_server.parsing_class.show_portal_order import CheckPortalOrder
 
 class BOT_STATUS(Enum):
 	CHOOSING = enum.auto()

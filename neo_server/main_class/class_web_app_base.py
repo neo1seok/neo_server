@@ -209,6 +209,7 @@ class WebAppBase():
 				self.map_ret.update(**ret)
 		except Exception as ext:
 			print(ext)
+			
 			self.map_ret = dict(result = "FAIL",error = str(ext))
 			pass
 		print(ret)
