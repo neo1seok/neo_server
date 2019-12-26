@@ -130,8 +130,11 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 		self.time_check['parse_time'] += time.time() - st
 		return dict(id=id, lastno=lastno, today_title=conv_title(today_title), img_src=img_src,
 		            status_icon=status_icon,writer=conv_title(writer),web_title=conv_title(web_title),reg_date=reg_date )
-		
-		
+
+
+	def getJustId(self, id, date=''):
+		return dict(id=id)
+
 	def getTopId_old(self, id):
 		#soup = BeautifulSoup(contents, 'html.parser')
 		r = requests.get(self.webtoonurlfmt.format(id))
@@ -334,8 +337,16 @@ if __name__ == '__main__':
 	#dict_res = inst = GetLateestWebtoon(date='mon', list_ids=list_all).parse_main_with_dash()
 	#print(dict_res)
 	#exit()
+	res = GetLateestWebtoon().parse_main_with_dash()
+
+	print(res)
+	exit()
+
 	inst = GetLateestWebtoon(date='mon'
-	                              '',list_ids=list_all).run()
+	                              '',list_ids=list_all)
+	res = inst.parse_main_with_dash()
+
+	inst.run()
 	result = 	inst.result()
 	for tmp in result:
 		print(tmp['id'],tmp['web_title'],tmp['today_title'],tmp['reg_date'])

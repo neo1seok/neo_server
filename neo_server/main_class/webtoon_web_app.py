@@ -91,7 +91,28 @@ class WebtoonWebApp(BaseDBWebApp):
 		self.list_tables[0].update(this_table)
 #		neoutil.simple_view_list(self.list_data)
 		pass
-	
+
+	def _get_from_db(self,date):
+		sql = """SELECT id FROM neo_pwinfo.webtoon where  status != 'HIDDEN';"""
+		list_ids = self.select(sql)
+		inst = GetLateestWebtoon()
+
+		inst = GetLateestWebtoon(date=date, list_ids=[tmp['id'] for tmp in list_ids]).run()
+		self.list_result_webtoon = inst.result()
+
+		ids = ",".join([f"'{tmp['id']}'" for tmp in self.list_result_webtoon])
+		if not ids:
+			ids = "''"
+
+		BaseDBWebApp.ready_extra_condition(self)
+		self.extra_condition += "and id in (%s) " % ids
+
+		sql = self.fmt_list.format(extra_condition=self.extra_condition)
+
+		self.cur.execute(sql)
+		list_data = self.cur.fetchall()
+		return list_data
+
 	def update_custom(self):
 
 		date = neoutil.get_safe_mapvalue(request.values, "date", "")
@@ -116,8 +137,12 @@ class WebtoonWebApp(BaseDBWebApp):
 		self.dict_result_webtoon = {tmp['id']: tmp for tmp in self.list_result_webtoon}
 		
 		for tmp_dic in self.list_result_webtoon:
+
+			comment = pymysql.escape_string(json.dumps(tmp_dic))
+			tmp_dic['comment']=comment
+
 			sql_update = """UPDATE neo_pwinfo.webtoon
-						SET title='{web_title}', today_title = '{today_title}',  lastno = '{lastno}', updt_date = now()
+						SET title='{web_title}', today_title = '{today_title}',  lastno = '{lastno}', updt_date = now(),comment='{comment}'
 						WHERE id='{id}';""".format(**tmp_dic)
 			self.cur.execute(sql_update)
 
@@ -147,5 +172,7 @@ class WebtoonWebApp(BaseDBWebApp):
 		table_html =render_template("webtoon_table.html", id_div_list="id_div_list", title="네이년 웹툰 ", list_result_webtoon=self.list_data,
 		                       modal_id="id_modal_input")
 		return dict(table_html=table_html,cur_web_date=self.cur_web_date,date=inst.date)
+
+
 # print(list_result)
 # return dict(result='ok')
