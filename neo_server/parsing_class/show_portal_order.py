@@ -1,4 +1,3 @@
-import datetime
 import json
 
 import requests
@@ -93,7 +92,7 @@ class CheckPortalOrder(neo_class.NeoRunnableClass):
 			# url = "https://www.naver.com"
 			r = requests.get(url)
 
-			#neoutil.StrToFile(r.text, outfile)
+			neoutil.StrToFile(r.text, outfile)
 			parse_name = parser(r.text)
 			print(title)
 			print(parse_name)
