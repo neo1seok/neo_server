@@ -1,3 +1,5 @@
+import copy
+import datetime
 from urllib.parse import urlparse
 
 from neolib import neoutil,neo_class
@@ -9,6 +11,8 @@ import time
 import codecs
 import base64
 from bs4 import BeautifulSoup, Tag, ResultSet
+
+from neo_server.parsing_class.enum_option import WEBTOON_PARSE_OPTION
 
 
 class GetLateestWebtoon(neo_class.NeoRunnableClass):
@@ -24,13 +28,23 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 		'일': 'sun',
 		
 	}
+	map_date_rev = {  val:key for key,val in map_date.items() }
+	default_obj =dict(id="", lastno="", today_title="", img_src="",
+		            status_icon="",writer="",web_title="",reg_date="" )
 	
-	def __init__(self,date=None,list_ids=[]):
+	def __init__(self, date=None, list_ids=[], option = WEBTOON_PARSE_OPTION.detail):
 		neo_class.NeoRunnableClass.__init__(self)
 		self.date = date
 		self.list_ids=list_ids
 		
 		self.time_check = dict(requst_time=0,parse_time=0)
+		self.option = option
+		self.set_option(option)
+
+
+
+		#self.get_dict_from_id = self.getTopId if self.option != WEBTOON_PARSE_OPTION.no_detail else self.getJustId
+		self.filterd_ids = None
 		
 		pass
 	
@@ -56,7 +70,7 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 		url = self.webtoonurlfmt.format(id,date)
 		#print(url)
 		st = time.time()
-		print(url)
+		#print(url)
 		r = requests.get(url)
 		self.time_check['requst_time'] +=time.time()-st
 		#print(r.text)
@@ -133,7 +147,7 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 
 
 	def getJustId(self, id, date=''):
-		return dict(id=id)
+		return dict(id=id,web_title=self.map_title_per_id[id])
 
 	def getTopId_old(self, id):
 		#soup = BeautifulSoup(contents, 'html.parser')
@@ -173,32 +187,84 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 		self.list_ids =list_ids
 		return self
 
+
+	def update_get_filter_ids(self):
+		if self.date == 'org':
+			self.filterd_ids = self.list_ids
+			return self.filterd_ids
+		st = time.time()
+		#if self.date != 'org':
+
+		main_info = self.parse_main_with_dash()
+		today_date = main_info['today_date']
+		self.cur_web_date = today_date
+		self.today_date = today_date
+
+		id_per_date = main_info['id_per_date']
+		if not self.date:
+			self.date = today_date
+		if self.date == 'all':
+			today_list_ids = []
+			for tmpdate, list_tuple_ids in id_per_date.items():
+				today_list_ids += [id for id, title in list_tuple_ids]
+		else:
+			list_tuple_ids = id_per_date[self.date]
+			today_list_ids = [id for id, title in list_tuple_ids]
+
+
+
+		self.map_title_per_id = {}
+
+		for tmpdate, list_tuple_ids in id_per_date.items():
+			self.map_title_per_id.update(**dict(list_tuple_ids))
+		# today_list_ids += [id for id, title in list_tuple_ids]
+
+
+		# [[id for id,title in list_tuple_ids] for list_tuple_ids in id_per_date.items()]
+
+		self.filterd_ids = set(today_list_ids) & set(self.list_ids)
+		return self.filterd_ids
+
+	def set_option(self,option):
+		self.option = option
+		self.get_dict_from_id = self.getTopId if self.option != WEBTOON_PARSE_OPTION.no_detail else self.getJustId
+		pass
+
 	def run(self):
 		self.cur_web_date = ""
-		self.filterd_ids = self.list_ids
+		if not self.filterd_ids :
+			self.update_get_filter_ids()
+
+		# self.filterd_ids = self.list_ids
 		st = time.time()
-		if self.date != 'org':
-
-			main_info = self.parse_main_with_dash()
-			today_date = main_info['today_date']
-			self.cur_web_date = today_date
-			self.today_date =today_date
-
-			id_per_date = main_info['id_per_date']
-			if not self.date:
-				self.date = today_date
-				
-			
-			list_tuple_ids = id_per_date[self.date]
-			today_list_ids = [id for id,title in list_tuple_ids]
-			if self.date == 'all':
-				today_list_ids=[]
-				for tmpdate,list_tuple_ids in id_per_date.items():
-					today_list_ids += [id for id,title in list_tuple_ids]
-				#[[id for id,title in list_tuple_ids] for list_tuple_ids in id_per_date.items()]
-			
-			
-			self.filterd_ids = set(today_list_ids) & set(self.list_ids)
+		# if self.date != 'org':
+		#
+		# 	main_info = self.parse_main_with_dash()
+		# 	today_date = main_info['today_date']
+		# 	self.cur_web_date = today_date
+		# 	self.today_date =today_date
+		#
+		# 	id_per_date = main_info['id_per_date']
+		# 	if not self.date:
+		# 		self.date = today_date
+		#
+		#
+		# 	list_tuple_ids = id_per_date[self.date]
+		# 	today_list_ids = [id for id,title in list_tuple_ids]
+		# 	self.map_title_per_id ={}
+		# 	for tmpdate, list_tuple_ids in id_per_date.items():
+		# 		self.map_title_per_id.update(**dict(list_tuple_ids))
+		# 		#today_list_ids += [id for id, title in list_tuple_ids]
+		#
+		#
+		# 	if self.date == 'all':
+		# 		today_list_ids=[]
+		# 		for tmpdate,list_tuple_ids in id_per_date.items():
+		# 			today_list_ids += [id for id,title in list_tuple_ids]
+		# 		#[[id for id,title in list_tuple_ids] for list_tuple_ids in id_per_date.items()]
+		#
+		#
+		# 	self.filterd_ids = set(today_list_ids) & set(self.list_ids)
 		
 			
 		# if not self.date =='all':
@@ -208,12 +274,22 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 		# 	print('list_ids',self.list_ids)
 		# 	print('filterd_ids',self.filterd_ids)
 		print("total list part",time.time()-st)
+		if self.date == "org" and self.option == WEBTOON_PARSE_OPTION.no_detail:
+			raise ValueError("date org and option no_detail not allow")
+
 		st = time.time()
 		self.mapTopid = []
 		for id in self.filterd_ids:
-			tmp = self.getTopId(id)
+			#web_title = self.map_title_per_id[id]
+			#print("web_title",web_title)
+			tmp = self.get_dict_from_id(id)
+
 			if tmp == None: continue
-			self.mapTopid.append(tmp)
+			new_obj = copy.deepcopy(self.default_obj)
+
+			new_obj.update(**tmp)
+
+			self.mapTopid.append(new_obj)
 		print("latest part", time.time() - st)
 		#print(self.mapTopid)
 		return self
@@ -257,10 +333,10 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 			col:Tag
 			col_inner_tag = col.find("div", class_='col_inner')
 			week_date = col_inner_tag.find("h4").attrs['class'][0]
-			print("week_date",week_date)
+			#print("week_date",week_date)
 			
 			if "col_selected" in col.attrs['class']:
-				print("col_selected",week_date)
+				#print("col_selected",week_date)
 				today_date =week_date
 			
 			img_list_tag = soup.find("ul", class_='img_list')
@@ -276,7 +352,7 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 				title = atitle.attrs['title']
 				parts = urlparse(link)
 				dict_args = dict([tmp.split("=") for tmp in parts.query.split("&")])
-				print(dict_args['titleId'])
+				#print(dict_args['titleId'])
 				titleId = dict_args['titleId']
 				
 				list_ids.append((titleId,title))
@@ -285,7 +361,7 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 				# list_ids.append((dict_args['titleId'],title))
 				pass
 			id_per_date[week_date] = list_ids
-			print(col.attrs['class'])
+			#print(col.attrs['class'])
 		return 	dict(id_per_date=id_per_date,today_date=today_date)
 		#print("img_list_tag",img_list_tag)
 	
@@ -331,20 +407,24 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 if __name__ == '__main__':
 	list_all = ["675554","665170","22897","21815","25455","570506","641253","670139","690503","703307","695321","696617","597478","710766","703836","723714","710751","712694","727268","726842","728750","730259","730148","729255","733413"]
 	#list_all = ["21815", ]
+	today = datetime.datetime.today()
+	tday = datetime.datetime(2019,12,26)
+	print(type(today.date()-tday.date()))
 
 	#result = GetLateestWebtoon().set_list_ids(['675554', '694191', '21815', '25613', '597478']).run().result()
 	#print(result)
 	#dict_res = inst = GetLateestWebtoon(date='mon', list_ids=list_all).parse_main_with_dash()
 	#print(dict_res)
 	#exit()
-	res = GetLateestWebtoon().parse_main_with_dash()
+	# res = GetLateestWebtoon().parse_main_with_dash()
+	#
+	# print(res)
+	# exit()
 
-	print(res)
-	exit()
-
-	inst = GetLateestWebtoon(date='mon'
-	                              '',list_ids=list_all)
-	res = inst.parse_main_with_dash()
+	inst = GetLateestWebtoon(date='all'
+	                              '',list_ids=list_all,option=WEBTOON_PARSE_OPTION.detail)
+	#res = inst.parse_main_with_dash()
+	inst.update_get_filter_ids()
 
 	inst.run()
 	result = 	inst.result()
@@ -352,6 +432,7 @@ if __name__ == '__main__':
 		print(tmp['id'],tmp['web_title'],tmp['today_title'],tmp['reg_date'])
 	print(result)
 	print(inst.time_check)
+	print(inst.today_date)
 	#parse_main
 	
 

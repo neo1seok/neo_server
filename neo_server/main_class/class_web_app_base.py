@@ -1,3 +1,4 @@
+import traceback
 
 from flask import render_template, json, session, request
 from werkzeug.utils import redirect
@@ -208,6 +209,7 @@ class WebAppBase():
 			if ret != None:
 				self.map_ret.update(**ret)
 		except Exception as ext:
+			traceback.print_exc()
 			print(ext)
 			
 			self.map_ret = dict(result = "FAIL",error = str(ext))
@@ -307,9 +309,9 @@ class BaseDBWebApp(WebAppBase):
 		type = neoutil.get_safe_mapvalue(request.values, "type", "")
 
 
-		if type == "":
-			self.extra_condition = "and status != 'HIDDEN' "
-		elif type == "all":
+		#if type == "":
+		self.extra_condition = "and status != 'HIDDEN' "
+		if type == "all":
 			self.extra_condition = ""
 
 		pass
