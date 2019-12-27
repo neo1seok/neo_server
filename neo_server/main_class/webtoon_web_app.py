@@ -226,11 +226,13 @@ class WebtoonWebApp(BaseDBWebApp):
 			# map_line.update(**webtoon_info)
 			# print("id",webtoon_info)
 		kor_date = GetLateestWebtoon.map_date_rev.get(inst.date,"")
+
+		print("inst.date",inst.date,self.date)
 		if kor_date:
 			str_tail = f"{kor_date}요일"
-		elif self.date =='all':
+		elif inst.date =='all':
 			str_tail = '연재중 리스트 '
-		elif self.date == 'org':
+		elif inst.date == 'org':
 			str_tail = '전체 리스트 '
 
 		table_html =render_template("webtoon_table.html", id_div_list="id_div_list", title=f"네이년 웹툰 {str_tail}", list_result_webtoon=self.list_data,

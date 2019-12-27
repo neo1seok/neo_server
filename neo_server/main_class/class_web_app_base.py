@@ -105,6 +105,7 @@ class WebAppBase():
 		session[tag_user] = user_mame
 		session[tag_time] = time.time()
 	def main_process(self):
+
 		print("main_process session", session)
 		print("main_process", self.__class__.__name__, self.name)
 		self.set_redirect_for_login()
