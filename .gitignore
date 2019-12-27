@@ -73,3 +73,4 @@ dist/
 /dlltest/libeay32.dll
 /businfo/json/station.json
 /businfo/json/routestation.json
+/neo_server/*.html
