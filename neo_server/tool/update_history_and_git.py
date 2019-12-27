@@ -12,7 +12,7 @@ class CurUpdateInitAndCommit(UpdateInitAndCommit):
 if __name__ == '__main__':
 	print(neolib)
 	msg = """
-1.1.3
+
 
 	"""
 	CurUpdateInitAndCommit().run(msg)
