@@ -12,6 +12,7 @@ class CurUpdateInitAndCommit(UpdateInitAndCommit):
 if __name__ == '__main__':
 	print(neolib)
 	msg = """
+	upgrade webtoon update custom
 
 
 	"""
