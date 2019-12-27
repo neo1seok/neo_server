@@ -3,8 +3,10 @@
 {% block json_function %}
 {{super()}}
 function update_webtoon_list(date=""){
+
     temp_query('/query/{{name}}/update_custom', {
-            date:date
+            date:date,
+            option:'just_get'
           }, function(response) {
             console.log("confirm ok",response,response.cur_web_date,response.date);
 
@@ -15,6 +17,9 @@ function update_webtoon_list(date=""){
 
 
             $('#id_date_'+response.date).addClass("w3-black");
+            console.log();
+            window.history.pushState('page2', 'Title', '/webtoon.neo');
+
 
 
 
@@ -46,8 +51,9 @@ for (i = 0; i < acc.length; i++) {
     });
 }
 
+console.log('{{date}}');
 
-update_webtoon_list();
+update_webtoon_list('{{date}}');
 
 {% endblock %}
 
@@ -64,6 +70,15 @@ update_webtoon_list();
          id="id_date_{{btn_item.eng}}">{{btn_item.name}}</a>
     {%endfor%}
 
+      <a href="#"
+         class="w3-bar-item w3-button list_week"
+         onclick="update_webtoon_list('all')"
+         id="id_date_all">전체(연재중)</a>
+
+    <a href="#"
+         class="w3-bar-item w3-button list_week"
+         onclick="update_webtoon_list('org')"
+         id="id_date_org">전체(완료포함)</a>
 
 </div>
 
