@@ -1,0 +1,55 @@
+{% extends "base_form.html" %}
+  {% block head %}
+<script src="../static/moment-with-locales.min.js"></script>
+<script src="../static/moment-timezone-with-data-10-year-range.js"></script>
+
+  {% endblock%}
+
+
+{% block json_function %}
+
+function check_att(){
+    datetime = new Date().toJSON();
+    var datetime    =moment().tz('Asia/Seoul').format('llll');
+
+
+    console.log(datetime,moment.tz('Asia/Seoul').locale());
+
+    url ='https://wh.jandi.com/connect-api/webhook/20747084/162ea949c087f8478edf2182cafeea7e'
+    data ={
+        "body" : "[{{name}}] 출근  "+datetime,
+    }
+
+  $.ajax('https://wh.jandi.com/connect-api/webhook/20747084/162ea949c087f8478edf2182cafeea7e', {
+    type: 'POST',  // http method
+    Accept: "application/vnd.tosslab.jandi-v2+json",
+    ContentType: "application/json",
+    data: data,  // data to submit
+    success: function (response) {
+        console.log(response)
+        $('p').text("성공");
+    },
+    error: function (jqXhr, textStatus, errorMessage) {
+            $('p').text("실패");
+        }
+});
+
+
+}
+$(window).load(function(){
+    check_att();
+});
+{% endblock %}
+
+
+<h1>이동</h1>
+<!-- The text field -->
+{% block body%}
+
+<!-- The button used to copy the text -->
+<button class="w3-button w3-metro-purple   w3-xxxlarge w3-round-large" onclick="check_att('id_new_input_wt')">출근기록</button>
+<p></p>
+
+
+
+{% endblock %}

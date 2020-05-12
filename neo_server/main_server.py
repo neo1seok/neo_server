@@ -1,3 +1,4 @@
+import datetime
 import os
 import sys
 
@@ -88,6 +89,13 @@ def query_app(app_name=None,cmd=None):
 def health_redirect():
 	dict_type = dict(wt='id_new_input_wt',bp='id_new_input_bp')
 	return render_template("health_redirect.html")
+
+@app.route('/recog.neo',methods=['GET'])
+def recog_attendance():
+	dict_type = dict(datetime=datetime.datetime.now(),name='신원석(neo1seok)')
+	return render_template("recog_attendance.html",**dict_type)
+
+
 
 @app.route('/netflix.neo',methods=['GET'])
 def netflix():
