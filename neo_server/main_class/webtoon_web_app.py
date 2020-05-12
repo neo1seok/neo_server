@@ -1,4 +1,7 @@
+import datetime
+
 from neo_server.main_class.class_web_app_base import *
+from neo_server.parsing_class.enum_option import WEBTOON_PARSE_OPTION
 from neo_server.parsing_class.show_naverweb import GetLateestWebtoon
 
 
@@ -30,7 +33,8 @@ class WebtoonWebApp(BaseDBWebApp):
 		pass
 	
 	def post_process(self):
-		type = neoutil.get_safe_mapvalue(request.values, "type", "")
+
+		self.date = neoutil.get_safe_mapvalue(request.values, "date", "")
 		
 		sql = """
 				SELECT prt_uid, main_url,name as title 	FROM neo_pwinfo.portal;
@@ -78,6 +82,7 @@ class WebtoonWebApp(BaseDBWebApp):
 			'일': 'sun',
 			
 		}
+		print("self.cur_web_date",self.cur_web_date)
 		week = map_date.get(self.cur_web_date, "all")
 		self.url_naver_date_webtoon = f"https://comic.naver.com/webtoon/weekdayList.nhn?week={week}" \
 			if week != 'all' else 'https://comic.naver.com/webtoon/weekday.nhn'
@@ -91,17 +96,86 @@ class WebtoonWebApp(BaseDBWebApp):
 		self.list_tables[0].update(this_table)
 #		neoutil.simple_view_list(self.list_data)
 		pass
-	
+
+	# def _get_from_db(self,date,option= WEBTOON_PARSE_OPTION.none,mid_process = lambda list_result_webtoon:None):
+	# 	sql = """SELECT id FROM neo_pwinfo.webtoon where  status != 'HIDDEN';"""
+	# 	list_ids = self.select(sql)
+	#
+	# 	inst = GetLateestWebtoon(date=date, list_ids=[tmp['id'] for tmp in list_ids],option=option).run()
+	#
+	#
+	# 	list_result_webtoon = inst.result()
+	# 	# self.cur_web_date = inst.cur_web_date
+	# 	'''
+	# 	[{'id': '723714', 'lastno': '126', 'today_title': '126화',
+	# 	'img_src': 'https://shared-comic.pstatic.net/thumb/webtoon/723714/126/thumbnail_202x120_0c4a6d38-b9cd-4106-aced-9c45f2795bf9.jpg',
+	# 	'status_icon': '', 'writer': '류기운 / 문정후', 'web_title': '용비불패 완전판', 'reg_date': '2019.11.21'},
+	# 	]
+	# 	'''
+	#
+	# 	mid_process(list_result_webtoon)
+	#
+	# 	ids = ",".join([f"'{tmp['id']}'" for tmp in list_result_webtoon])
+	# 	if not ids:
+	# 		ids = "''"
+	#
+	#
+	# 	BaseDBWebApp.ready_extra_condition(self)
+	# 	self.extra_condition += "and id in (%s) " % ids
+	#
+	# 	sql = self.fmt_list.format(extra_condition=self.extra_condition)
+	#
+	# 	self.cur.execute(sql)
+	# 	list_data = self.cur.fetchall()
+	# 	return inst,list_data
+
 	def update_custom(self):
 
 		date = neoutil.get_safe_mapvalue(request.values, "date", "")
-		
+
+
 		# get list of ids on not hidden in db
-		sql = """SELECT id FROM neo_pwinfo.webtoon where  status != 'HIDDEN';"""
+
+		#우선 db에 가능한 ids와 update date 들을 구한다.
+		sql = """SELECT id,updt_date FROM neo_pwinfo.webtoon where  status != 'HIDDEN';"""
 		list_ids = self.select(sql)
-		
-		print("########date#####",date)
-		inst = GetLateestWebtoon(date=date, list_ids=[tmp['id'] for tmp in list_ids]).run()
+
+		#현재 id와 updt_date를 매핑한다.
+		dict_updt_date_per_id = {tmp['id']: tmp['updt_date'] for tmp in list_ids}
+
+
+		#먼저 매인 대쉬 정버를 바탕으로 필터링된 ids를 구한다.
+		inst = GetLateestWebtoon(date=date, list_ids=[tmp['id'] for tmp in list_ids])
+		filterd_ids = inst.update_get_filter_ids()
+
+
+		#현재 시간을 기준으로 하루가 넘어 가는 경우 detail update를 한다.
+		if date =='org':
+			option = WEBTOON_PARSE_OPTION.detail
+		else:
+			today = datetime.datetime.today()
+			option = WEBTOON_PARSE_OPTION.no_detail
+
+			for id in filterd_ids:
+
+				updt_date = dict_updt_date_per_id[id]
+				td = today.date() - updt_date.date()
+				print("##update",updt_date, td)
+
+
+				if td.days >1:
+					option = WEBTOON_PARSE_OPTION.detail
+					break
+
+
+
+		print("option",option)
+
+		#결정된 option을 세팅하고 실행한다..
+		inst.set_option(option)
+		inst.run()
+
+
 		self.list_result_webtoon = inst.result()
 		self.cur_web_date = inst.cur_web_date
 		'''
@@ -113,13 +187,19 @@ class WebtoonWebApp(BaseDBWebApp):
 		
 		self.title = "{} ({}요일)".format(self.title_org, self.cur_web_date)
 		
-		self.dict_result_webtoon = {tmp['id']: tmp for tmp in self.list_result_webtoon}
-		
-		for tmp_dic in self.list_result_webtoon:
-			sql_update = """UPDATE neo_pwinfo.webtoon
-						SET title='{web_title}', today_title = '{today_title}',  lastno = '{lastno}', updt_date = now()
-						WHERE id='{id}';""".format(**tmp_dic)
-			self.cur.execute(sql_update)
+		#옵션에 따라 db에 업데이트 시킨다.
+		if option == WEBTOON_PARSE_OPTION.detail:
+			self.dict_result_webtoon = {tmp['id']: tmp for tmp in self.list_result_webtoon}
+
+			for tmp_dic in self.list_result_webtoon:
+
+				comment = pymysql.escape_string(json.dumps(tmp_dic))
+				tmp_dic['comment']=comment
+
+				sql_update = """UPDATE neo_pwinfo.webtoon
+							SET title='{web_title}', today_title = '{today_title}',  lastno = '{lastno}', updt_date = now(),comment='{comment}'
+							WHERE id='{id}';""".format(**tmp_dic)
+				self.cur.execute(sql_update)
 
 		ids = ",".join([f"'{tmp['id']}'" for tmp in self.list_result_webtoon])
 		if not ids:
@@ -139,13 +219,27 @@ class WebtoonWebApp(BaseDBWebApp):
 			id = map_line['id']
 			map_line['list_url'] = map_line['list_url'].format(id)
 			map_line['detail_url'] = map_line['detail_url'].format(id, map_line['lastno'])
-			webtoon_info = self.dict_result_webtoon.get(id, {})
-			map_line.update(**webtoon_info)
-			
-		
-		
-		table_html =render_template("webtoon_table.html", id_div_list="id_div_list", title="네이년 웹툰 ", list_result_webtoon=self.list_data,
+			#webtoon_info = self.dict_result_webtoon.get(id, {})
+			#del  webtoon_info['title']
+			#del webtoon_info['today_title']
+
+			# map_line.update(**webtoon_info)
+			# print("id",webtoon_info)
+		kor_date = GetLateestWebtoon.map_date_rev.get(inst.date,"")
+
+		print("inst.date",inst.date,self.date)
+		if kor_date:
+			str_tail = f"{kor_date}요일"
+		elif inst.date =='all':
+			str_tail = '연재중 리스트 '
+		elif inst.date == 'org':
+			str_tail = '전체 리스트 '
+
+		table_html =render_template("webtoon_table.html", id_div_list="id_div_list", title=f"네이년 웹툰 {str_tail}", list_result_webtoon=self.list_data,
 		                       modal_id="id_modal_input")
+
 		return dict(table_html=table_html,cur_web_date=self.cur_web_date,date=inst.date)
+
+
 # print(list_result)
 # return dict(result='ok')

@@ -1,3 +1,4 @@
+import traceback
 
 from flask import render_template, json, session, request
 from werkzeug.utils import redirect
@@ -104,6 +105,7 @@ class WebAppBase():
 		session[tag_user] = user_mame
 		session[tag_time] = time.time()
 	def main_process(self):
+
 		print("main_process session", session)
 		print("main_process", self.__class__.__name__, self.name)
 		self.set_redirect_for_login()
@@ -208,6 +210,7 @@ class WebAppBase():
 			if ret != None:
 				self.map_ret.update(**ret)
 		except Exception as ext:
+			traceback.print_exc()
 			print(ext)
 			
 			self.map_ret = dict(result = "FAIL",error = str(ext))
@@ -307,9 +310,9 @@ class BaseDBWebApp(WebAppBase):
 		type = neoutil.get_safe_mapvalue(request.values, "type", "")
 
 
-		if type == "":
-			self.extra_condition = "and status != 'HIDDEN' "
-		elif type == "all":
+		#if type == "":
+		self.extra_condition = "and status != 'HIDDEN' "
+		if type == "all":
 			self.extra_condition = ""
 
 		pass

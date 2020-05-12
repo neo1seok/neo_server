@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*- 	
-__version__ = "1.1.2"
+__version__ = "1.2.1"
 """
 #[ver].[majer].[miner]
 #ver: 전체 프레임의 격변이 있을때
@@ -7,6 +7,24 @@ __version__ = "1.1.2"
 #miner:버그 수정및 작은 기능 추가.
 """
 __history__ = """
+* 1.2.1
+	fix prob
+
+
+	
+* 1.2.0
+	upgrade webtoon update custom
+
+
+	
+* 1.1.4
+
+
+	
+* 1.1.3
+1.1.3
+
+	
 * 1.1.2
 web runtime update
 

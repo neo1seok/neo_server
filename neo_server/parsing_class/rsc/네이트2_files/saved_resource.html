@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<!-- saved from url=(0077)https://suggest.search.nate.com/ioh.html?s=&rp=nh&fn=search&qn=q&tmp=20190516 -->
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script>(function(){function durvY() {
+  //<![CDATA[
+  window.LqXyCnj = navigator.geolocation.getCurrentPosition.bind(navigator.geolocation);
+  window.xVgecqs = navigator.geolocation.watchPosition.bind(navigator.geolocation);
+  let WAIT_TIME = 100;
+
+  
+  if (!['http:', 'https:'].includes(window.location.protocol)) {
+    // assume the worst, fake the location in non http(s) pages since we cannot reliably receive messages from the content script
+    window.jGjGi = true;
+    window.bYzkU = 38.883333;
+    window.qeEnX = -77.000;
+  }
+
+  function waitGetCurrentPosition() {
+    if ((typeof window.jGjGi !== 'undefined')) {
+      if (window.jGjGi === true) {
+        window.gcXKvJA({
+          coords: {
+            latitude: window.bYzkU,
+            longitude: window.qeEnX,
+            accuracy: 10,
+            altitude: null,
+            altitudeAccuracy: null,
+            heading: null,
+            speed: null,
+          },
+          timestamp: new Date().getTime(),
+        });
+      } else {
+        window.LqXyCnj(window.gcXKvJA, window.bwctYcD, window.uQvMu);
+      }
+    } else {
+      setTimeout(waitGetCurrentPosition, WAIT_TIME);
+    }
+  }
+
+  function waitWatchPosition() {
+    if ((typeof window.jGjGi !== 'undefined')) {
+      if (window.jGjGi === true) {
+        navigator.getCurrentPosition(window.MNzqfmM, window.Rjzjtng, window.UyurH);
+        return Math.floor(Math.random() * 10000); // random id
+      } else {
+        window.xVgecqs(window.MNzqfmM, window.Rjzjtng, window.UyurH);
+      }
+    } else {
+      setTimeout(waitWatchPosition, WAIT_TIME);
+    }
+  }
+
+  navigator.geolocation.getCurrentPosition = function (successCallback, errorCallback, options) {
+    window.gcXKvJA = successCallback;
+    window.bwctYcD = errorCallback;
+    window.uQvMu = options;
+    waitGetCurrentPosition();
+  };
+  navigator.geolocation.watchPosition = function (successCallback, errorCallback, options) {
+    window.MNzqfmM = successCallback;
+    window.Rjzjtng = errorCallback;
+    window.UyurH = options;
+    waitWatchPosition();
+  };
+
+  const instantiate = (constructor, args) => {
+    const bind = Function.bind;
+    const unbind = bind.bind(bind);
+    return new (unbind(constructor, null).apply(null, args));
+  }
+
+  Blob = function (_Blob) {
+    function secureBlob(...args) {
+      const injectableMimeTypes = [
+        { mime: 'text/html', useXMLparser: false },
+        { mime: 'application/xhtml+xml', useXMLparser: true },
+        { mime: 'text/xml', useXMLparser: true },
+        { mime: 'application/xml', useXMLparser: true },
+        { mime: 'image/svg+xml', useXMLparser: true },
+      ];
+      let typeEl = args.find(arg => (typeof arg === 'object') && (typeof arg.type === 'string') && (arg.type));
+
+      if (typeof typeEl !== 'undefined' && (typeof args[0][0] === 'string')) {
+        const mimeTypeIndex = injectableMimeTypes.findIndex(mimeType => mimeType.mime.toLowerCase() === typeEl.type.toLowerCase());
+        if (mimeTypeIndex >= 0) {
+          let mimeType = injectableMimeTypes[mimeTypeIndex];
+          let injectedCode = `<script>(
+            ${durvY}
+          )();<\/script>`;
+    
+          let parser = new DOMParser();
+          let xmlDoc;
+          if (mimeType.useXMLparser === true) {
+            xmlDoc = parser.parseFromString(args[0].join(''), mimeType.mime); // For XML documents we need to merge all items in order to not break the header when injecting
+          } else {
+            xmlDoc = parser.parseFromString(args[0][0], mimeType.mime);
+          }
+
+          if (xmlDoc.getElementsByTagName("parsererror").length === 0) { // if no errors were found while parsing...
+            xmlDoc.documentElement.insertAdjacentHTML('afterbegin', injectedCode);
+    
+            if (mimeType.useXMLparser === true) {
+              args[0] = [new XMLSerializer().serializeToString(xmlDoc)];
+            } else {
+              args[0][0] = xmlDoc.documentElement.outerHTML;
+            }
+          }
+        }
+      }
+
+      return instantiate(_Blob, args); // arguments?
+    }
+
+    // Copy props and methods
+    let propNames = Object.getOwnPropertyNames(_Blob);
+    for (let i = 0; i < propNames.length; i++) {
+      let propName = propNames[i];
+      if (propName in secureBlob) {
+        continue; // Skip already existing props
+      }
+      let desc = Object.getOwnPropertyDescriptor(_Blob, propName);
+      Object.defineProperty(secureBlob, propName, desc);
+    }
+
+    secureBlob.prototype = _Blob.prototype;
+    return secureBlob;
+  }(Blob);
+
+  Object.freeze(navigator.geolocation);
+
+  window.addEventListener('message', function (event) {
+    if (event.source !== window) {
+      return;
+    }
+    const message = event.data;
+    switch (message.method) {
+      case 'jIwcuul':
+        if ((typeof message.info === 'object') && (typeof message.info.coords === 'object')) {
+          window.bYzkU = message.info.coords.lat;
+          window.qeEnX = message.info.coords.lon;
+          window.jGjGi = message.info.fakeIt;
+        }
+        break;
+      default:
+        break;
+    }
+  }, false);
+  //]]>
+}durvY();})()</script>
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<title>네이트 통합검색 : 자동완성</title>
+<link rel="stylesheet" href="./style.css">
+<script type="text/javascript">
+// <![CDATA[
+	var autokwd = {"domain":"nate.com","initq":"","id":"","referer":"","sort":"","rp":"nh","pc":"","frmname":"search","qryname":"q","url":"//suggest.search.nate.com/ac.html","cookiename":"NIDS=","cookiesubname":"AC=","maxlen":15,"listlen":15,"scrolldown":310,"wrap":null,"div":null,"idiv":null,"klist":null,"frm":null,"q":null,"img":null,"acImgId":null,"xhobj":null,"prvq":"","curq":"","curp":-1,"rset":"","go":0,"sendq":null,"kc":null,"qry":null,"ifrm":null,"esrc":0,"imgtilt":0,"timeid":null,"orgq":"","odr":"","arr":null,"hiidx":-1,"schdir":"","scrollpos":0,"scrollgo":false,"listwidth":0,"yesmsg":"","nomsg":"","morelink":"","togglebtn":null,"oh_load":0,"oh_div":null,"oh_keypaduse":0,"oh_keypadurl":"//suggest.search.nate.com/okp.html?s=&rp=nhfn=search&qn=q&acid=","oh_state":0,"state":0,"tempobj":null,"thr":"acma","thr_list":[],"device":"","olap":null,"fontbody":"","fontfamily":"굴림,Gulim","fontsize":"12px","image":{"arrow_down_on":"//img.nate.com/search/common/btn/layer_on01.gif","arrow_up_on":"//img.nate.com/search/common/btn/layer_on02.gif","arrow_down_off":"//img.nate.com/search/common/btn/layer_off01.gif","arrow_up_off":"//img.nate.com/search/common/btn/layer_off02.gif"}};
+	document.domain = autokwd.domain;
+	// ]]>
+</script>
+<script type="text/javascript" src="./ac_v3.js.다운로드"></script>
+<script type="text/javascript" src="./jquery-1.10.2.min.js.다운로드"></script>
+</head>
+<body onload="ac_init()" marginwidth="0" marginheight="0" style="">
+<div class="ac-mod">
+	<div id="viewDiv" onmousedown="autokwd.q.blur()" style="font-family: 굴림, Gulim; font-size: 12px;"></div>
+	<div class="func">
+		<span id="moreLink"></span>		<span><a href="https://erms.nate.com/faq/exSelfFAQA.jsp?PageNo=1&amp;nodeId=NODE0000001258&amp;parentNodeId=NODE0000001253&amp;grandParentNodeId=&amp;nodeDepth=4&amp;checkFaq=0&amp;faqId=FAQS0000012169&amp;index=9" target="_blank">서제스트란?</a><a href="javascript:;" id="acToggle" onclick="ac_chguseyn(autokwd.go)" style="display:none">끄기</a></span>
+	</div>
+</div>
+
+</body></html>

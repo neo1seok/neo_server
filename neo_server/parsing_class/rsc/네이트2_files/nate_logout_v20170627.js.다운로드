@@ -1,0 +1,84 @@
+
+var threadXecureCnt=0;var threadXecureKey=null;var objPop=null;var gLogin=true;function initKeycrypt(){if(nateMain_getCookie("NATE_KEYCRYPT")){setKeycryptBtn(RunKeycrypt());}
+else
+setKeycryptBtn(false);}
+function showKeycryptAlert(){var x,y;x=screen.width-2;y=screen.height-45;try{CKKeyPro_ShowPopup(100,8000,100,5,x,y);}catch(err){}}
+function setKeycryptBtn(bMode){if(bMode){document.getElementById("KeycryptBtn").src="//main.nateimg.co.kr/img/nate/ico_security_on.gif"
+document.getElementById("KeycryptBtn").alt="키보드보안 ON";document.getElementById("KeycryptBtn").onclick=DeActivateKeycrypt;}
+else{document.getElementById("KeycryptBtn").src="//main.nateimg.co.kr/img/nate/ico_security_off.gif"
+document.getElementById("KeycryptBtn").alt="키보드보안 OFF";document.getElementById("KeycryptBtn").onclick=ActivateKeycrypt;}}
+function ActivateKeycrypt(){if(nateData.browser.msie){var boolActiveX=RunKeycrypt();if(boolActiveX){setKeycryptCookie("NATE_KEYCRYPT","1");self.location.reload();}
+else{show_UI_KEYCRYPT_INFO();setKeycryptCookie("NATE_KEYCRYPT","0");}}
+else
+show_UI_KEYCRYPT_NO_IE();}
+function DeActivateKeycrypt(){setKeycryptCookie("NATE_KEYCRYPT","0");clearKeycryptApp();self.location.reload();}
+function show_UI_KEYCRYPT_INFO(){$D("UI",false);$D("UI_KEYCRYPT_NO_IE",false);$D("UI_KEYCRYPT_INFO",true);}
+function show_UI_KEYCRYPT_NO_IE(){$D("UI",false);$D("UI_KEYCRYPT_INFO",false);$D("UI_KEYCRYPT_NO_IE",true);}
+function show_UI_Login(){$D("UI_KEYCRYPT_INFO",false);$D("UI_KEYCRYPT_NO_IE",false);$D("UI",true);}
+function RunKeycrypt(type){if(type=="x")
+threadXecureCnt++;if(threadXecureCnt>50)
+clearThreadXecureKey();var boolInstall=isCKInstalled();if(boolInstall){CreateCKKeyProObject()
+if(type=="x"){try{setKeycryptCookie("NATE_KEYCRYPT","1");clearThreadXecureKey();self.location.reload();}catch(e){}
+if(objPop!=null)
+objPop.close();}
+return true;}
+else
+return false;}
+function setKeycryptCookie(cookieName,cockieValue){var expired_date=new Date(2011,1,1);if(cockieValue!=1)
+expired_date=new Date(1900,1,1);nateMain_setCookie(cookieName,cockieValue,expired_date,"/","nate.com",false);}
+function clearThreadXecureKey(){window.clearInterval(threadXecureKey);threadXecureKey=null;}
+function checkInstallTimer(){threadXecureKey=window.setInterval("RunKeycrypt('x');",500);}
+function clearKeycryptApp(){if(document.CKKeyPro==null||typeof(document.CKKeyPro)=="undefined"||document.CKKeyPro.object==null)
+return;try{document.CKKeyPro.Clear("login","XecureKey",0);}catch(e){}}
+function keycryptInstall(){if(isCKInstalled())
+alert("키보드 보안이 이미 설치되어 있습니다.");else
+document.location.href="/common/login/install.asp";checkInstallTimer();}
+function openKeyCryptInfoPop(){if(nateData==null){nateData=new NateData();}
+if(!nateData.browser.msie){show_UI_KEYCRYPT_NO_IE();}
+else{objPop=window.open('https://www.nate.com/common/login/popup_keycrypt.html','objPop','width=451,height=457,scrollbars=no,resizable=no,status=yes')
+objPop.focus();}}
+function vBlurPassInput(){if(document.f_login.PASSWD.value==""){document.f_login.PASSWD.style.display='none';document.f_login.PASSDM.style.display='inline';document.getElementById("lb_passwd").style.display='none';document.getElementById("lb_passdm").style.display='inline';}}
+function vkeydownDomainInput(e){var e=window.event?window.event:e;if(e.keyCode==9&&e.shiftKey){document.f_login.ID.focus();}else if(e.keyCode==9){document.f_login.PASSDM.focus();}}
+function vkeydownSubmit(e){var e=window.event?window.event:e;if(e.keyCode==9&&e.shiftKey){document.f_login.PASSDM.focus();}}
+function NateLogin(formName,buttonId,loginUrl,idMent,pwMent){var oForm=null;var sLoginUrl='';var sSavedId='';var nSslLogin=0;var sIdMent='';var sPwMent='';var bReady=false;this.setLoginUrl=bSetLoginUrl;function init(){if(undefined!=idMent)sIdMent=idMent;if(undefined!=pwMent)sPwMent=pwMent;if(undefined!=loginUrl)sLoginUrl=loginUrl;oForm=oGetForm(formName);if(undefined==oForm)return false;vAddInputId();vAddInputPw();if(undefined!=buttonId)bAddButtonSubmit(buttonId);}
+function oGetForm(formName){if(formName==null)return null;if(typeof formName!='string')return null;var formEl=document.getElementById(formName);if(!formEl)return null;return formEl;}
+function bSetLoginUrl(str){if(typeof str!='string')return false;sLoginUrl=str;return true;}
+function bSetIdMent(str){if(typeof str!='string')return false;sIdMent=str;return true;}
+function bSetPwMent(str){if(typeof str!='string')return false;sPwMent=str;return true;}
+function vReadyInput(){if(document.f_login.ID.value==sIdMent||document.f_login.ID.value==(loginBoxName)){document.f_login.ID.value='';setTimeout("document.f_login.ID.focus()",1);isKeepLogin();return false;}}
+function vReadyPassInput(){document.f_login.PASSWD.style.display='inline';document.f_login.PASSDM.style.display='none';document.getElementById("lb_passwd").style.display='inline';document.getElementById("lb_passdm").style.display='none';setTimeout("document.f_login.PASSWD.focus()",1);isKeepLogin();}
+function vBlurIdInput(){if(document.f_login.ID.value==""){document.f_login.ID.value=loginBoxName;}}
+function vTabkeyDownIdInput(e){var e=window.event?window.event:e;if(e.keyCode==9&&e.shiftKey){setTimeout("document.search.q.focus()",1);}else if(e.keyCode==9){if(document.f_login.ID.className=="login_input"){setTimeout("document.f_login.domain.focus()",1);}else{setTimeout("document.f_login.PASSWD.focus()",1);}}}
+function vOnEnterKeyDown(e){var e=window.event?window.event:e;if(e.keyCode==13)bLogin();return true;}
+function vAddInputId(){var el=document.getElementById('ID');if(el.value=='')el.value=sIdMent;if(document.addEventListener){el.addEventListener('click',vReadyInput,false);el.addEventListener('focus',vReadyInput,false);el.addEventListener('blur',vBlurIdInput,false);el.addEventListener('keydown',vTabkeyDownIdInput,false);}
+else if(document.attachEvent){el.attachEvent('onclick',vReadyInput);el.attachEvent('onfocus',vReadyInput);el.attachEvent('onblur',vBlurIdInput);el.attachEvent('onkeydown',vTabkeyDownIdInput);}}
+function vAddInputPw(){var el=document.getElementById('PASSDM');el.value=sPwMent;if(document.addEventListener){el.addEventListener('click',vReadyPassInput,false);el.addEventListener('focus',vReadyPassInput,false);}
+else if(document.attachEvent){el.attachEvent('onclick',vReadyPassInput);el.attachEvent('onfocus',vReadyPassInput);}}
+function bAddButtonSubmit(id){if(typeof id!='string')return false;var el=document.getElementById(id);if(!el)return false;if(document.addEventListener){el.addEventListener('click',bLogin,false);}
+else if(document.attachEvent){el.attachEvent('onclick',bLogin);}}
+function bLogin(){gLogin=true;var chked=bCheckBlank();if(!chked){gLogin=false;return false;}
+return true;}
+function bCheckBlank(){var id=trim(oForm.ID.value);var defaultIDMent=loginBoxName;if(id==defaultIDMent||id=='이메일'||id==''){oForm.ID.value='';alert('아이디를 입력하세요');document.getElementById('ID').focus();return false;}
+else if(!validId(id)){oForm.ID.value='';alert('허용되지 않은 문자가 포함되어 있습니다.\n\n아이디의 허용된 문자는 영문 소문자, 숫자, -, _ 입니다.\n단 아이디 첫 글자는 영문으로 시작됩니다.');document.getElementById('ID').focus();return false;}
+var pw=trim(oForm.PASSWD.value);if(pw==sPwMent||pw==''){oForm.PASSWD.value='';alert('비밀번호를 입력하세요');setTimeout("document.f_login.PASSDM.focus()",1);return false;}
+var idIndexValue=oForm.ID.value.indexOf('@');if(idIndexValue!=-1){oForm.domain.value=oForm.ID.value.substring(idIndexValue+1);}else{oForm.domain.value="nate.com";}
+xLogin.setCookie(oForm.keeplogin,oForm.ID,oForm.domain);if(!xXecure.isCKKeyPro()){xRSA.encrypt(oForm.ID,oForm.PASSWD,oForm.PASSWD_RSA,"NATE");}
+else{xRSA.encryptE2E(oForm.ID,"f_login","PASSWD",oForm.PASSWD_RSA,"NATE");}
+oForm.PASSDM.value="";nc("NLI01");return true;}
+function validId(str){var re=new RegExp("(^[a-zA-Z]){1}([a-zA-Z0-9_\-])*$","ig");return true;}
+function vSetAction(){oForm.acti}
+init();}
+function SubmitCheck(){chkMobile();var osType=setUserAgent.getOS();if(setUserAgent.getBS()==="ua-ie8"||osType[0]==="ua-xp"){var redirectInputUrl=$("#f_login > #redirect").val().replace("https","http");$("#redirect").val(redirectInputUrl);}
+if(gLogin){return true;}else{return false;}}
+function onclick_Join(){nc('NLI31');location.href="https://member.nate.com/Member/Regist/Join.sk?cp=main";}
+function onclick_Find(){nc('NLI21');location.href="//member.nate.com/helpdesk/findID.sk";}
+function onclick_FindPW(){nc('NLI23');location.href="//member.nate.com/helpdesk/findPW.sk";}
+function isKeepLogin(val){if($('#keeplogin').is(':checked')&&val=='on'){$('div.overlay_info.type_saveid').removeClass("nHide");}else{$('div.overlay_info.type_saveid').addClass("nHide");}}
+function closeKeepLoginLayer(){$('div.overlay_info.type_saveid').addClass("nHide");}
+function setInitFocusValue(){isLoignBoxInput=true;}
+function isLogout(){if(isNateLogin){return false;}
+var fvalue=getFValue();var _isParam=(fvalue=="logout"||fvalue=="ips");var _value=xCookie.getCookie("Logout");var _isValue=(fvalue=="ips")?true:(_value!=undefined&&_value!="");return(_isParam||_isValue);}
+function fillLogout(){var _value=xCookie.getCookie("Logout");if(_value==undefined){ExecFillLogout(null);}
+else if(_value!=""){callJsonPDoc("//www.nate.com/js/common/xhrAES.js?f=logout")}}
+function ExecFillLogout(name){bLogout=true;if(name==""&&name!=null){var _value=ifu(xCookie.getCookie("Logout"),"");callJsonPDoc("//www.nate.com/js/common/xEnc.js");name=AESDecryptCtr(_value,base64list,256);}
+xCookie.setCookie("Logout","");xCookie.setCookie("SVC","");if(getFValue()=="ips"){window.open("//www.nate.com/common/secure/logout_info.html","Nate","height=355, width=500, scrollbars=no, resizable=yes");}}

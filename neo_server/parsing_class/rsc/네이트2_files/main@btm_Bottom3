@@ -1,0 +1,58 @@
+//prefixUrl setting 2018-05-30 02:21
+try{if(!CyadLib)var CyadLib={};CyadLib.hasOwnProperty("prefixUrl")||(CyadLib.prefixUrl=function(t){var r=location.protocol;return/^http[s]?:/.test(r)&&(t=t.replace(/http:/g,r).replace(/https:/g,r)),/^\/\/\w+?/.test(t)&&(t=r+t),/^http[s]?\/\//.test(t)&&(t=t.replace(/http\/\//g,r+"//").replace(/https\/\//g,r+"//")),t})}catch(t){}
+
+// ad setting
+function _jsonp($options) {
+    var adscript = document.createElement('script'),
+        zoneid = '279808',
+        callbackName = 'botCiteoAD' + Math.random().toString().replace('.', '');
+    window[callbackName] = function($data) {
+        $options.success.call(this, $data);
+    };
+    adscript.setAttribute('src', $options.url + 'zoneid=' + zoneid + '&callback=' + callbackName);
+    document.getElementsByTagName('head')[0].appendChild(adscript);
+}
+
+var botCriteoAdHandler = {
+    adLogo: '',
+    getAd: function($data) {
+        if($data === undefined) return;
+        var areaAd = $('.area_ad09'), str = '';
+        if ($data.response_status === 0) {
+            adLogo = $data.advertiser.logo.url;
+            str += '<ul>';
+            for (var i = 0, productsLength = $data.products.length; i < productsLength; i++) {
+                str += '<li><a href="' + $data.products[i].click_url + '" title="' + $data.products[i].title + '" target="_blank">';
+                str += '<img src="' + $data.products[i].image.url + '" width="70" height="68" alt="" onerror="botCriteoAdHandler.imgError(this)" />';
+                str += '<span>' + $data.products[i].title + '</span>';
+                str += $data.products[i].price.length >= 9 ? '<em style="font-size:13px">' + $data.products[i].price + '</em></a></li>' : '<em>' + $data.products[i].price + '</em></a></li>';
+            }
+            str += '</ul>';
+            str += '<img src="' + $data.impression_pixels[0].url + '" width="0" height="0" alt="ê´&#47886;&#53292;" /></li>';
+            if ( $data.privacy.optout_click_url !== '' ) {
+                str += '<a href="' + $data.privacy.optout_click_url + '" title="ê´&#47886;&#53292;" target="_blank">';
+                str += '<img src="' + $data.privacy.optout_image_url + '" width="19" height="15" class="adicon" alt="" /></a>';
+            }
+            areaAd.html(str);
+        } else {
+            var replaceDocumentWrite = document.write;
+            document.write = function($node) {
+                areaAd.append($node);
+                areaAd.children().eq(0).append(areaAd.children().eq(1));
+            };
+            $.getScript( CyadLib.prefixUrl('http://cyad1.nate.com/js.kti/nate/cri@back_Bottom1'), function() {
+                setTimeout(function() {
+                    document.write = replaceDocumentWrite;
+                }, 100);
+            });
+        }
+    },
+    imgError : function($element) {
+        $element.src = adLogo;
+    }
+};
+
+_jsonp({
+    url: CyadLib.prefixUrl('http://cas.criteo.com/delivery/0.1/napi.jsonp?'),
+    success: botCriteoAdHandler.getAd
+});
