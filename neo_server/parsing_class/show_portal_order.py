@@ -19,11 +19,28 @@ def comm_parser(contents:str,patt_title:str,start_tag:str,end_tag:str):
 #	print(re.findall(patt_title, narrow_contents))
 	return re.findall(patt_title, narrow_contents)
 
-def parse_naver(contents:str):
+def parse_naver_old(contents:str):
 	patt_title =r'<span class="ah_r">(\d+)</span>s*\n\s*<span class="ah_k">(.+)</span>'
 	start_tag = '<div class="ah_roll_area PM_CL_realtimeKeyword_rolling">'
 	end_tag = '</div>'
 	return comm_parser(contents,patt_title,start_tag,end_tag)
+
+
+
+def parse_naver(contents:str):
+	soup = BeautifulSoup(contents, 'html.parser')
+	div_issue_keyword = soup.find('div', class_='NM_RTK_VIEW_list_wrap')
+	for tmp in  div_issue_keyword.find_all("li"):
+		#print(tmp)
+
+		f_nump = tmp.find("span",class_='ah_r')
+		f_a = tmp.find("span", class_='ah_k')
+		yield f_nump.text,f_a.text
+		#print(f_nump.text,f_a.text)
+
+
+	return
+
 
 def parse_daum(contents:str):
 	patt_title = r'<span class="num_pctop rank\d+"><span class="ir_wa">(\d+)위</span></span>\s*\n\s*<span class="txt_issue"><a href=".+" class="link_issue">(.+)</a></span>'
@@ -68,7 +85,7 @@ class CheckPortalOrder(neo_class.NeoRunnableClass):
 	def __init__(self):
 		neo_class.NeoRunnableClass.__init__(self)
 		self.list_tuples =[
-			("naver.com","https://www.naver.com", 'naver.html',
+			("naver.com","https://www.naver.com/", 'naver.html',
 			 'https://search.naver.com/search.naver?where=nexearch&query={}&ie=utf8&sm=tab_lve',parse_naver),
 			("daum.net","https://www.daum.net",
 			 'daum.html', 'https://search.daum.net/search?w=tot&DA=1TH&rtmaxcoll=1TH&q={}',parse_daum),
@@ -163,7 +180,7 @@ if __name__ == "__main__":
 			print(order,keyword)
 		print()
 
-	print("", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "현재")
+	#print("", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "현재")
 	exit()
 	max_length = -1
 	for wd in list_str:
