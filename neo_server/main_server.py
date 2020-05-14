@@ -127,7 +127,7 @@ def recog_attendance():
 			result['error'] = str(ext)
 
 			pass
-		return result
+		return json.dumps(result)
 
 	dict_type = dict(datetime=datetime.datetime.now(),name='신원석(neo1seok)')
 	return render_template("recog_attendance.html",**dict_type)

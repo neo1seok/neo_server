@@ -33,6 +33,7 @@ function check_att(){
     data: data,  // data to submit
     success: function (response) {
         console.log(response)
+        response =JSON.parse(response);
         if(response.result == "OK"){
 
             window.location.href ="/main.neo"
