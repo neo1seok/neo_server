@@ -9,28 +9,42 @@
 {% block json_function %}
 
 function check_att(){
-    datetime = new Date().toJSON();
-    var datetime    =moment().tz('Asia/Seoul').format('llll');
+    datetime = new Date();
+    console.log(Date.now())
+
+    //var datetime    =moment().tz('Asia/Seoul').format('llll');
 
 
     console.log(datetime,moment.tz('Asia/Seoul').locale());
 
     url ='https://wh.jandi.com/connect-api/webhook/20747084/162ea949c087f8478edf2182cafeea7e'
     data ={
+
         "body" : "[{{name}}] 출근  "+datetime,
+        "curtime":Date.now()
     }
 
-  $.ajax('https://wh.jandi.com/connect-api/webhook/20747084/162ea949c087f8478edf2182cafeea7e', {
+
+    //json.dumps(self.map_ret)
+  $.ajax('', {
     type: 'POST',  // http method
     Accept: "application/vnd.tosslab.jandi-v2+json",
     ContentType: "application/json",
     data: data,  // data to submit
     success: function (response) {
         console.log(response)
-        $('p').text("성공");
+        if(response.result == "OK"){
+
+            window.location.href ="/main.neo"
+            $('p').text("성공");
+        }
+        else{
+            $('p').text("실패" + response.error);
+        }
+
     },
     error: function (jqXhr, textStatus, errorMessage) {
-            $('p').text("실패");
+            $('p').text("오류",errorMessage);
         }
 });
 

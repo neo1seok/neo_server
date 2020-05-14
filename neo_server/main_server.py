@@ -2,6 +2,7 @@ import datetime
 import os
 import sys
 
+import requests
 from flask import Flask, request, render_template, url_for, Markup, json, session, send_from_directory
 from flaskext.mysql import MySQL
 from flask import jsonify
@@ -90,8 +91,40 @@ def health_redirect():
 	dict_type = dict(wt='id_new_input_wt',bp='id_new_input_bp')
 	return render_template("health_redirect.html")
 
-@app.route('/recog.neo',methods=['GET'])
+@app.route('/recog.neo',methods=['GET','POST'])
 def recog_attendance():
+	print(request.method)
+	if request.method == "POST":
+		data= dict(request.values)
+
+		print("values",data)
+		print("form", request.form)
+		print("args", request.args)
+		print("data", request.data)
+		curtime = data['curtime']
+		curtime = datetime.datetime.fromtimestamp(float(curtime) / 1000)
+		print(curtime,type(curtime))
+		import time
+
+		url = 'https://wh.jandi.com/connect-api/webhook/20747084/162ea949c087f8478edf2182cafeea7e'
+		headers ={ "Accept": "application/vnd.tosslab.jandi-v2+json",
+                "ContentType": "application/json",}
+
+		ret = requests.post(url,json=dict(body=f'신원석(neo1seok) {curtime:%Y%m%d %H%M%S}'),headers=headers)
+		print(ret.text,type(ret.text))
+
+		result =dict(result="OK")
+		try:
+
+			result.update(**json.loads(ret.text))
+
+		except Exception as ext:
+			result['result'] = "FAIL"
+			result['error'] = str(ext)
+
+			pass
+		return result
+
 	dict_type = dict(datetime=datetime.datetime.now(),name='신원석(neo1seok)')
 	return render_template("recog_attendance.html",**dict_type)
 
