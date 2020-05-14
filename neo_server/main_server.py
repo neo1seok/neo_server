@@ -113,15 +113,16 @@ def recog_attendance():
 		headers ={ "Accept": "application/vnd.tosslab.jandi-v2+json",
                 "ContentType": "application/json",}
 
-		ret = requests.post(url,json=dict(body=f'신원석(neo1seok) {curtime:%Y/%m/%d %H:%M:%S}'),headers=headers)
-		print(ret.text,type(ret.text))
-
-		result =dict(result="OK")
 		try:
+			ret = requests.post(url, json=dict(body=f'신원석(neo1seok) {curtime:%Y/%m/%d %H:%M:%S}'), headers=headers)
+			print(ret.text, type(ret.text))
+
+			result = dict(result="OK")
 
 			result.update(**json.loads(ret.text))
 
 		except Exception as ext:
+			print(ext)
 			result['result'] = "FAIL"
 			result['error'] = str(ext)
 
