@@ -95,7 +95,7 @@ def health_redirect():
 def recog_attendance():
 	print(request.method)
 	if request.method == "POST":
-		data= dict(request.values)
+		data= dict(request.form)
 
 		print("values",data)
 		print("form", request.form)
