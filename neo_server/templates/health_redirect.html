@@ -11,6 +11,12 @@ function health_redirect(open_dlg_id){
 
 
 }
+function check_att_redirect(){
+
+    window.location.href = '/recog.neo';
+
+
+}
 {% endblock %}
 
 
@@ -21,6 +27,7 @@ function health_redirect(open_dlg_id){
 <!-- The button used to copy the text -->
 <button class="w3-button w3-metro-purple   w3-xxxlarge w3-round-large" onclick="health_redirect('id_new_input_wt')">체중입력창</button>
 <button class="w3-button w3-metro-dark-red   w3-xxxlarge w3-round-large" onclick="health_redirect('id_new_input_bp')">혈압입력창</button>
+<button class="w3-button w3-metro-yellow w3-xxxlarge w3-round-large" onclick="check_att_redirect()">출근 체크</button>
 
 
 {% endblock %}
