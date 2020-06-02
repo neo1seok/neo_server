@@ -9,6 +9,9 @@
 {% block json_function %}
 
 function check_att(){
+    if(!confirm("출근 체크를 하시겠습니까?")){
+        return;
+    }
     datetime = new Date();
     console.log(Date.now())
 
@@ -62,7 +65,7 @@ $(window).load(function(){
 {% block body%}
 
 <!-- The button used to copy the text -->
-<button class="w3-button w3-metro-purple   w3-xxxlarge w3-round-large" onclick="check_att('id_new_input_wt')">출근기록</button>
+<button class="w3-button w3-metro-purple   w3-xxxlarge w3-round-large" onclick="check_att()">출근기록</button>
 <p></p>
 
 
