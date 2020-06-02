@@ -12,6 +12,9 @@ function health_redirect(open_dlg_id){
 
 }
 function check_att_redirect(){
+    if(!confirm("이동 하시겠습니까?")){
+        return;
+    }
 
     window.location.href = '/recog.neo';
 
