@@ -41,14 +41,7 @@ class WebtoonWebApp(BaseDBWebApp):
 				"""
 		list_portals = self.select(sql)
 		
-		# for map_line in self.list_data:
-		# 	id = map_line['id']
-		# 	map_line['list_url'] = map_line['list_url'].format(id)
-		# 	map_line['detail_url'] = map_line['detail_url'].format(id, map_line['lastno'])
-		# 	webtoon_info = self.dict_result_webtoon.get(id,{})
-		# 	map_line.update(**webtoon_info)
-		
-		# print("map_url", map_line['list_url'], map_line['detail_url'])
+
 		
 		list_input_row = [
 			
@@ -97,42 +90,16 @@ class WebtoonWebApp(BaseDBWebApp):
 #		neoutil.simple_view_list(self.list_data)
 		pass
 
-	# def _get_from_db(self,date,option= WEBTOON_PARSE_OPTION.none,mid_process = lambda list_result_webtoon:None):
-	# 	sql = """SELECT id FROM neo_pwinfo.webtoon where  status != 'HIDDEN';"""
-	# 	list_ids = self.select(sql)
-	#
-	# 	inst = GetLateestWebtoon(date=date, list_ids=[tmp['id'] for tmp in list_ids],option=option).run()
-	#
-	#
-	# 	list_result_webtoon = inst.result()
-	# 	# self.cur_web_date = inst.cur_web_date
-	# 	'''
-	# 	[{'id': '723714', 'lastno': '126', 'today_title': '126화',
-	# 	'img_src': 'https://shared-comic.pstatic.net/thumb/webtoon/723714/126/thumbnail_202x120_0c4a6d38-b9cd-4106-aced-9c45f2795bf9.jpg',
-	# 	'status_icon': '', 'writer': '류기운 / 문정후', 'web_title': '용비불패 완전판', 'reg_date': '2019.11.21'},
-	# 	]
-	# 	'''
-	#
-	# 	mid_process(list_result_webtoon)
-	#
-	# 	ids = ",".join([f"'{tmp['id']}'" for tmp in list_result_webtoon])
-	# 	if not ids:
-	# 		ids = "''"
-	#
-	#
-	# 	BaseDBWebApp.ready_extra_condition(self)
-	# 	self.extra_condition += "and id in (%s) " % ids
-	#
-	# 	sql = self.fmt_list.format(extra_condition=self.extra_condition)
-	#
-	# 	self.cur.execute(sql)
-	# 	list_data = self.cur.fetchall()
-	# 	return inst,list_data
+	def update_from_site(self):
+
+		return dict()
+
+
 
 	def update_custom(self):
 
 		date = neoutil.get_safe_mapvalue(request.values, "date", "")
-
+		print("update_custom",date)
 
 		# get list of ids on not hidden in db
 
