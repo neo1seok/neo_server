@@ -196,6 +196,34 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 		#if self.date != 'org':
 
 		main_info = self.parse_main_with_dash()
+		'''
+		{
+    "id_per_date": {
+        "mon": [
+            [
+                "733766",
+                "인생존망"
+            ],
+          .
+		  .
+        ],
+        "tue": [
+            [
+                "20853",
+                "마음의소리"
+            ],
+            [
+                "703846",
+                "여신강림"
+            ],
+         
+        ]
+    },
+    "today_date": "sun"
+}
+		'''
+
+		#print(neoutil.json_pretty(main_info))
 		today_date = main_info['today_date']
 		self.cur_web_date = today_date
 		self.today_date = today_date
@@ -237,42 +265,7 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 
 		# self.filterd_ids = self.list_ids
 		st = time.time()
-		# if self.date != 'org':
-		#
-		# 	main_info = self.parse_main_with_dash()
-		# 	today_date = main_info['today_date']
-		# 	self.cur_web_date = today_date
-		# 	self.today_date =today_date
-		#
-		# 	id_per_date = main_info['id_per_date']
-		# 	if not self.date:
-		# 		self.date = today_date
-		#
-		#
-		# 	list_tuple_ids = id_per_date[self.date]
-		# 	today_list_ids = [id for id,title in list_tuple_ids]
-		# 	self.map_title_per_id ={}
-		# 	for tmpdate, list_tuple_ids in id_per_date.items():
-		# 		self.map_title_per_id.update(**dict(list_tuple_ids))
-		# 		#today_list_ids += [id for id, title in list_tuple_ids]
-		#
-		#
-		# 	if self.date == 'all':
-		# 		today_list_ids=[]
-		# 		for tmpdate,list_tuple_ids in id_per_date.items():
-		# 			today_list_ids += [id for id,title in list_tuple_ids]
-		# 		#[[id for id,title in list_tuple_ids] for list_tuple_ids in id_per_date.items()]
-		#
-		#
-		# 	self.filterd_ids = set(today_list_ids) & set(self.list_ids)
-		
-			
-		# if not self.date =='all':
-		# 	today_list_ids = list(self.parse_main())
-		# 	self.filterd_ids = set( today_list_ids) & set(self.list_ids)
-		# 	print('today_list_ids',today_list_ids)
-		# 	print('list_ids',self.list_ids)
-		# 	print('filterd_ids',self.filterd_ids)
+
 		print("total list part",time.time()-st)
 		if self.date == "org" and self.option == WEBTOON_PARSE_OPTION.no_detail:
 			raise ValueError("date org and option no_detail not allow")

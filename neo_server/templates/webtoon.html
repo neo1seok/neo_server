@@ -2,11 +2,11 @@
 
 {% block json_function %}
 {{super()}}
-function update_webtoon_list(date=""){
+function update_webtoon_list(date="",option=""){
 
     temp_query('/query/{{name}}/update_custom', {
             date:date,
-            option:'just_get'
+            option:option
           }, function(response) {
             console.log("confirm ok",response,response.cur_web_date,response.date);
 
@@ -14,7 +14,20 @@ function update_webtoon_list(date=""){
             $(".list_week").each(function(index, item){
                 $(item).removeClass("w3-black");
             })
+            info = "";
+            info += response.option
 
+            response.dict_time
+            info += "<br/>";
+            console.log("response.dict_time", response.dict_time);
+            for (var key in response.dict_time) {
+                var value = response.dict_time[key];
+                info += key + ":" +value.toFixed(2);
+                 info += "<br/>";
+                console.log(key, value);
+            }
+            console.log("info", info);
+            $('#id_info').html(info);
 
             $('#id_date_'+response.date).addClass("w3-black");
             console.log();
@@ -25,6 +38,10 @@ function update_webtoon_list(date=""){
 
 
      })
+}
+
+function toggle_info(){
+    $('#id_info').toggle();
 }
 {% endblock %}
 
@@ -54,6 +71,7 @@ for (i = 0; i < acc.length; i++) {
 console.log('{{date}}');
 
 update_webtoon_list('{{date}}');
+$('#id_info').hide();
 
 {% endblock %}
 
@@ -83,7 +101,14 @@ update_webtoon_list('{{date}}');
 </div>
 
 <a href="{{url_naver_date_webtoon}}" class="w3-button" target="_blank">네이버 웹툰 화면으로 가기</a>
+<a href="javascript:void(0)" class="w3-button" onclick="toggle_info()">파싱정보보기</a>
+ <a href="#"
+         class="w3-bar-item w3-button list_week"
+         onclick="update_webtoon_list('{{date}}','detail')"
+         id="id_detail">오늘날짜 자세히 얻기</a>
+<div id="id_info">
 
+</div>
 <div class="w3-container" id='table_contents'>
 </div>
 

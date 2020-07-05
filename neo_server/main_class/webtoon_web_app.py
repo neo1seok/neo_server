@@ -97,9 +97,13 @@ class WebtoonWebApp(BaseDBWebApp):
 
 
 	def update_custom(self):
+		st = time.time()
+		dict_time ={}
 
 		date = neoutil.get_safe_mapvalue(request.values, "date", "")
+		option = neoutil.get_safe_mapvalue(request.values, "option", "")
 		print("update_custom",date)
+		print("option", option)
 
 		# get list of ids on not hidden in db
 
@@ -114,10 +118,12 @@ class WebtoonWebApp(BaseDBWebApp):
 		#먼저 매인 대쉬 정버를 바탕으로 필터링된 ids를 구한다.
 		inst = GetLateestWebtoon(date=date, list_ids=[tmp['id'] for tmp in list_ids])
 		filterd_ids = inst.update_get_filter_ids()
+		dict_time["update_get_filter_ids "] = time.time() -st
+		st = time.time()
 
 
 		#현재 시간을 기준으로 하루가 넘어 가는 경우 detail update를 한다.
-		if date =='org':
+		if date =='org' or option == 'detail':
 			option = WEBTOON_PARSE_OPTION.detail
 		else:
 			today = datetime.datetime.today()
@@ -141,7 +147,8 @@ class WebtoonWebApp(BaseDBWebApp):
 		#결정된 option을 세팅하고 실행한다..
 		inst.set_option(option)
 		inst.run()
-
+		dict_time["update_detail_title "] = time.time() - st
+		st = time.time()
 
 		self.list_result_webtoon = inst.result()
 		self.cur_web_date = inst.cur_web_date
@@ -167,6 +174,8 @@ class WebtoonWebApp(BaseDBWebApp):
 							SET title='{web_title}', today_title = '{today_title}',  lastno = '{lastno}', updt_date = now(),comment='{comment}'
 							WHERE id='{id}';""".format(**tmp_dic)
 				self.cur.execute(sql_update)
+		dict_time["update_db"] = time.time() - st
+		st = time.time()
 
 		ids = ",".join([f"'{tmp['id']}'" for tmp in self.list_result_webtoon])
 		if not ids:
@@ -205,7 +214,11 @@ class WebtoonWebApp(BaseDBWebApp):
 		table_html =render_template("webtoon_table.html", id_div_list="id_div_list", title=f"네이년 웹툰 {str_tail}", list_result_webtoon=self.list_data,
 		                       modal_id="id_modal_input")
 
-		return dict(table_html=table_html,cur_web_date=self.cur_web_date,date=inst.date)
+		dict_time["make_table_html"] = time.time() - st
+		st = time.time()
+
+		return dict(table_html=table_html,cur_web_date=self.cur_web_date,date=inst.date,
+		            option =option.name,dict_time=dict_time)
 
 
 # print(list_result)
