@@ -45,9 +45,19 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 
 		#self.get_dict_from_id = self.getTopId if self.option != WEBTOON_PARSE_OPTION.no_detail else self.getJustId
 		self.filterd_ids = None
-		
+		self.dict_timer={}
+		self.dict_timer_time = {}
+		#self.st_time = time.time()
 		pass
-	
+
+
+
+	def _write_time_check(self,key,is_start=False):
+		if is_start:
+			self.dict_timer_time[key] = time.time()
+		else:
+			self.dict_timer [key ] = time.time() - self.dict_timer_time[key]
+
 	def reff(self):
 		id = '409629'
 		nicklist = requests.get("http://comic.naver.com/webtoon/list.nhn?titleId={0}".format(id))
@@ -194,8 +204,9 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 			return self.filterd_ids
 		st = time.time()
 		#if self.date != 'org':
-
+		self._write_time_check('GetLateestWebtoon.parse_main_with_dash',True)
 		main_info = self.parse_main_with_dash()
+		self._write_time_check('GetLateestWebtoon.parse_main_with_dash')
 		'''
 		{
     "id_per_date": {
@@ -314,8 +325,11 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 	def parse_main_with_dash(self):
 		url = 'https://comic.naver.com/webtoon/weekday.nhn'
 		date = self.date
+		self._write_time_check('GetLateestWebtoon.parse_main_with_dash.requests', True)
 		r = requests.get(url)
+		self._write_time_check('GetLateestWebtoon.parse_main_with_dash.requests')
 		# print(r.text)
+		self._write_time_check('GetLateestWebtoon.parse_main_with_dash.parse', True)
 		soup = BeautifulSoup(r.text, 'html.parser')
 		soup: Tag
 		col_list_tag = soup.find("div", class_='list_area daily_all').find_all("div", class_='col')
@@ -354,6 +368,7 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 				# list_ids.append((dict_args['titleId'],title))
 				pass
 			id_per_date[week_date] = list_ids
+			self._write_time_check('GetLateestWebtoon.parse_main_with_dash.parse')
 			#print(col.attrs['class'])
 		return 	dict(id_per_date=id_per_date,today_date=today_date)
 		#print("img_list_tag",img_list_tag)
