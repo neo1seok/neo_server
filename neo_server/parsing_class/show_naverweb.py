@@ -270,6 +270,7 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 		pass
 
 	def run(self):
+		self._write_time_check('GetLateestWebtoon.detail_title', True)
 		self.cur_web_date = ""
 		if not self.filterd_ids :
 			self.update_get_filter_ids()
@@ -296,6 +297,7 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 			self.mapTopid.append(new_obj)
 		print("latest part", time.time() - st)
 		#print(self.mapTopid)
+		self._write_time_check('GetLateestWebtoon.detail_title', False)
 		return self
 	
 	def run_old(self):
@@ -470,6 +472,7 @@ if __name__ == '__main__':
 	inst = GetLateestWebtoon(date='all'
 	                              '',list_ids=list_all,option=WEBTOON_PARSE_OPTION.detail)
 	#res = inst.parse_main_with_dash()
+	print("inst.get_today()",inst.get_today())
 	inst.update_get_filter_ids()
 
 	inst.run()

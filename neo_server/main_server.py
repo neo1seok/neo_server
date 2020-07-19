@@ -11,12 +11,12 @@ import pymysql
 from werkzeug.utils import redirect
 
 from neo_server.main_class import class_web_app
-from neo_server.main_class.util import get_lists
+from neo_server.main_class.util import get_lists, get_webtoon_json
 from neo_server.neo_telegram_bot.api_token import neo_bot_token, temptest_bot
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 map_general_map = get_lists(dir_path)
-
+webtoon_info_file = get_webtoon_json(dir_path)
 #print(map_general_map)
 app = Flask(__name__)
 mysql = MySQL()

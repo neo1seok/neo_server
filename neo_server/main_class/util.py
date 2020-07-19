@@ -1,4 +1,5 @@
 import datetime
+import pickle
 import random
 import urllib
 import urllib.parse
@@ -46,3 +47,14 @@ def get_lists(dir_path):
 	for inst in map_general_map.values():
 		inst.navigation_org = navigation
 	return map_general_map
+
+def get_webtoon_json(dir_path):
+
+	webtoon_info_file = os.path.join(dir_path,"temp", "webtoon_info.json")
+	if not os.path.exists(webtoon_info_file):
+		temp_dir = os.path.dirname(webtoon_info_file)
+		neoutil.MakeDir(temp_dir)
+		pickle.dump({},open(webtoon_info_file,"wb"))
+
+
+	return webtoon_info_file

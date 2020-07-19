@@ -1,4 +1,5 @@
 import datetime
+import pickle
 
 from neo_server.main_class.class_web_app_base import *
 from neo_server.parsing_class.enum_option import WEBTOON_PARSE_OPTION
@@ -113,20 +114,27 @@ class WebtoonWebApp(BaseDBWebApp):
 
 		#현재 id와 updt_date를 매핑한다.
 		dict_updt_date_per_id = {tmp['id']: tmp['updt_date'] for tmp in list_ids}
+		from neo_server.main_server import webtoon_info_file
+		webtoon_info = pickle.load(open(webtoon_info_file,'rb'))
+		print("webtoon_info",webtoon_info)
+
 
 
 		#먼저 매인 대쉬 정버를 바탕으로 필터링된 ids를 구한다.
 		inst = GetLateestWebtoon(date=date, list_ids=[tmp['id'] for tmp in list_ids])
+		today = webtoon_info.get('today')
+		web_today = inst.get_today()
+		if today != web_today or option == 'detail':
+			filterd_ids = inst.update_get_filter_ids()
+			inst.dict_timer
 
-		inst.get_today()
-
-
-		filterd_ids = inst.update_get_filter_ids()
-		inst.dict_timer
-		dict_time.update(**inst.dict_timer)
-		dict_time["update_get_filter_ids "] = time.time() -st
-		st = time.time()
-
+			dict_time["update_get_filter_ids "] = time.time() -st
+			st = time.time()
+			webtoon_info['today'] =web_today
+			webtoon_info['filterd_ids'] = filterd_ids
+			pickle.dump(webtoon_info,open(webtoon_info_file,'wb'))
+		else:
+			filterd_ids = webtoon_info['filterd_ids']
 
 		#현재 시간을 기준으로 하루가 넘어 가는 경우 detail update를 한다.
 		if date =='org' or option == 'detail':
@@ -154,6 +162,7 @@ class WebtoonWebApp(BaseDBWebApp):
 		inst.set_option(option)
 		inst.run()
 		dict_time["update_detail_title "] = time.time() - st
+		dict_time.update(**inst.dict_timer)
 		st = time.time()
 
 		self.list_result_webtoon = inst.result()
