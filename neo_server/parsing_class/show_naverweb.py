@@ -321,21 +321,59 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 	
 	def result(self):
 		return self.mapTopid
-	
+
+	def _col_list_from_dash(self):
+		url = 'https://comic.naver.com/webtoon/weekday.nhn'
+
+		self._write_time_check('GetLateestWebtoon._col_list_from_dash.requests', True)
+		r = requests.get(url)
+		self._write_time_check('GetLateestWebtoon._col_list_from_dash.requests')
+		# print(r.text)
+		self._write_time_check('GetLateestWebtoon._col_list_from_dash.get.col_list', True)
+		self._write_time_check('GetLateestWebtoon._col_list_from_dash.get.BeautifulSoup', True)
+		soup = BeautifulSoup(r.text, 'html.parser')
+		self._write_time_check('GetLateestWebtoon._col_list_from_dash.get.BeautifulSoup', False)
+		soup: Tag
+		self._write_time_check('GetLateestWebtoon._col_list_from_dash.get.col_list', True)
+		col_list_tag = soup.find("div", class_='list_area daily_all').find_all("div", class_='col')
+		self._write_time_check('GetLateestWebtoon._col_list_from_dash.get.col_list')
+		result = {}
+		id_per_date = {}
+		today_date = ""
+		return soup,col_list_tag
+
+	def get_today(self):
+		self._write_time_check('GetLateestWebtoon.get_today', True)
+		soup, col_list_tag = self._col_list_from_dash()
+		for col in col_list_tag:
+			col: Tag
+			col_inner_tag = col.find("div", class_='col_inner')
+			week_date = col_inner_tag.find("h4").attrs['class'][0]
+			# print("week_date",week_date)
+
+			if "col_selected" in col.attrs['class']:
+				# print("col_selected",week_date)
+				today_date = week_date
+		self._write_time_check('GetLateestWebtoon.get_today')
+		return 	today_date
+
 	def parse_main_with_dash(self):
 		url = 'https://comic.naver.com/webtoon/weekday.nhn'
 		date = self.date
-		self._write_time_check('GetLateestWebtoon.parse_main_with_dash.requests', True)
-		r = requests.get(url)
-		self._write_time_check('GetLateestWebtoon.parse_main_with_dash.requests')
-		# print(r.text)
-		self._write_time_check('GetLateestWebtoon.parse_main_with_dash.parse', True)
-		soup = BeautifulSoup(r.text, 'html.parser')
-		soup: Tag
-		col_list_tag = soup.find("div", class_='list_area daily_all').find_all("div", class_='col')
+
+		soup,col_list_tag = self._col_list_from_dash()
+		# self._write_time_check('GetLateestWebtoon.parse_main_with_dash.requests', True)
+		# r = requests.get(url)
+		# self._write_time_check('GetLateestWebtoon.parse_main_with_dash.requests')
+		# # print(r.text)
+		# self._write_time_check('GetLateestWebtoon.parse_main_with_dash.parse', True)
+		# soup = BeautifulSoup(r.text, 'html.parser')
+		# soup: Tag
+		# col_list_tag = soup.find("div", class_='list_area daily_all').find_all("div", class_='col')
 		result = {}
 		id_per_date ={}
 		today_date =""
+		self._write_time_check('GetLateestWebtoon.parse_main_with_dash.parse',True)
 		for col in col_list_tag:
 			col:Tag
 			col_inner_tag = col.find("div", class_='col_inner')
@@ -368,7 +406,7 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 				# list_ids.append((dict_args['titleId'],title))
 				pass
 			id_per_date[week_date] = list_ids
-			self._write_time_check('GetLateestWebtoon.parse_main_with_dash.parse')
+#			self._write_time_check('GetLateestWebtoon.parse_main_with_dash.parse')
 			#print(col.attrs['class'])
 		return 	dict(id_per_date=id_per_date,today_date=today_date)
 		#print("img_list_tag",img_list_tag)

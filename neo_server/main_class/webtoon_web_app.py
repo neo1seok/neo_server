@@ -117,6 +117,10 @@ class WebtoonWebApp(BaseDBWebApp):
 
 		#먼저 매인 대쉬 정버를 바탕으로 필터링된 ids를 구한다.
 		inst = GetLateestWebtoon(date=date, list_ids=[tmp['id'] for tmp in list_ids])
+
+		inst.get_today()
+
+
 		filterd_ids = inst.update_get_filter_ids()
 		inst.dict_timer
 		dict_time.update(**inst.dict_timer)

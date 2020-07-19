@@ -1,11 +1,17 @@
-
-__version__ = "1.2.8"
+# -*- coding: utf-8 -*- 	
+__version__ = "1.2.9"
+"""
 #[ver].[majer].[miner]
 #ver: 전체 프레임의 격변이 있을때
 #majer:큰 기능 추가가 되었을때
 #miner:버그 수정및 작은 기능 추가.
-
+"""
 __history__ = """
+* 1.2.9
+	update webtoon page ,parsing timer 
+
+
+	
 * 1.2.8
 	update webtoon page 
 
