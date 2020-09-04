@@ -35,9 +35,14 @@ jinja_options.update(dict(
 #Name
 
 # MySQL configurations
-print("config.yaml",os.path.abspath("config.yaml"))
 
-with open('config.yaml') as f:
+
+
+basedir = os.path.dirname(os.path.abspath(__file__))
+config_path = os.path.join(basedir,'config.yaml')
+print("config.yaml",config_path)
+
+with open(config_path) as f:
     conf = yaml.safe_load(f)
 print(conf)
 

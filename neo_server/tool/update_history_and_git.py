@@ -12,7 +12,8 @@ class CurUpdateInitAndCommit(UpdateInitAndCommit):
 if __name__ == '__main__':
 	print(neolib)
 	msg = """
-	update yaml config 
+	
+	config absolute path 
  
 
 
