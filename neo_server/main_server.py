@@ -3,6 +3,7 @@ import os
 import sys
 
 import requests
+import yaml
 from flask import Flask, request, render_template, url_for, Markup, json, session, send_from_directory
 from flaskext.mysql import MySQL
 from flask import jsonify
@@ -34,10 +35,34 @@ jinja_options.update(dict(
 #Name
 
 # MySQL configurations
-app.config['MYSQL_DATABASE_USER'] = 'neo1seok'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'tofhdna1pi'
-app.config['MYSQL_DATABASE_DB'] = 'neo_pwinfo'
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+print("config.yaml",os.path.abspath("config.yaml"))
+
+with open('config.yaml') as f:
+    conf = yaml.safe_load(f)
+print(conf)
+
+# app.config['MYSQL_DATABASE_USER'] = 'neo1seok'
+# app.config['MYSQL_DATABASE_PASSWORD'] = 'tofhdna1pi'
+# app.config['MYSQL_DATABASE_DB'] = 'neo_pwinfo'
+# app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+
+#app.config.__dict__.update(**conf)
+
+# print(app.config['MYSQL_DATABASE_USER'])
+# print(app.config['MYSQL_DATABASE_PASSWORD'])
+# print(app.config['MYSQL_DATABASE_DB'])
+# print(app.config['MYSQL_DATABASE_HOST'])
+print()
+
+app.config.update(**conf)
+
+
+print(app.config['MYSQL_DATABASE_USER'])
+print(app.config['MYSQL_DATABASE_PASSWORD'])
+print(app.config['MYSQL_DATABASE_DB'])
+print(app.config['MYSQL_DATABASE_HOST'])
+print()
+
 app.secret_key = 'super secret key'
 app.config['SESSION_TYPE'] = 'filesystem'
 

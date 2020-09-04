@@ -12,8 +12,8 @@ class CurUpdateInitAndCommit(UpdateInitAndCommit):
 if __name__ == '__main__':
 	print(neolib)
 	msg = """
-	update webtoon page 
-	update when not repeat on today 
+	update yaml config 
+ 
 
 
 	"""
