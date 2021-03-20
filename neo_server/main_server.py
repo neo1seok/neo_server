@@ -13,9 +13,10 @@ from werkzeug.utils import redirect
 
 from neo_server.main_class import class_web_app
 from neo_server.main_class.util import get_lists, get_webtoon_json
+from neo_server.main_value import dir_path, basedir
 from neo_server.neo_telegram_bot.api_token import neo_bot_token, temptest_bot
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
+#dir_path = os.path.dirname(os.path.realpath(__file__))
 map_general_map = get_lists(dir_path)
 webtoon_info_file = get_webtoon_json(dir_path)
 #print(map_general_map)
@@ -38,7 +39,7 @@ jinja_options.update(dict(
 
 
 
-basedir = os.path.dirname(os.path.abspath(__file__))
+#basedir = os.path.dirname(os.path.abspath(__file__))
 config_path = os.path.join(basedir,'config.yaml')
 print("config.yaml",config_path)
 
@@ -162,7 +163,26 @@ def recog_attendance():
 	dict_type = dict(datetime=datetime.datetime.now(),name='신원석(neo1seok)')
 	return render_template("recog_attendance.html",**dict_type)
 
+@app.route('/dia.neo',methods=['GET','POST'])
+def dia_check():
+	print(request.method)
+	if request.method == "POST":
+		#data = dict()
+		data =request.form.to_dict()
 
+		#data= dict(request.form)
+
+		print("values",data)
+		print("form", request.form)
+		print("args", request.args)
+		print("data", request.data)
+
+		result = dict(result="OK")
+
+		return json.dumps(result)
+
+	dict_type = dict(datetime=datetime.datetime.now(),name='신원석(neo1seok)')
+	return render_template("recog_attendance.html",**dict_type)
 
 @app.route('/netflix.neo',methods=['GET'])
 def netflix():

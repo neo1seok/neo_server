@@ -1,0 +1,5 @@
+client id
+1be3037ade9b4b3d985fa8f30bf3e049
+pw
+dFm02m4Ai4aKahl9R3xZCX4DGTg7GQrV
+

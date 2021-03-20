@@ -1,0 +1,51 @@
+{% extends "layout_with_list_form.html" %}
+
+{% block json_function %}
+{{super()}}
+function init() {
+
+};
+
+
+function create_diary(){
+    console.log('create_diary');
+    title = $('#id_title').val();
+
+temp_query('/query/{{name}}/create_diary', {title: title
+      }, function(response) {
+        console.log("confirm ok",response.url);
+        //$('#id_contents').html(response.table_html);
+
+        window.open("about:blank").location.href =response.url
+
+ })
+    //location.href = '/{{name}}.neo?type=search&keyword='+keyword
+
+}
+
+ {% endblock%}
+
+ {% block main_lable %}
+    <div class="jumbotron">
+
+
+	      <div class="w3-container">
+		   <form class="w3-container" id="search" name="search">
+
+		    </form>
+
+		      <div class="btn-group_">
+				     <h4>제목</h4>
+			      <input class="w3-input w3-border" type="text" id="id_title" name="title"  placeholder="TODAY TITLE">
+			      <button class="btn btn-primary" name ="type"  value="search" onclick="create_diary()">&#10004; 검색</button>
+			</div>
+
+	      </div>
+
+
+    </div>
+
+    {% endblock%}
+
+{% block pagination%}
+ {% endblock%}
