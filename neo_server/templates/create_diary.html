@@ -1,4 +1,4 @@
-{% extends "layout_with_list_form.html" %}
+{% extends "layout.html" %}
 
 {% block json_function %}
 {{super()}}
@@ -37,7 +37,7 @@ temp_query('/query/{{name}}/create_diary', {title: title
 		      <div class="btn-group_">
 				     <h4>제목</h4>
 			      <input class="w3-input w3-border" type="text" id="id_title" name="title"  placeholder="TODAY TITLE">
-			      <button class="btn btn-primary" name ="type"  value="search" onclick="create_diary()">&#10004; 검색</button>
+			      <button class="w3-btn w3-block w3-teal" name ="type"  value="search" onclick="create_diary()">&#10004; 생성</button>
 			</div>
 
 	      </div>
