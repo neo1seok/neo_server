@@ -118,10 +118,13 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 		#get last no
 		url_tag = tr_tag.find("a")
 		lasturl = url_tag.attrs['href']
-		regexp = r"/webtoon/detail.nhn\?titleId=" + id + r"&no=(\d{1,4}).*"
+		regexp = r"/webtoon/detail\?titleId=" + id + r"&no=(\d{1,4}).*"
+		print(regexp)
+		print(lasturl)
 		results = re.search(regexp, lasturl)
 		lastno = results.group(1)
-		
+
+
 		# get status icon
 		status_icon_tag = title_tag.find("img")
 		status_icon = 	status_icon_tag.attrs["src"]	if status_icon_tag else ""

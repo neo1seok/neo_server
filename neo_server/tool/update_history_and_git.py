@@ -12,8 +12,8 @@ class CurUpdateInitAndCommit(UpdateInitAndCommit):
 if __name__ == '__main__':
 	print(neolib)
 	msg = """
-	
-	config absolute path 
+fix webtoon parse	
+ 
  
 
 
