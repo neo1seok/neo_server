@@ -1,3 +1,4 @@
+import copy
 import datetime
 import pickle
 
@@ -170,48 +171,7 @@ class WebtoonWebApp(BaseDBWebApp):
 
 
 
-		# today = webtoon_info.get('today')
-		# web_today = inst.get_today()
-		# if today != web_today or option == 'detail':
-		# 	filterd_ids = inst.update_get_filter_ids()
-		#
-		#
-		# 	dict_time["update_get_filter_ids "] = time.time() -st
-		# 	st = time.time()
-		# 	webtoon_info['today'] =web_today
-		# 	webtoon_info['filterd_ids'] = filterd_ids
-		# 	pickle.dump(webtoon_info,open(webtoon_info_file,'wb'))
-		# else:
-		# 	filterd_ids = webtoon_info['filterd_ids']
-		#
-		# #현재 시간을 기준으로 하루가 넘어 가는 경우 detail update를 한다.
-		# if date =='org' or option == 'detail':
-		# 	option = WEBTOON_PARSE_OPTION.detail
-		# else:
-		# 	today = datetime.datetime.today()
-		# 	option = WEBTOON_PARSE_OPTION.no_detail
-		#
-		# 	for id in filterd_ids:
-		#
-		# 		updt_date = dict_updt_date_per_id[id]
-		# 		td = today.date() - updt_date.date()
-		# 		print("##update",updt_date, td)
-		#
-		#
-		# 		if td.days >1:
-		# 			option = WEBTOON_PARSE_OPTION.detail
-		# 			break
-		#
-		#
-		#
-		# print("option",option)
-		#
-		# #결정된 option을 세팅하고 실행한다..
-		# inst.set_option(option)
-		# inst.run()
-		# dict_time["update_detail_title "] = time.time() - st
-		# dict_time.update(**inst.dict_timer)
-		# st = time.time()
+
 
 		#self.list_result_webtoon = inst.result_detail
 		self.cur_web_date = inst.result_detail['today_date']
@@ -234,7 +194,7 @@ class WebtoonWebApp(BaseDBWebApp):
 		
 		#옵션에 따라 db에 업데이트 시킨다.
 		#if option == WEBTOON_PARSE_OPTION.detail:
-
+		dict_update_ids = {}
 		for id_,tmp_dic in self.dict_result_webtoon.items():
 			comment = dict_db_data_per_id[id_].get('comment','{}')
 			if comment =="":
@@ -248,13 +208,15 @@ class WebtoonWebApp(BaseDBWebApp):
 			print("hash vals",db_hash_value,cur_hash)
 
 			comment = pymysql.escape_string(json.dumps(tmp_dic,ensure_ascii=True))
-			tmp_dic['comment']=comment
 
+			dict_update_ids[id_] = copy.deepcopy(tmp_dic)
+			tmp_dic['comment'] = comment
 			sql_update = """UPDATE neo_pwinfo.webtoon
 						SET title='{web_title}', today_title = '{today_title}',  lastno = '{lastno}', updt_date = now(),reg_date = '{reg_date}',comment='{comment}'
 						WHERE id='{id}';""".format(**tmp_dic)
 			print(sql_update)
 			self.cur.execute(sql_update)
+		return dict(dict_update_ids=dict_update_ids)
 		# dict_time["update_db"] = time.time() - st
 		# st = time.time()
 		#

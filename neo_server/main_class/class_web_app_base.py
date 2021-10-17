@@ -219,7 +219,9 @@ class WebAppBase():
 			pass
 		print(ret)
 
-		return json.dumps(self.map_ret)
+		return neoutil.json_pretty(self.map_ret)
+		#json.dumps(self.map_ret,ensure_ascii=False)
+
 	def get_content(self):
 		print("id",self.data.id)
 		return dict(state='adasffsadf')
