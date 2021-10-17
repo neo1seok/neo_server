@@ -104,6 +104,7 @@ class WebAppBase():
 		session[tag_login] = True
 		session[tag_user] = user_mame
 		session[tag_time] = time.time()
+
 	def main_process(self):
 
 		print("main_process session", session)
@@ -146,6 +147,7 @@ class WebAppBase():
 
 		print("user_description",self.user_description)
 		return self.render()
+
 	def do_run(self):
 		pass
 	def get_template(self):
@@ -283,6 +285,7 @@ class BaseDBWebApp(WebAppBase):
 		self.ready_extra_condition()
 		self.update_from_db()
 		self.post_process()
+
 	def get_last_uid(self):
 		ret = self.select("SELECT max(seq) as last_seq FROM neo_pwinfo.{table_name};".format(**self.data.get_dict()))
 		if ret[0]['last_seq'] == None:

@@ -2,6 +2,7 @@
 
 {% block json_function %}
 {{super()}}
+var table_html = '{{table_html}}';
 function update_webtoon_list(date="",option=""){
 
     temp_query('/query/{{name}}/update_custom', {
@@ -9,6 +10,7 @@ function update_webtoon_list(date="",option=""){
             option:option
           }, function(response) {
             console.log("confirm ok",response,response.cur_web_date,response.date);
+            location.reload();
 
             $('#table_contents').html(response.table_html);
             $(".list_week").each(function(index, item){
@@ -70,7 +72,8 @@ for (i = 0; i < acc.length; i++) {
 
 console.log('{{date}}');
 
-update_webtoon_list('{{date}}');
+//update_webtoon_list('{{date}}');
+
 $('#id_info').hide();
 
 {% endblock %}
@@ -104,13 +107,58 @@ $('#id_info').hide();
 <a href="javascript:void(0)" class="w3-button" onclick="toggle_info()">파싱정보보기</a>
  <a href="#"
          class="w3-bar-item w3-button list_week"
-         onclick="update_webtoon_list('{{date}}','detail')"
-         id="id_detail">오늘날짜 자세히 얻기</a>
+         onclick="update_webtoon_list('{{date}}','')"
+         id="id_today">오늘날짜 얻기</a>
+ <a href="#"
+         class="w3-bar-item w3-button list_week"
+         onclick="update_webtoon_list('{{date}}','force')"
+         id="id_detail">오늘날짜  강제 얻기</a>
 <div id="id_info">
 
 </div>
 <div class="w3-container" id='table_contents'>
+
+    <h2>{{title}}</h2>
+
+    <table class="table table-striped">
+
+             {% for item in list_data %}
+            <tr>
+            <td>
+                <a href="{{ item.list_url }}" target="_blank"> {{ item.title }}
+                    <img src="{{ item.main_img_src }}" >
+                </a>
+            </td>
+
+
+            <td>
+                <a href="{{ item.detail_url }}" target="_blank">
+                      <img src="{{ item.img_src }}"  width=100>
+                      <p target="_blank"> {{ item.today_title }} </p>
+                      <p target="_blank"> {{ item.reg_date }} </p>
+                        <img src="{{ item.status_icon }}">
+
+
+                </a>
+            </td>
+
+
+
+                <td width="5%">
+            <button class="w3-btn w3-ripple " data-toggle="modal" data-target="#id_modal_input"
+                    onclick="edit_content('{{item.cur_uid}}')" >&#9998;</button>
+            </td>
+
+            </tr>
+            {% endfor %}
+
+    </table>
+
+
+
 </div>
+
+
 
 {% endblock %}
 
