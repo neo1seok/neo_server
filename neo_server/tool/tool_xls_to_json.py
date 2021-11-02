@@ -7,9 +7,12 @@ def main():
 	content = [     { title_name[idx]:col for idx, col in enumerate(line) }for line  in list_lines[1:]]
 
 
-	json.dump(content,open('../rsc/webinfo.json','w'))
 
-	new_content = json.load(open('../rsc/webinfo.json'))
+
+	neoutil.StrToFile(neoutil.json_pretty(content),'../rsc/webinfo.json')
+	#json.dump(content,open('../rsc/webinfo.json','w'))
+
+	new_content = json.load(open('../rsc/webinfo.json',encoding='utf-8'))
 	neoutil.simple_view_list(new_content)
 
 if __name__ == '__main__':

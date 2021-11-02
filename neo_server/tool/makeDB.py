@@ -31,5 +31,6 @@ if __name__ != '__main__':
 	exit()
 
 
+
 CreateTableAnd().Run()
 CreateClass().Run()

@@ -39,11 +39,7 @@ def get_lists(dir_path):
 	for idx,val in enumerate( list_map_from_json):
 		list_general_map.insert(1+idx,val)
 	map_general_map = collections.OrderedDict( [(tmp.name,tmp) for tmp in list_general_map])
-# map_general_map = dict(
-# 	main=MainWebApp(name="main",description ='이 홈페이지는 신원석(neo1seok)의 집에 있는 라즈베리파이의 아파치 서버위에서 돌아가고 있습니다..'),
-# 	test_jinja=MainWebApp( name="test_jinja",description ="테스트 진자" )
-#
-# )
+
 	navigation = [  dict(id=val.id, title=val.title, href=val.href,type=val.type) for val in list_general_map if val.name != "main"]
 	for inst in map_general_map.values():
 		inst.navigation_org = navigation
