@@ -88,5 +88,20 @@
         "fmt_udpate": "UPDATE neo_pwinfo.today_contents \nSET title = '{title)', issue = '{issue}', solution = '{solution}', updt_date = now()\nWHERE tdc_uid = '{cur_uid}'\n",
         "fmt_insert": "INSERT INTO neo_pwinfo.today_contents(\n   seq  ,tdc_uid  ,title  ,issue  ,solution ,status   ,updt_date  ,reg_date\n  \n) VALUES (\n    {last_seq}  ,'{last_uid}'   ,'{title}'  ,'{issue}'   ,'{solution}'  ,''  ,now()  ,now() \n \n)",
         "type": "general"
+    },
+    {
+        "name": "jcsg_novel",
+        "class_name": "JcsgNovelWebApp",
+        "title": "장씨세가 호위무사 소설",
+        "temp_file": "",
+        "href": "/jcsg_novel.neo",
+        "uid_prefix": "jc",
+        "table_name": "jcsg_contents",
+        "description": "장씨세가 호위무사 소설 뷰어",
+        "column_names": "",
+        "fmt_list": "SELECT seq, jc_uid, no, title, contents, updt_date, reg_date, comment FROM neo_pwinfo.jcsg_contents;",
+        "fmt_udpate": "",
+        "fmt_insert": "",
+        "type": "general"
     }
 ]
