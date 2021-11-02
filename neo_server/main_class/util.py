@@ -25,7 +25,7 @@ from neo_server.parsing_class.show_portal_order import CheckPortalOrder
 def get_lists(dir_path):
 
 
-	list_new_content = json.load(open(dir_path+'/rsc/webinfo.json'))
+	list_new_content = json.load(open(dir_path+'/rsc/webinfo.json',encoding='utf-8'))
 	val_global = globals()
 	list_map_from_json =[  val_global[tmp['class_name']](**tmp) for tmp in list_new_content]
 	list_general_map =  [
