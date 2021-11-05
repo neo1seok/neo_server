@@ -99,7 +99,7 @@
         "table_name": "jcsg_contents",
         "description": "장씨세가 호위무사 소설 뷰어",
         "column_names": "",
-        "fmt_list": "SELECT seq, jc_uid, no, title, contents, updt_date, reg_date, comment FROM neo_pwinfo.jcsg_contents;",
+        "fmt_list": "SELECT seq, jc_uid, no, title, updt_date, reg_date, comment FROM neo_pwinfo.jcsg_contents;",
         "fmt_udpate": "",
         "fmt_insert": "",
         "type": "general"

@@ -119,10 +119,19 @@ def query_app(app_name=None,cmd=None):
 	# print("ret",ret)
 	return get_main_inst(app_name).do_query(cmd,request.form)
 
+
+
 @app.route('/health_rd.neo',methods=['GET'])
 def health_redirect():
 	dict_type = dict(wt='id_new_input_wt',bp='id_new_input_bp')
 	return render_template("health_redirect.html")
+
+
+@app.route('/jcsg/<no>')
+def jscg_novel_contents(no):
+	dict_type = dict(datetime=datetime.datetime.now(), name='신원석(neo1seok)')
+	return render_template("jcsg_novel_contents.html",**dict_type)
+
 
 @app.route('/recog.neo',methods=['GET','POST'])
 def recog_attendance():
@@ -285,4 +294,4 @@ def init():
 if __name__ == '__main__':
 
 	init()
-	app.run(host='localhost' ,port=5556,threaded=True)
+	app.run(host='localhost' ,port=4434,threaded=True)

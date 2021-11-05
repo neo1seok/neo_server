@@ -1,3 +1,4 @@
+import datetime
 import traceback
 
 from flask import render_template, json, session, request
@@ -217,7 +218,13 @@ class WebAppBase():
 			
 			self.map_ret = dict(result = "FAIL",error = str(ext))
 			pass
-		print(ret)
+		print("self.map_ret",self.map_ret)
+		for key,val in self.map_ret.items():
+			if type(val) == datetime.datetime:
+				val:datetime.datetime
+				self.map_ret[key] = val.strftime("%Y-%m-%d %H:%M:%S")
+			if val == None:
+				self.map_ret[key] = ""
 
 		return neoutil.json_pretty(self.map_ret)
 		#json.dumps(self.map_ret,ensure_ascii=False)
@@ -347,6 +354,7 @@ class BaseDBWebApp(WebAppBase):
 			list_map =self.cur.fetchall()
 			response = list_map[0]
 			response['result'] = "ok"
+
 			return response
 		except Exception as ex:
 			return dict(error=str(ex))
