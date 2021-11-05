@@ -1,4 +1,4 @@
-{% extends "layout_with_list_form.html" %}
+{% extends "layout.html" %}
 
 
 {% block json_on_load %}
@@ -28,7 +28,6 @@ for (i = 0; i < acc.length; i++) {
 
 
 {% block list_contents %}
-
 {%for table in list_tables%}
 
 <div class="w3-container" id='{{table.id_div_list}}'>
@@ -36,16 +35,15 @@ for (i = 0; i < acc.length; i++) {
 <table class="table table-striped">
 
 		 {% for item in table.list_data %}
-		<tr>
-            <td>
-            <button class="w3-btn w3-ripple " data-toggle="modal" data-target="#{{table.modal_id}}"  onclick="edit_content('{{item.cur_uid}}')" >&#9998;{{ item.title }}</button>
-            </td>
+		<tr><td>
+		<button class="w3-btn w3-ripple " data-toggle="modal" data-target="#{{table.modal_id}}"  onclick="edit_content('{{item.cur_uid}}')" >&#9998;{{ item.title }}</button>
+		</td>
 		</tr>
 		{% endfor %}
 
 </table>
 
-  </div>
+
 
 </div>
 {%endfor%}

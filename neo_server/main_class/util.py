@@ -15,11 +15,13 @@ from neolib.hexstr_util import *
 from neo_server.main_class.class_web_app import *
 from neo_server.main_class.class_web_app_base import *
 from neo_server.main_class.create_diary_web_app import CreateDiaryWebApp
+from neo_server.main_class.jcsg_novel_web_app import JcsgNovelWebApp
 from neo_server.main_class.webtoon_web_app import WebtoonWebApp
 from neo_server.neo_telegram_bot.neo_chat_bot import NeoChatBot
 from neo_server.parsing_class.show_naverweb import GetLateestWebtoon
 from neo_server.parsing_class.show_portal_order import CheckPortalOrder
 
+#JcsgNovelWebApp
 #CreateDiaryWebApp
 
 def get_lists(dir_path):
