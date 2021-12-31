@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*- 	
-__version__ = "1.3.2"
+__version__ = "1.3.3"
 """
 #[ver].[majer].[miner]
 #ver: 전체 프레임의 격변이 있을때
@@ -7,6 +7,13 @@ __version__ = "1.3.2"
 #miner:버그 수정및 작은 기능 추가.
 """
 __history__ = """
+* 1.3.3
+일기 생성을 2022 년 폴더로 변경
+ 
+ 
+
+
+	
 * 1.3.2
 fix json object porb	
  
