@@ -87,6 +87,10 @@ def main():
 	print("main")
 	return get_main_inst('main') .main_process()
 
+@app.route('/favicon.ico')
+def favicon():
+	return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 @app.route('/<app_name>.neo',methods=['GET','POST'])
 def show_general_app(app_name=None):

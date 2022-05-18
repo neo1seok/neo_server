@@ -12,7 +12,7 @@ class CurUpdateInitAndCommit(UpdateInitAndCommit):
 if __name__ == '__main__':
 	print(neolib)
 	msg = """
-일기 생성을 2022 년 폴더로 변경
+favicon 추가
  
  
 
