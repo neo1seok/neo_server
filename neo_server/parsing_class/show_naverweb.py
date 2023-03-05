@@ -277,19 +277,19 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 		return self.main_data
 
 	def _col_list_from_dash(self):
-		url = 'https://comic.naver.com/webtoon/weekday.nhn'
+		url = 'https://comic.naver.com/webtoon'
 
 		self._write_time_check('GetLateestWebtoon._col_list_from_dash.requests', True)
 		r = requests.get(url)
 		self._write_time_check('GetLateestWebtoon._col_list_from_dash.requests')
-		# print(r.text)
+		print(r.text)
 		self._write_time_check('GetLateestWebtoon._col_list_from_dash.get.col_list', True)
 		self._write_time_check('GetLateestWebtoon._col_list_from_dash.get.BeautifulSoup', True)
 		soup = BeautifulSoup(r.text, 'html.parser')
 		self._write_time_check('GetLateestWebtoon._col_list_from_dash.get.BeautifulSoup', False)
 		soup: Tag
 		self._write_time_check('GetLateestWebtoon._col_list_from_dash.get.col_list', True)
-		col_list_tag = soup.find("div", class_='list_area daily_all').find_all("div", class_='col')
+		col_list_tag = soup.find("div", class_='WeekdayMainView__daily_all_wrap--UvRFc').find_all("div", class_='WeekdayMainView__daily_all_item--DnTAH')
 		self._write_time_check('GetLateestWebtoon._col_list_from_dash.get.col_list')
 		result = {}
 		id_per_date = {}
@@ -299,15 +299,17 @@ class GetLateestWebtoon(neo_class.NeoRunnableClass):
 	def get_today(self):
 		self._write_time_check('GetLateestWebtoon.get_today', True)
 		soup, col_list_tag = self._col_list_from_dash()
+		today_date=''
 		for col in col_list_tag:
 			col: Tag
-			col_inner_tag = col.find("div", class_='col_inner')
-			week_date = col_inner_tag.find("h4").attrs['class'][0]
+			header = col.find("div", class_='WeekdayMainView__heading--tHIYj')
+			#week_date = col_inner_tag.find("h4").attrs['class'][0]
 			# print("week_date",week_date)
 
-			if "col_selected" in col.attrs['class']:
+			if "WeekdayMainView__is_active" in col.attrs['class']:
 				# print("col_selected",week_date)
-				today_date = week_date
+				#today_date = week_date
+				pass
 		self._write_time_check('GetLateestWebtoon.get_today')
 		return 	today_date
 
