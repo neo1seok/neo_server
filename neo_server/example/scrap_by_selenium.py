@@ -1,5 +1,7 @@
 from selenium import webdriver
 from time import sleep
+#https://raspberrypi.stackexchange.com/questions/4941/can-i-run-selenium-webdriver-using-firefox-as-the-browser
+
 driver_path ='C:/app/python38/chromedriver_110/chromedriver.exe'
 options = webdriver.ChromeOptions()
 options.add_argument('headless')

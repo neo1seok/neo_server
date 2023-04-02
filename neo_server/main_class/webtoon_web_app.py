@@ -29,8 +29,9 @@ class WebtoonWebApp(BaseDBWebApp):
 		return date_name
 	
 	def ready_extra_condition(self):
-		self.extra_condition = "and status != 'HIDDEN' and A.updt_date >= DATE_ADD(NOW(), INTERVAL -1 DAY) order by updt_date desc"
 
+		#self.extra_condition = "and status != 'HIDDEN' and A.updt_date >= DATE_ADD(NOW(), INTERVAL -1 DAY) order by updt_date desc"
+		self.extra_condition = f"and status != 'HIDDEN' and dates ='{self.get_today_date()}' order by updt_date desc"
 
 
 		pass
@@ -152,8 +153,10 @@ class WebtoonWebApp(BaseDBWebApp):
 		# get list of ids on not hidden in db
 
 		#우선 db에 가능한 ids와 update date 들을 구한다.
-		sql = """SELECT id,updt_date,comment FROM neo_pwinfo.webtoon where  status != 'HIDDEN';"""
+		sql = f"""SELECT * FROM neo_pwinfo.webtoon where  status != 'HIDDEN' and dates='{date}';"""
 		list_ids = self.select(sql)
+
+		print(list_ids)
 
 		#현재 id와 updt_date를 매핑한다.
 		dict_db_data_per_id = {tmp['id']: tmp for tmp in list_ids}
@@ -217,53 +220,3 @@ class WebtoonWebApp(BaseDBWebApp):
 			print(sql_update)
 			self.cur.execute(sql_update)
 		return dict(dict_update_ids=dict_update_ids)
-		# dict_time["update_db"] = time.time() - st
-		# st = time.time()
-		#
-		# ids = ",".join([f"'{tmp['id']}'" for tmp in self.list_result_webtoon])
-		# if not ids:
-		# 	ids = "''"
-		# BaseDBWebApp.ready_extra_condition(self)
-		# self.extra_condition += "and id in (%s) " % ids
-		#
-		#
-		#
-		# sql = self.fmt_list.format(extra_condition=self.extra_condition)
-		# print("extra_condition", self.extra_condition)
-		# print("sql", sql)
-		# self.cur.execute(sql)
-		# self.list_data = self.cur.fetchall()
-		#
-		# for map_line in self.list_data:
-		# 	id = map_line['id']
-		# 	map_line['list_url'] = map_line['list_url'].format(id)
-		# 	map_line['detail_url'] = map_line['detail_url'].format(id, map_line['lastno'])
-		# 	#webtoon_info = self.dict_result_webtoon.get(id, {})
-		# 	#del  webtoon_info['title']
-		# 	#del webtoon_info['today_title']
-		#
-		# 	# map_line.update(**webtoon_info)
-		# 	# print("id",webtoon_info)
-		# kor_date = GetLateestWebtoon.map_date_rev.get(inst.date,"")
-		#
-		# print("inst.date",inst.date,self.date)
-		# str_tail =""
-		# if kor_date:
-		# 	str_tail = f"{kor_date}요일"
-		# elif inst.date =='all':
-		# 	str_tail = '연재중 리스트 '
-		# elif inst.date == 'org':
-		# 	str_tail = '전체 리스트 '
-		#
-		# table_html =render_template("webtoon_table.html", id_div_list="id_div_list", title=f"네이년 웹툰 {str_tail}", list_result_webtoon=self.list_data,
-		#                        modal_id="id_modal_input")
-		#
-		# dict_time["make_table_html"] = time.time() - st
-		# st = time.time()
-
-		# return dict(table_html=table_html,cur_web_date=self.cur_web_date,date=inst.date,
-		#             option =option,dict_time=dict_time)
-
-
-# print(list_result)
-# return dict(result='ok')
