@@ -12,7 +12,7 @@ from neolib import neoutil,crypto_util_bin
 from neolib.hexstr_util import *
 
 from neo_server.main_class.class_web_app_base import *
-from neo_server.neo_telegram_bot.neo_chat_bot import NeoChatBot
+#from neo_server.neo_telegram_bot.neo_chat_bot import NeoChatBot
 from neo_server.parsing_class.show_naverweb import GetLateestWebtoon
 from neo_server.parsing_class.show_portal_order import CheckPortalOrder
 
@@ -538,50 +538,50 @@ class LogIn(BaseDBWebApp):
 		print('hash_hint_passwd', self.data.hash_hint_passwd)
 		return self.comm_confirm(user_info, calc_hash, self.data.hash_hint_passwd)
 
-	def start_log_in_telegram(self):
-		telebot_inst: NeoChatBot
-		telebot_inst = self.global_args.get("telebot_inst",None)
-		if telebot_inst == None:
-			raise Exception("telebot_inst is None")
-
-		session_no = tohexstr(crypto_util_bin.getrandom(16))
-		session[tag_session_no]  = session_no
-
-
-		telebot_inst.start_auth(session_no)
-
-		return dict(result="ok")
-
-	def check_log_in_telegram(self):
-		telebot_inst: NeoChatBot
-		telebot_inst = self.global_args.get("telebot_inst", None)
-
-		if telebot_inst == None:
-			raise Exception("telebot_inst is None")
-
-		session_no = session.get(tag_session_no,"")
-		auth_info = telebot_inst.auth_info
-
-		if auth_info == None:
-			raise Exception(f"auth is not excute")
-
-		session_status = auth_info["session_status"]
-		auth = auth_info["auth"]
-		tele_session_no = auth_info["session_no"]
-
-		if tele_session_no != session_no:
-			raise Exception(f"session_no:{session_no} is diffrent from  {tele_session_no}")
-
-		if session_status != "done" or not auth_info["auth"]:
-			raise Exception(f"session_no:{session_no} session_status:{session_status} and auth:{auth}")
-
-		auth_info["session_status"] = "init"
-		session[tag_session_no] = ""
-		calc_hash = crypto_util_bin.sha256(b'111')
-		print('calc_hash',tohexstr(calc_hash))
-		user_info = neoutil.Struct()
-		user_info.name = "신원석"
-		return self.comm_confirm(user_info, calc_hash, calc_hash)
+	# def start_log_in_telegram(self):
+	# 	telebot_inst: NeoChatBot
+	# 	telebot_inst = self.global_args.get("telebot_inst",None)
+	# 	if telebot_inst == None:
+	# 		raise Exception("telebot_inst is None")
+	#
+	# 	session_no = tohexstr(crypto_util_bin.getrandom(16))
+	# 	session[tag_session_no]  = session_no
+	#
+	#
+	# 	telebot_inst.start_auth(session_no)
+	#
+	# 	return dict(result="ok")
+	#
+	# def check_log_in_telegram(self):
+	# 	telebot_inst: NeoChatBot
+	# 	telebot_inst = self.global_args.get("telebot_inst", None)
+	#
+	# 	if telebot_inst == None:
+	# 		raise Exception("telebot_inst is None")
+	#
+	# 	session_no = session.get(tag_session_no,"")
+	# 	auth_info = telebot_inst.auth_info
+	#
+	# 	if auth_info == None:
+	# 		raise Exception(f"auth is not excute")
+	#
+	# 	session_status = auth_info["session_status"]
+	# 	auth = auth_info["auth"]
+	# 	tele_session_no = auth_info["session_no"]
+	#
+	# 	if tele_session_no != session_no:
+	# 		raise Exception(f"session_no:{session_no} is diffrent from  {tele_session_no}")
+	#
+	# 	if session_status != "done" or not auth_info["auth"]:
+	# 		raise Exception(f"session_no:{session_no} session_status:{session_status} and auth:{auth}")
+	#
+	# 	auth_info["session_status"] = "init"
+	# 	session[tag_session_no] = ""
+	# 	calc_hash = crypto_util_bin.sha256(b'111')
+	# 	print('calc_hash',tohexstr(calc_hash))
+	# 	user_info = neoutil.Struct()
+	# 	user_info.name = "신원석"
+	# 	return self.comm_confirm(user_info, calc_hash, calc_hash)
 
 
 	def do_run(self):
