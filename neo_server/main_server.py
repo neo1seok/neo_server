@@ -14,7 +14,7 @@ from werkzeug.utils import redirect
 from neo_server.main_class import class_web_app
 from neo_server.main_class.util import get_lists, get_webtoon_json
 from neo_server.main_value import dir_path, basedir
-from neo_server.neo_telegram_bot.api_token import neo_bot_token, temptest_bot
+#from neo_server.neo_telegram_bot.api_token import neo_bot_token, temptest_bot
 
 #dir_path = os.path.dirname(os.path.realpath(__file__))
 from neo_server.sample_data import sample_data
@@ -285,10 +285,10 @@ def page_test():
 
 def init():
 	global telebot_inst
-	from neo_server.neo_telegram_bot import neo_chat_bot
-	api_token = neo_bot_token
-	if sys.argv.__len__() > 1 and sys.argv[1] == 'debug':
-		api_token = temptest_bot
+	# from neo_server.neo_telegram_bot import neo_chat_bot
+	# api_token = neo_bot_token
+	# if sys.argv.__len__() > 1 and sys.argv[1] == 'debug':
+	# 	api_token = temptest_bot
 	#telebot_inst = neo_chat_bot.start(api_token)
 	#telebot_inst = neo_chat_bot.start(api_token)
 
