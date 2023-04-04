@@ -3,7 +3,7 @@ git+https://github.com/neo1seok/neolib_python.git
 async-generator==1.10
 attrs==21.4.0
 cachetools==4.2.2
-certifi==2022.5.18.1
+certifi==2022.12.7
 charset-normalizer==2.0.12
 
 h11==0.13.0
