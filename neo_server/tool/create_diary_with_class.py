@@ -51,24 +51,35 @@ class HandlingDiaryGDocs():
 		print('File ID: %s' % file.get('id'))
 		return file
 
-	def create_diary(self,folder_id,title):
+	def create_diary(self,dict_folder_id,title):
 
 		curdate = datetime.datetime.now()-datetime.timedelta(hours=3)
 		curdate.weekday()
+		folder_id = dict_folder_id[curdate.year]
+
 		name = f'{curdate.month:02d}월 {curdate.day:02d}일 {get_weekday(curdate)}요일 - {title}'
 
 		return self.create_doc(folder_id,name)
 
 	def get_subfolders(self):
 		page_token = None
-		q=f"parents in '1nxWaOdPzGGcS7yM-Tf_9J3FLexF6ptvf'"
+		parent_folder_id = '0B-r02_3Jzx_tNDNmNWZiYzQtNGFkMi00ZTk5LWEyMzAtYjE2N2EyOTIwNjJi?resourcekey=0-WWCI4Q82KqB4DGX1uyTsVA'
+		parent_folder_id = '1nxWaOdPzGGcS7yM-Tf_9J3FLexF6ptvf'
+		#q = "mimeType = 'application/vnd.google-apps.folder' and name = 'image'"
+		q = f"'{parent_folder_id}' in parents and mimeType = 'application/vnd.google-apps.folder'"
+		#q=f"parents in '1nxWaOdPzGGcS7yM-Tf_9J3FLexF6ptvf'"
 		q = "mimeType = 'application/vnd.google-apps.folder'"
 		response = self.DRIVE.files().list(
 			q=q,
-			spaces='drive',
+			pageSize=10,
+			#spaces='drive',
 			fields='nextPageToken, files(id, name)',
-			pageToken=page_token).execute()
-		for file in response.get('files', []):
+			#pageToken=page_token
+		).execute()
+		print(response)
+		res = response.get('files', [])
+		print(res)
+		for file in res:
 			# Process change
 			print('Found file: %s (%s)' % (file.get('name'), file.get('id')))
 		pass

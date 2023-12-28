@@ -31,11 +31,20 @@ class CreateDiaryWebApp(BaseDBWebApp):
 		folder_id = '14vcMN6bSAfeIIEx8Zm3JuRLTOzSbpPrX'  # 2021
 		folder_id = '15emoEeiwCCSCh_FvywT8ZwDPS7-OPC-z' # 2022
 		folder_id = '1xlxONRV9EkgXXSIfgMoUu0Z1iChYNEtN' # 2023
+		'1n09C7N4e2c1HDXuduRkCK5RUfRAop0GY' # 2024
+		dict_folder_id ={
+			2019: '171NMajZTbIJB_tcXiO9PAxOXgxZoce0T',
+			2020: '1EuKyGnIt7l4n3pjyf9xJbcKCqTlHCWK3',
+			2021: '14vcMN6bSAfeIIEx8Zm3JuRLTOzSbpPrX',
+			2022:'15emoEeiwCCSCh_FvywT8ZwDPS7-OPC-z',
+			2023:'1xlxONRV9EkgXXSIfgMoUu0Z1iChYNEtN',
+			2024: '1n09C7N4e2c1HDXuduRkCK5RUfRAop0GY',
+		}
 		#folder_id = '1nxWaOdPzGGcS7yM-Tf_9J3FLexF6ptvf'  # test
 
 		# messagebox.showinfo("secrete_file", f"{secrete_file} ")
 		inst = HandlingDiaryGDocs.get_build_drive(secrete_file,storage_file)
-		file = inst.create_diary(folder_id, self.data.title)
+		file = inst.create_diary(dict_folder_id, self.data.title)
 		url = f'https://docs.google.com/document/d/{file["id"]}/edit'
 
 
