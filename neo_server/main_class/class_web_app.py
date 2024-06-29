@@ -502,6 +502,8 @@ class LogIn(BaseDBWebApp):
 		print("hash", tohexstr(crypto_util_bin.sha256('tofhdna1pwd'.encode())))
 		print("hash pwd", user_info.pwd)
 
+		print("server random", tohexstr(self.server_random))
+
 		pwd = user_info.pwd
 		print("input_hash",tohexstr(self.server_random+ tobytes(pwd)))
 		calc_hash = crypto_util_bin.sha256(self.server_random+ tobytes(pwd))

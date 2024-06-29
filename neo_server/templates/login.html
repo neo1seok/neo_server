@@ -83,6 +83,7 @@ function login(){
 	var pw = $('#inputPassword').val();
 
 	var inputhash = server_random+sha256_from_hexstr(toHex(pw))
+	console.log('server_random',server_random);
 	console.log('login',id,pw,inputhash);
 	var hash_passwd = sha256_from_hexstr(inputhash);
 
@@ -195,15 +196,15 @@ $('#status').val( 'TEST');
 
 	</form>
 	<div class="w3-container" align="center">
-	<button  class="btn btn-lg btn-primary" align="center" onclick="login()" type="button">Sign up</button>
+	<button  class="btn btn-lg btn-primary" align="center" onclick="login()" type="button">LOG IN</button>
 		<br/>
 	<!--<button  class="btn btn-lg btn-primary" align="center" onclick="start_log_in_telegram()" type="button">start with telegram</button>-->
 		<!--<button  class="btn btn-lg btn-primary" align="center" onclick="check_log_in_telegram()" type="button">check with telegram</button>-->
 
-		<fb:login-button size="xlarge"
-		                 onlogin='checkLoginState();' align="center">
-			Login with Facebook
-		</fb:login-button>
+<!--		<fb:login-button size="xlarge"-->
+<!--		                 onlogin='checkLoginState();' align="center">-->
+<!--			Login with Facebook-->
+<!--		</fb:login-button>-->
 	</div>
 	<div id="status"></div>
 
