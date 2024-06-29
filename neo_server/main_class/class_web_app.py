@@ -592,6 +592,7 @@ class LogIn(BaseDBWebApp):
 		self.pre_key = list(self.map_hint.keys())[idx_a]
 		self.server_random = crypto_util_bin.getrandom(32)
 		self.hexstr_server_random = tohexstr(self.server_random)
+		print("hexstr_server_random",self.hexstr_server_random)
 		pass
 	# def main_process(self):
 	# 	session[tag_login] = False
