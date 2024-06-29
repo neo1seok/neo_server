@@ -19,7 +19,7 @@
 
 {% block json_function %}
 
-var server_random = '{{hexstr_server_random}}';
+//var server_random = '{{hexstr_server_random}}';
 
 var statusChangeCallback = function (response) {
     console.log('statusChangeCallback');
@@ -29,7 +29,7 @@ var statusChangeCallback = function (response) {
 	var userID = response.authResponse.userID;
 	var hitprocess = $('#inputHintPassword').val()
 
-	var hash_hint_passwd = sha256_from_hexstr(server_random+toHex(hitprocess));
+	//var hash_hint_passwd = sha256_from_hexstr(server_random+toHex(hitprocess));
 
 
     if (response.status === 'connected') {
@@ -37,7 +37,7 @@ var statusChangeCallback = function (response) {
 		$('#status').text( 'connected' );
 	      temp_query('/query/login/log_in_facebook', {
 			fb_userid:userID,
-			hash_hint_passwd:hash_hint_passwd
+			//hash_hint_passwd:hash_hint_passwd
 
 		  }, function(response) {
 	            console.log("responseaaa",response);
@@ -82,30 +82,52 @@ function login(){
 	var id = $('#inputID').val();
 	var pw = $('#inputPassword').val();
 
-	var inputhash = server_random+sha256_from_hexstr(toHex(pw))
-	console.log('server_random',server_random);
-	console.log('login',id,pw,inputhash);
-	var hash_passwd = sha256_from_hexstr(inputhash);
 
 
-
+		var server_random ;
+		var hash_passwd;
 		$('#status').text( 'connected' );
-	      temp_query('/query/login/log_in', {
-			id:id,
-			hash_passwd:hash_passwd
+
+		 temp_query('/query/login/chal', {
 
 		  }, function(response) {
 	            console.log("responseaaa",response);
-	            location.href =response.redirect;
+	            server_random = response.chal;
+				var inputhash = server_random+sha256_from_hexstr(toHex(pw))
+				console.log('server_random',server_random);
+				console.log('login',id,pw,inputhash);
+				hash_passwd = sha256_from_hexstr(inputhash);
+
+				temp_query('/query/login/log_in', {
+							id:id,
+							hash_passwd:hash_passwd
+
+						  }, function(response) {
+								console.log("responseaaa",response);
+								location.href =response.redirect;
+
+						  },
+						function(response) {
+							console.log("login error",response);
+							alert(response.error);
+							location.reload();
+
+							}
+						);
+
 
 	      },
 		function(response) {
 			console.log("login error",response);
 			alert(response.error);
-			location.reload();
+
 
 			}
 		);
+
+
+
+
 
 var hexstr = sha256_from_hexstr('aa');
 console.log('login',toHex('aaaaaaa'),hexstr);

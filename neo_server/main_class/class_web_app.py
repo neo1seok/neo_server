@@ -487,6 +487,11 @@ class LogIn(BaseDBWebApp):
 		#session[tag_redirect] = "/main.neo"
 		return dict(result="ok", redirect=redirect)
 
+	def chal(self):
+		self.server_random = crypto_util_bin.getrandom(32)
+		return dict(result="ok", chal=self.server_random.hex())
+
+
 	def log_in(self):
 		print("log_in data", self.data.id,self.data.hash_passwd)
 		list_user_info = self.select("""SELECT seq, usr_uid, id, fb_userid, name, pwd, rn, rn_srv, etc_info 
@@ -590,9 +595,9 @@ class LogIn(BaseDBWebApp):
 		print("do_run")
 		idx_a = random.randint(0,len(self.map_hint)-1)
 		self.pre_key = list(self.map_hint.keys())[idx_a]
-		self.server_random = crypto_util_bin.getrandom(32)
-		self.hexstr_server_random = tohexstr(self.server_random)
-		print("hexstr_server_random",self.hexstr_server_random)
+		#self.server_random = crypto_util_bin.getrandom(32)
+		#self.hexstr_server_random = tohexstr(self.server_random)
+		#print("hexstr_server_random",self.hexstr_server_random)
 		pass
 	# def main_process(self):
 	# 	session[tag_login] = False
