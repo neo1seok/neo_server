@@ -22,7 +22,7 @@ from neo_server.sample_data import sample_data
 map_general_map = get_lists(dir_path)
 webtoon_info_file = get_webtoon_json(dir_path)
 #print(map_general_map)
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 mysql = MySQL()
 
 jinja_options = app.jinja_options.copy()
@@ -83,8 +83,8 @@ def get_main_inst(app_name):
 	return map_general_map[app_name].update_params( mysql=mysql,telebot_inst=telebot_inst)
 @app.route('/')
 def main():
-	url_for('static', filename='style.css')
-	print("main")
+
+	print("main",url_for('static', filename='style.css'))
 	return get_main_inst('main') .main_process()
 
 @app.route('/favicon.ico')
