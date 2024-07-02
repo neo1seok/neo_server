@@ -19,6 +19,7 @@ tag_login = "login"
 tag_user = "user"
 tag_time ="log_in_time"
 tag_redirect = "redirect"
+tag_server_random = "server_random"
 #tag_prev_href_without_login="prev_href_without_login"
 tag_session_no = "session_no"
 

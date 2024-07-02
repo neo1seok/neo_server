@@ -2,10 +2,13 @@ import datetime
 import random
 import urllib
 import urllib.parse
+import uuid
 from copy import deepcopy
 
 import pymysql
 import time
+
+#import redis
 from flask import render_template, json, session, request
 import collections,os
 from neolib import neoutil,crypto_util_bin
@@ -486,10 +489,23 @@ class LogIn(BaseDBWebApp):
 		#session[tag_redirect] = "/main.neo"
 		#session[tag_redirect] = "/main.neo"
 		return dict(result="ok", redirect=redirect)
+	# def _connect_redis(self):
+	# 	conf = self.global_args.get("conf")
+	# 	REDIS_HOST = conf["REDIS_HOST"]
+	# 	REDIS_PORT = conf["REDIS_PORT"]
+	# 	redis_inst = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
+	# 	return redis_inst
 
 	def chal(self):
-		self.server_random = crypto_util_bin.getrandom(32)
-		return dict(result="ok", chal=self.server_random.hex())
+		#redis_inst = self._connect_redis()
+		#self.server_random = crypto_util_bin.getrandom(32)
+		session_id = str(uuid.uuid4())
+		server_random = crypto_util_bin.getrandom(32)
+		session[tag_server_random] =server_random.hex()
+
+		#redis_inst.set(session_id,self.server_random,ex=10)
+
+		return dict(result="ok", chal=server_random.hex())
 
 
 	def log_in(self):
@@ -506,12 +522,14 @@ class LogIn(BaseDBWebApp):
 		user_info = neoutil.Struct(**list_user_info[0])
 		print("hash", tohexstr(crypto_util_bin.sha256('tofhdna1pwd'.encode())))
 		print("hash pwd", user_info.pwd)
+		server_random = session.get(tag_server_random,'')
+		server_random = tobytes(server_random)
 
-		print("server random", tohexstr(self.server_random))
+		print("server random", tohexstr(server_random))
 
 		pwd = user_info.pwd
-		print("input_hash",tohexstr(self.server_random+ tobytes(pwd)))
-		calc_hash = crypto_util_bin.sha256(self.server_random+ tobytes(pwd))
+		print("input_hash",tohexstr(server_random+ tobytes(pwd)))
+		calc_hash = crypto_util_bin.sha256(server_random+ tobytes(pwd))
 		return self.comm_confirm(user_info,calc_hash,self.data.hash_passwd)
 		# print('calc_hash',tohexstr(calc_hash))
 		# print('hash_passwd', self.data.hash_passwd)

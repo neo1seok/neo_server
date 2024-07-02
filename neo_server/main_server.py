@@ -80,7 +80,7 @@ mysql.init_app(app)
 telebot_inst = None
 
 def get_main_inst(app_name):
-	return map_general_map[app_name].update_params( mysql=mysql,telebot_inst=telebot_inst)
+	return map_general_map[app_name].update_params( mysql=mysql,telebot_inst=telebot_inst,conf=conf)
 @app.route('/')
 def main():
 
