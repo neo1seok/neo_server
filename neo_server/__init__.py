@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*- 	
-__version__ = "1.4.1"
+__version__ = "1.4.2"
 """
 #[ver].[majer].[miner]
 #ver: 전체 프레임의 격변이 있을때
@@ -7,6 +7,13 @@ __version__ = "1.4.1"
 #miner:버그 수정및 작은 기능 추가.
 """
 __history__ = """
+* 1.4.2
+update create diary 2025 folder
+ 
+ 
+
+
+	
 * 1.4.1
 user server random for session
  
