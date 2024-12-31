@@ -39,6 +39,7 @@ class CreateDiaryWebApp(BaseDBWebApp):
 			2022:'15emoEeiwCCSCh_FvywT8ZwDPS7-OPC-z',
 			2023:'1xlxONRV9EkgXXSIfgMoUu0Z1iChYNEtN',
 			2024: '1n09C7N4e2c1HDXuduRkCK5RUfRAop0GY',
+			2025:'1C4XW-OOiXcFal_T1TUUj5dvvidRhuBlP'
 		}
 		#folder_id = '1nxWaOdPzGGcS7yM-Tf_9J3FLexF6ptvf'  # test
 
