@@ -12,7 +12,8 @@ class CurUpdateInitAndCommit(UpdateInitAndCommit):
 if __name__ == '__main__':
 	print(neolib)
 	msg = """
-update create diary 2025 folder
+update create diary 2026 folder
+and etc
  
  
 
