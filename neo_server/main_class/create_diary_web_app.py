@@ -22,6 +22,8 @@ class CreateDiaryWebApp(BaseDBWebApp):
 
 	def create_diary(self):
 		print("create_diary title",self.data.title)
+		print("create_diary contents", self.data.contents)
+
 
 
 		secrete_file = basedir + '/rsc/client_secret_476383775373-192qipsl35ec4g3hf7ue11v4464j8mp0.apps.googleusercontent.com.json'
@@ -39,13 +41,16 @@ class CreateDiaryWebApp(BaseDBWebApp):
 			2022:'15emoEeiwCCSCh_FvywT8ZwDPS7-OPC-z',
 			2023:'1xlxONRV9EkgXXSIfgMoUu0Z1iChYNEtN',
 			2024: '1n09C7N4e2c1HDXuduRkCK5RUfRAop0GY',
-			2025:'1C4XW-OOiXcFal_T1TUUj5dvvidRhuBlP'
+			2025:'1C4XW-OOiXcFal_T1TUUj5dvvidRhuBlP',
+			2026: '1QGvsdUYOrZRUggKGcu1XtjDi4mLO7pFp',
 		}
 		#folder_id = '1nxWaOdPzGGcS7yM-Tf_9J3FLexF6ptvf'  # test
-
+		#return dict(url="")
 		# messagebox.showinfo("secrete_file", f"{secrete_file} ")
 		inst = HandlingDiaryGDocs.get_build_drive(secrete_file,storage_file)
 		file = inst.create_diary(dict_folder_id, self.data.title)
+
+		#inst.update_contents(file["id"],self.data.contents)
 		url = f'https://docs.google.com/document/d/{file["id"]}/edit'
 
 

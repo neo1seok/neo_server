@@ -10,8 +10,10 @@ function init() {
 function create_diary(){
     console.log('create_diary');
     title = $('#id_diary_title').val();
+    contents = $('#id_diary_contents').val();
 
-temp_query('/query/{{name}}/create_diary', {title: title
+
+temp_query('/query/{{name}}/create_diary', {title: title,contents:contents
       }, function(response) {
         console.log("confirm ok",response.url);
         //$('#id_contents').html(response.table_html);
@@ -37,6 +39,8 @@ temp_query('/query/{{name}}/create_diary', {title: title
 		      <div class="btn-group_">
 				     <h4>제목</h4>
 			      <input class="w3-input w3-border" type="text" id="id_diary_title" name="diary_title"  placeholder="TODAY TITLE">
+                   <textarea class="w3-input w3-border" name="diary_contents" id="id_diary_contents" rows="10"></textarea>
+
 			      <button class="w3-btn w3-block w3-teal" name ="type"  value="search" onclick="create_diary()">&#10004; 생성</button>
 			</div>
 

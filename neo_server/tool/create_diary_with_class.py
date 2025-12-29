@@ -48,6 +48,18 @@ class HandlingDiaryGDocs():
 		file = self.DRIVE.files().create(body=file_metadata,
 									# media_body=media,
 									fields='id').execute()
+
+		requests = [
+			{
+				'insertText': {
+					'location': {
+						'index': 1  # 문서의 시작 위치
+					},
+					'text': '이것은 자동 생성된 문서입니다.\n오늘 하루도 수고하셨습니다!'
+				}
+			}
+		]
+		#document_id = file.get('id')
 		print('File ID: %s' % file.get('id'))
 		return file
 
@@ -61,6 +73,35 @@ class HandlingDiaryGDocs():
 
 		return self.create_doc(folder_id,name)
 
+	def update_contents(self,document_id,contents):
+
+		requests = [
+			{
+				'insertText': {
+					'location': {
+						'index': 1  # 문서의 시작 위치
+					},
+					'text': contents
+				}
+			}
+		]
+
+		self.DRIVE.documents().batchUpdate(
+			documentId=document_id,
+			body={'requests': requests}
+		).execute()
+
+		return file
+
+	def create_diary(self,dict_folder_id,title):
+
+		curdate = datetime.datetime.now()-datetime.timedelta(hours=3)
+		curdate.weekday()
+		folder_id = dict_folder_id[curdate.year]
+
+		name = f'{curdate.month:02d}월 {curdate.day:02d}일 {get_weekday(curdate)}요일 - {title}'
+
+		return self.create_doc(folder_id,name)
 	def get_subfolders(self):
 		page_token = None
 		parent_folder_id = '0B-r02_3Jzx_tNDNmNWZiYzQtNGFkMi00ZTk5LWEyMzAtYjE2N2EyOTIwNjJi?resourcekey=0-WWCI4Q82KqB4DGX1uyTsVA'
