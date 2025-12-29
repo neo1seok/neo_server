@@ -74,3 +74,4 @@ dist/
 /businfo/json/station.json
 /businfo/json/routestation.json
 /neo_server/*.html
+neo_server/rsc/storage.json
